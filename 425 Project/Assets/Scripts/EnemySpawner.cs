@@ -13,6 +13,7 @@ public class EnemySpawner : MonoBehaviour
         {
             Instantiate(enemy, spawnPositions[Random.Range(0,spawnPositions.Count)].transform.position + modifier, Quaternion.identity);
             Navigation enemyNav = enemy.GetComponent<Navigation>();
+            Debug.Log(player);
             enemyNav.playerObject = player;
         }
     }
