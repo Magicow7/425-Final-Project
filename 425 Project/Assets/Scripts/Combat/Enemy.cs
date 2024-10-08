@@ -16,6 +16,7 @@ namespace Combat
 
         public void TakeDamage(int damage)
         {
+            Debug.Log(damage);
             Health -= damage;
             if (Health <= 0)
             {

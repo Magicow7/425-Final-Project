@@ -11,11 +11,12 @@ public class Bullet : MonoBehaviour
     void Awake()
     {
         Destroy(gameObject, life);
+        StartCoroutine(CanCollide());
     }
 
     IEnumerator CanCollide()
     {
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(0.1f);
         _canHit = true;
 
     }
