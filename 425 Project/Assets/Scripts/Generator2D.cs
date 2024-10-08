@@ -4,7 +4,7 @@ using UnityEngine;
 using Random = System.Random;
 using Graphs;
 using System;
-
+using Locomotion;
 
 
 public class Generator2D : MonoBehaviour {
@@ -638,7 +638,7 @@ public class Generator2D : MonoBehaviour {
     }
 
     void PlacePlayer(){
-        player.transform.position = spawnedThings[0].transform.position + new Vector3(0.5f,0.5f,0.5f);
+        LocomotionManager.Instance.Teleport(spawnedThings[0].transform.position + new Vector3(0.5f,0.5f,0.5f));
     }
 
     void SetupEnemies(){

@@ -51,7 +51,7 @@ namespace Locomotion
                 ToggleSprint();
             }
             
-            Move(_characterTransform, new Vector2(horizontal, vertical));
+            Move(LocomotionManager.Instance.Camera.transform, new Vector2(horizontal, vertical));
         }
         
         public void ToggleSprint()

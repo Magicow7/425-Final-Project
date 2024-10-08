@@ -12,6 +12,9 @@ namespace Locomotion
     /// </summary>  
     public class LocomotionManager : SingletonMonoBehaviour<LocomotionManager>, ICustomUpdate, ICustomFixedUpdate
     {
+        [field: SerializeField] 
+        public Camera Camera { get; private set; }
+        
         [SerializeField]
         private CharacterController _characterController = null!;
         
@@ -124,14 +127,6 @@ namespace Locomotion
             ProcessFixedUpdate(fixedDeltaTime);
             ApplyMovement(fixedDeltaTime);
             ProcessAfterMovementUpdate(fixedDeltaTime);
-            // ResetVelocity();
-        }
-
-        private void ResetVelocity()
-        {
-            _velocity = Vector3.zero;
-            _velocityXZ = Vector2.zero;
-            _velocityY = 0;
         }
         
         /// <summary>
@@ -148,6 +143,13 @@ namespace Locomotion
             }
 
             throw new ArgumentException("Provider of type " + typeof(T).Name + " not found!");
+        }
+
+        public void Teleport(Vector3 location)
+        {
+            _characterController.enabled = false;
+            _characterController.transform.position = location;
+            _characterController.enabled = true;
         }
 
         private void ApplyMovement(float deltaTime)
