@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = System.Random;
 using Graphs;
-using System;
 using Locomotion;
 
 
@@ -16,30 +15,17 @@ public class Generator2D : MonoBehaviour {
     [SerializeField]
     Vector2Int size;
     [SerializeField]
-    float worldScale;
-    [SerializeField]
-    private List<RoomPlaceParams> roomPlacePasses = new List<RoomPlaceParams>();
-    /*
-    [SerializeField]
-    
     int roomCount;
     [SerializeField]
     Vector2Int roomMaxSize;
     [SerializeField]
     Vector2Int roomMinSize;
-    */
     [SerializeField]
     GameObject hallwayTile;
     [SerializeField]
     GameObject roomTile;
     [SerializeField]
     GameObject player;
-
-    [SerializeField]
-    EnemySpawner enemySpawner;
-
-    [SerializeField]
-    NavMeshSetup navMeshSetup;
 
     [SerializeField]
     float nonMSTHallwayChance; // default was 1.25f
@@ -61,18 +47,7 @@ public class Generator2D : MonoBehaviour {
     Room startRoom;
     Room endRoom;
 
-    int failedRoomPlacements = 0;
-
     int generationIteration = 0;
-
-    private int addedRooms = 0;
-
-    [Serializable]
-    struct RoomPlaceParams {
-        public int roomCount;
-        public Vector2Int roomMaxSize;
-        public Vector2Int roomMinSize;
-    }
 
     void Start() {
         Destroy(instance);
@@ -103,10 +78,7 @@ public class Generator2D : MonoBehaviour {
         Tile.clearActivatedWalls();
 
         if(currentGenerationIteration == generationIteration){
-            for(int i = 0; i < roomPlacePasses.Count; i++){
-                PlaceRooms(roomPlacePasses[i]);
-            }
-            
+            PlaceRooms();
         }
         if(currentGenerationIteration == generationIteration){
             Triangulate();
@@ -130,9 +102,6 @@ public class Generator2D : MonoBehaviour {
             PlacePlayer();
         }
         if(currentGenerationIteration == generationIteration){
-            SetupEnemies();
-        }
-        if(currentGenerationIteration == generationIteration){
             //Instantiate(HeroSpawner,transform.position,Quaternion.identity);
         }
         
@@ -141,21 +110,21 @@ public class Generator2D : MonoBehaviour {
     }
 
     //randomly places rooms around the grid with the given paramaters
-    void PlaceRooms(RoomPlaceParams param) {
-        
-        for (int i = 0; i < param.roomCount; i++) {
+    void PlaceRooms() {
+        int failedRoomPlacements = 0;
+        for (int i = 0; i < roomCount; i++) {
             Vector2Int location = new Vector2Int(
                 random.Next(0, size.x),
                 random.Next(0, size.y)
             );
 
             Vector2Int roomSize = new Vector2Int(
-                random.Next(param.roomMinSize.x, param.roomMaxSize.x + 1),
-                random.Next(param.roomMinSize.y, param.roomMaxSize.y + 1)
+                random.Next(roomMinSize.x, roomMaxSize.x + 1),
+                random.Next(roomMinSize.y, roomMaxSize.y + 1)
             );
 
             bool add = true;
-            Room newRoom = new Room(location, roomSize, (addedRooms + 1).ToString());
+            Room newRoom = new Room(location, roomSize, (i + 1).ToString());
             Room buffer = new Room(location + new Vector2Int(-1, -1), roomSize + new Vector2Int(2, 2), "0");
 
             foreach (string room in rooms.Keys) {
@@ -171,7 +140,6 @@ public class Generator2D : MonoBehaviour {
             }
 
             if (add) {
-                addedRooms += 1;
                 rooms.Add(newRoom.identifier, newRoom);
                 //GameObject newBattle = Instantiate(battleHandler,new Vector3(newRoom.bounds.center.x,0,newRoom.bounds.center.y), Quaternion.identity);
                 //newRoom.battleHandler = newBattle.GetComponent<BattleHandler>();
@@ -188,8 +156,7 @@ public class Generator2D : MonoBehaviour {
                     grid[pos] = CellType.Room;
                 }
             }else{
-                if(failedRoomPlacements > param.roomCount * 50){
-                    failedRoomPlacements = 0;
+                if(failedRoomPlacements > roomCount * 50){
                     Debug.Log("Regenerating dungeon");
                     Regenerate();
                     return;
@@ -201,7 +168,6 @@ public class Generator2D : MonoBehaviour {
             }
         }
     }
-    
     
     //triangulates the distances between rooms with delauney triangulation, which I don't really understand
     void Triangulate() {
@@ -606,14 +572,14 @@ public class Generator2D : MonoBehaviour {
         GameObject go;
         Tile newTile;
         if(type == CellType.Room){            
-            go = Instantiate(roomTile, new Vector3(location.x * worldScale, zPos, location.y * worldScale), Quaternion.identity);
+            go = Instantiate(roomTile, new Vector3(location.x, zPos, location.y), Quaternion.identity);
             newTile = go.GetComponent<Tile>();
             
         }else{
-            go = Instantiate(hallwayTile, new Vector3(location.x * worldScale, zPos, location.y * worldScale), Quaternion.identity);
+            go = Instantiate(hallwayTile, new Vector3(location.x, zPos, location.y), Quaternion.identity);
             newTile = go.GetComponent<Tile>();
         }
-            go.transform.localScale *= worldScale;
+            
             tileGrid[location] = newTile;
             newTile.setCellType(type);
             newTile.setTexture(new Vector2Int(0,0),Tile.TextureType.Floor);
@@ -639,11 +605,6 @@ public class Generator2D : MonoBehaviour {
 
     void PlacePlayer(){
         LocomotionManager.Instance.Teleport(spawnedThings[0].transform.position + new Vector3(0.5f,0.5f,0.5f));
-    }
-
-    void SetupEnemies(){
-        navMeshSetup.SetupNavMesh();
-        enemySpawner.SpawnEnemies(spawnedThings, new Vector3(0.5f,0.5f,0.5f));
     }
 
    
