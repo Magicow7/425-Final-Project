@@ -153,12 +153,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   size: {x: 50, y: 50}
-  roomCount: 30
-  roomMaxSize: {x: 0, y: 0}
-  roomMinSize: {x: 0, y: 0}
+  worldScale: 3
+  roomPlacePasses:
+  - roomCount: 50
+    roomMaxSize: {x: 5, y: 5}
+    roomMinSize: {x: 3, y: 3}
   hallwayTile: {fileID: 1125310345526195227, guid: 8d25788680a0f284a88ef48f69c5e449, type: 3}
   roomTile: {fileID: 1125310345526195227, guid: 45970bd5dc398da47ba0b9351e31a2fb, type: 3}
   player: {fileID: 1043705239}
+  enemySpawner: {fileID: 951243911}
+  navMeshSetup: {fileID: 2050463549}
   nonMSTHallwayChance: 0.25
   spawnedThings: []
 --- !u!4 &23580665
@@ -722,7 +726,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2f539b06a79f4971981bf2ed583c164, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  navMeshSurface: {fileID: 0}
+  navMeshSurface: {fileID: 2050463551}
 --- !u!4 &2050463550
 Transform:
   m_ObjectHideFlags: 0
@@ -767,7 +771,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.16666667
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 0}
+  m_NavMeshData: {fileID: 23800000, guid: f560aa92e3b200f4ca4328e72946db68, type: 2}
   m_BuildHeightMesh: 0
 --- !u!33 &120706901812401900
 MeshFilter:

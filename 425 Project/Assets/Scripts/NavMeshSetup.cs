@@ -11,6 +11,7 @@ public class NavMeshSetup : MonoBehaviour
     // Update is called once per frame
     public void SetupNavMesh()
     {
+        Debug.Log("Setup!");
         navMeshSurface = gameObject.GetComponent<NavMeshSurface>();
         navMeshSurface.BuildNavMesh();
         
