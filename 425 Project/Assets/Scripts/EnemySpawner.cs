@@ -11,7 +11,7 @@ public class EnemySpawner : MonoBehaviour
     {
         for (int i = 0; i < enemyCount; i++)
         {
-            Instantiate(enemy, spawnPositions[Random.Range(0,spawnPositions.Count)].transform.position + modifier, Quaternion.identity);
+            Instantiate(enemy, spawnPositions[Random.Range(0, spawnPositions.Count)].transform.position + modifier, Quaternion.identity);
             Navigation enemyNav = enemy.GetComponent<Navigation>();
             Debug.Log(player);
             enemyNav.playerObject = player;

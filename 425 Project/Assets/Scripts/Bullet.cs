@@ -11,28 +11,30 @@ public class Bullet : MonoBehaviour
     void Awake()
     {
         Destroy(gameObject, life);
-        StartCoroutine(CanCollide());
-    }
-
-    IEnumerator CanCollide()
-    {
-        yield return new WaitForSeconds(0.1f);
         _canHit = true;
-
+       
     }
 
-    void OnCollisionEnter(Collision collision)
+   
+
+    private void OnTriggerEnter(Collider other)
     {
         if (!_canHit)
         {
             return;
         }
-        
-        if (collision.gameObject.TryGetComponent<IDamageable>(out IDamageable damageable))
+
+        if (other.gameObject.TryGetComponent<IDamageable>(out IDamageable damageable))
         {
             damageable.TakeDamage(life);
+            Destroy(gameObject);
         }
+
         
-        Destroy(gameObject);
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        
     }
 }

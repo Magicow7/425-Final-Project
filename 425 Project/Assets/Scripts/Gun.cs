@@ -6,10 +6,14 @@ public class Gun : MonoBehaviour
 {
     public Transform bulletSpawnPoint;
     public GameObject bulletPrefab;
-    public float bulletSpeed ;
-    public Camera mainCamera;  // Reference to the main camera
+    public Camera mainCamera;
     public ManaBar manaBar;
+    public LayerMask bulletLayer;
+    public GameObject player;
 
+    private float rate = 0.1f;
+    private float nextFireTime = 0f;
+    private float bulletSpeed = 10f;
     private const int MANA_PER_SHOT = 20;
 
     private void Start()
@@ -19,18 +23,20 @@ public class Gun : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetButtonDown("Fire1"))
+        if (Input.GetButton("Fire1") && Time.time > nextFireTime)
         {
+            nextFireTime = Time.time + rate;
+            
             if (manaBar.UseMana(MANA_PER_SHOT) == true)
             {
-                // Ray from the center of the screen
+
                 Ray ray = mainCamera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2));
                 RaycastHit hit;
 
                 Vector3 targetPoint;
 
 
-                if (Physics.Raycast(ray, out hit))
+                if (Physics.Raycast(ray, out hit, ~bulletLayer))
                 {
                     targetPoint = hit.point;
                 }
@@ -42,16 +48,15 @@ public class Gun : MonoBehaviour
 
                 Vector3 direction = (targetPoint - bulletSpawnPoint.position).normalized;
 
-                // Instantiate the bullet
                 var bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
 
-                // Set bullet velocity towards the target point
                 bullet.GetComponent<Rigidbody>().velocity = direction * bulletSpeed;
-            } else
+            }
+            else
             {
                 // not enough mana to shoot
             }
-            
+
         }
     }
 }

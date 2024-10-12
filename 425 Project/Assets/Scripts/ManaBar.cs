@@ -9,7 +9,7 @@ public class ManaBar : MonoBehaviour
     private Image barImage;
     private Mana mana;
 
-    
+
 
     // Start is called before the first frame update
     void Start()
@@ -32,26 +32,26 @@ public class ManaBar : MonoBehaviour
     public bool UseMana(int amt)
     {
 
-        
+
         return mana.spendMana(amt);
     }
 }
 
 public class Mana
 {
-    private const int MANA_MAX = 100;
+    private const int MANA_MAX = 500;
     private float manaAmount;
     private float regenAmount;
 
     public Mana()
     {
         manaAmount = 0;
-        regenAmount = 20f;
+        regenAmount = 200f;
     }
 
     public void Update()
     {
-        
+
         float temp = regenAmount * Time.deltaTime + manaAmount;
         manaAmount = Mathf.Clamp(temp, 0f, MANA_MAX);
     }
@@ -62,7 +62,8 @@ public class Mana
         {
             manaAmount -= amount;
             return true;
-        } else
+        }
+        else
         {
             return false;
         }

@@ -18,6 +18,7 @@ namespace Combat
         {
             Debug.Log(damage);
             Health -= damage;
+            
             if (Health <= 0)
             {
                 Death();
