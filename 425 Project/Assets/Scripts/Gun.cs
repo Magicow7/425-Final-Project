@@ -16,18 +16,13 @@ public class Gun : MonoBehaviour
     private float bulletSpeed = 10f;
     private const int MANA_PER_SHOT = 20;
 
-    private void Start()
-    {
-        //manaBar = manaBar.GetComponent<ManaBar>();
-    }
-
     void Update()
     {
         if (Input.GetButton("Fire1") && Time.time > nextFireTime)
         {
             nextFireTime = Time.time + rate;
             
-            if (manaBar.UseMana(MANA_PER_SHOT) == true)
+            if (manaBar.UseMana(MANA_PER_SHOT))
             {
 
                 Ray ray = mainCamera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2));
