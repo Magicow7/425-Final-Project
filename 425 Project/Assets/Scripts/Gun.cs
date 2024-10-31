@@ -8,6 +8,10 @@ public class Gun : MonoBehaviour
     public GameObject bulletPrefab;
     public Camera mainCamera;
     public ManaBar manaBar;
+
+    // TEMPORARY
+    public HealthBar healthBar;
+
     public LayerMask bulletLayer;
     public GameObject player;
 
@@ -21,7 +25,7 @@ public class Gun : MonoBehaviour
         if (Input.GetButton("Fire1") && Time.time > nextFireTime)
         {
             nextFireTime = Time.time + rate;
-            
+            healthBar.AddHealth(5);
             if (manaBar.UseMana(MANA_PER_SHOT))
             {
 
