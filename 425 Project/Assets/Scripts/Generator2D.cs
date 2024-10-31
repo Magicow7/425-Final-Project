@@ -649,7 +649,7 @@ public class Generator2D : MonoBehaviour {
     IEnumerator _SpawnEnemies()
     {
         yield return new WaitForSeconds(5);
-        enemySpawner.SpawnEnemies(spawnedThings, new Vector3(0.5f,0.5f,0.5f));
+        //enemySpawner.SpawnEnemies(spawnedThings, new Vector3(0.5f,0.5f,0.5f));
         StartCoroutine(_SpawnEnemies());
     }
 
