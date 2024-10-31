@@ -25,7 +25,7 @@ public class Gun : MonoBehaviour
         if (Input.GetButton("Fire1") && Time.time > nextFireTime)
         {
             nextFireTime = Time.time + rate;
-            healthBar.AddHealth(5);
+            //healthBar.AddHealth(5);
             if (manaBar.UseMana(MANA_PER_SHOT))
             {
 
