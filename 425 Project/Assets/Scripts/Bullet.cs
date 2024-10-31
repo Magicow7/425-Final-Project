@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Combat;
@@ -5,17 +6,27 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    public int life = 10;
+    [field: SerializeField] 
+    public Rigidbody Rigidbody { get; private set; }
+
+    private float _damage = 0;
     private bool _canHit = false;
 
-    void Awake()
+    private void Reset()
     {
-        Destroy(gameObject, life);
-        _canHit = true;
-       
+        Rigidbody = GetComponent<Rigidbody>();
     }
 
-   
+    private void Awake()
+    {
+        _canHit = true;
+    }
+
+    public void Setup(float damage, float lifespan)
+    {
+        _damage = damage;
+        Destroy(gameObject, lifespan);
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -26,15 +37,8 @@ public class Bullet : MonoBehaviour
 
         if (other.gameObject.TryGetComponent<IDamageable>(out IDamageable damageable))
         {
-            damageable.TakeDamage(life);
+            damageable.TakeDamage(_damage);
             Destroy(gameObject);
         }
-
-        
-    }
-
-    void OnCollisionEnter(Collision collision)
-    {
-        
     }
 }

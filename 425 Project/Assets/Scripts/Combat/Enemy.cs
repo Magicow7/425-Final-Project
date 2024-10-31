@@ -5,8 +5,13 @@ namespace Combat
 {
     public class Enemy : MonoBehaviour, IDamageable
     {
-        public int Health { get; private set; } = 10;
-        public int MaxHealth { get; private set; } = 10;
+        [field: SerializeField]
+        public float Health { get; private set; } = 10;
+        [field: SerializeField]
+        public float MaxHealth { get; private set; } = 10;
+
+        [SerializeField] 
+        private DamageNumber _damageNumber;
 
         private void Start()
         {
@@ -14,15 +19,19 @@ namespace Combat
         }
 
 
-        public void TakeDamage(int damage)
+        public bool TakeDamage(float damage)
         {
-            Debug.Log(damage);
+            _damageNumber.ShowDamageNumber(damage);
+            
             Health -= damage;
             
             if (Health <= 0)
             {
                 Death();
+                return false;
             }
+
+            return true;
         }
 
         public void Death()

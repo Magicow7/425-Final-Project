@@ -10,6 +10,9 @@ namespace Locomotion
 
         [SerializeField, Tooltip("How fast the player moves when sprinting.")]
         private float _sprintSpeed = 10f;
+
+        [SerializeField]
+        private float _jumpSpeed = 3f;
         
         private bool _isSprinting = false;
         private float _currentMoveSpeed;
@@ -24,10 +27,12 @@ namespace Locomotion
 
         public override void OnFixedUpdate(float deltaTime)
         {
+            /*
             if (!locomotionManager.IsGrounded)
             {
                 return;
             }
+            */
 
             HandleMovement();
         }
@@ -46,6 +51,11 @@ namespace Locomotion
             
             input.Normalize();
 
+            if (UnityEngine.Input.GetKey(KeyCode.Space) && locomotionManager.IsGrounded)
+            {
+                Jump();
+            }
+
             if (UnityEngine.Input.GetKey(KeyCode.LeftShift) != _isSprinting)
             {
                 ToggleSprint();
@@ -58,6 +68,11 @@ namespace Locomotion
         {
             _isSprinting = !_isSprinting;
             _currentMoveSpeed = _isSprinting ? _sprintSpeed : _walkSpeed;
+        }
+        
+        public void Jump()
+        {
+            AddVelocityY(_jumpSpeed);
         }
         
         public void Move(Transform relativeTo, Vector2 input)
