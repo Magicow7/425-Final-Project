@@ -7106,6 +7106,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 0.933
       objectReference: {fileID: 0}
+    - target: {fileID: 980145996997789468, guid: 4d789508985efea40a383ea5d6661a21, type: 3}
+      propertyPath: m_CullingMask.m_Bits
+      value: 887
+      objectReference: {fileID: 0}
     - target: {fileID: 2656711142912903537, guid: 4d789508985efea40a383ea5d6661a21, type: 3}
       propertyPath: field of view
       value: 60
