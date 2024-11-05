@@ -9,7 +9,7 @@ using Unity.AI.Navigation;
 
 public class DungeonGenerator : MonoBehaviour
 {
-
+    public static List<Vector3> possibleSpawnPoints;
 
     //parameter structs   
     [Serializable]
@@ -296,7 +296,15 @@ public class DungeonGenerator : MonoBehaviour
         }
         //UpdateNeighborCenterDistances(newCenterRoom, newCenterRoom);
         SpawnRoomObjects();
-
+        
+        //update possible spawn positions
+        List<Vector3> temp = new List<Vector3>();
+        foreach(DungeonRoom room in rooms){
+            if(room.graphDistanceFromCenter == maxGraphDistanceFromCenter){
+                temp.Add(room.worldPosition + new Vector3(0,1,0));
+            }
+        }
+        possibleSpawnPoints = temp;
     }
 
     //function to destroy a list of rooms, removing it from the graph and deleting their gameobjects
@@ -819,7 +827,7 @@ public class DungeonGenerator : MonoBehaviour
     void SetupEnemies(){
         
         //navMeshSetup.SetupNavMesh();
-        StartCoroutine(_SpawnEnemies());
+        //StartCoroutine(_SpawnEnemies());
     }
 
     IEnumerator _SpawnEnemies()
