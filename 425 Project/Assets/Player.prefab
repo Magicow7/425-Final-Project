@@ -559,6 +559,7 @@ MonoBehaviour:
   bulletPrefab: {fileID: 2429062590409925565, guid: 5d92b61b2320dda47a81a8903a463cbc, type: 3}
   mainCamera: {fileID: 980145996997789468}
   manaBar: {fileID: 0}
+  healthBar: {fileID: 0}
   bulletLayer:
     serializedVersion: 2
     m_Bits: 256
@@ -771,35 +772,35 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fec5a6f277e8e954d8140710ca065312, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.07
+      value: 0.14204769
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fec5a6f277e8e954d8140710ca065312, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.116
+      value: 0.37067455
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fec5a6f277e8e954d8140710ca065312, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.53
+      value: -0.5171881
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fec5a6f277e8e954d8140710ca065312, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.012575209
+      value: 0.00000003166003
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fec5a6f277e8e954d8140710ca065312, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.99992096
+      value: 0.00000015810087
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fec5a6f277e8e954d8140710ca065312, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: -0.99992096
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fec5a6f277e8e954d8140710ca065312, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: -0.012575209
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fec5a6f277e8e954d8140710ca065312, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: -88.559
+      value: -178.559
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fec5a6f277e8e954d8140710ca065312, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
@@ -807,8 +808,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fec5a6f277e8e954d8140710ca065312, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
+      value: -180
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: fec5a6f277e8e954d8140710ca065312, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: b046dadcc7a104442ac32dc606b98a99, type: 2}
     - target: {fileID: 919132149155446097, guid: fec5a6f277e8e954d8140710ca065312, type: 3}
       propertyPath: m_Name
       value: wand (1)
