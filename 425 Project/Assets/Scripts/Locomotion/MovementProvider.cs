@@ -11,17 +11,22 @@ namespace Locomotion
         [SerializeField, Tooltip("How fast the player moves when sprinting.")]
         private float _sprintSpeed = 10f;
 
+        [SerializeField, Tooltip("How fast friction decelerates the player.")]
+        private float _frictionSpeed = 2f;
+
         [SerializeField]
         private float _jumpSpeed = 3f;
         
         private bool _isSprinting = false;
         private float _currentMoveSpeed;
+        private float _currentMaxSpeed;
         
         private Transform _characterTransform = null!;
         
         protected override void OnInitialize()
         {
-            _currentMoveSpeed = _walkSpeed;
+            _currentMoveSpeed = 0;
+            _currentMaxSpeed = _walkSpeed;
             _characterTransform = locomotionManager.CharacterController.transform;
         }
 
@@ -67,7 +72,7 @@ namespace Locomotion
         public void ToggleSprint()
         {
             _isSprinting = !_isSprinting;
-            _currentMoveSpeed = _isSprinting ? _sprintSpeed : _walkSpeed;
+            _currentMaxSpeed = _isSprinting ? _sprintSpeed : _walkSpeed;
         }
         
         public void Jump()
@@ -87,8 +92,27 @@ namespace Locomotion
             right.Normalize();
             input.Normalize();
             
-            var targetVelocity = (forward * input.y + right * input.x) * _currentMoveSpeed;
-            SetVelocityXZ(targetVelocity);
+            var targetVelocity = (forward * input.y + right * input.x);
+            if (locomotionManager.IsGrounded)
+            {
+                if (locomotionManager.VelocityXZ.magnitude > _currentMaxSpeed)
+                {
+                    _currentMoveSpeed -= Mathf.Max(
+                        _currentMaxSpeed * _frictionSpeed * Time.fixedDeltaTime, 
+                        locomotionManager.VelocityXZ.magnitude / 100);
+                }
+                else
+                {
+                    _currentMoveSpeed = _currentMaxSpeed;
+                }
+            }
+            else
+            {
+                _currentMoveSpeed += _currentMaxSpeed * Time.fixedDeltaTime;
+            }
+
+            float horizontalSpeed = _currentMoveSpeed > _currentMaxSpeed ? _currentMaxSpeed : _currentMoveSpeed;
+            SetVelocityXZ(forward * (input.y * _currentMoveSpeed) + right * (input.x * horizontalSpeed));
 
             SetMovementState(MovementState.Moving, input != Vector2.zero);
         }
