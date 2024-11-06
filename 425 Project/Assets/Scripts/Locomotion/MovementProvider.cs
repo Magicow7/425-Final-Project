@@ -1,3 +1,4 @@
+using System.Collections;
 using Locomotion;
 using UnityEngine;
 
@@ -14,30 +15,40 @@ namespace Locomotion
         [SerializeField, Tooltip("How fast friction decelerates the player.")]
         private float _frictionSpeed = 2f;
 
+        [SerializeField, Tooltip("The max speed someone can move at.")]
+        private float _maxSpeed = 30f;
+
         [SerializeField]
         private float _jumpSpeed = 3f;
+        
+        [SerializeField]
+        private float _wallJumpCooldown = 2f;
         
         private bool _isSprinting = false;
         private float _currentMoveSpeed;
         private float _currentMaxSpeed;
         
         private Transform _characterTransform = null!;
+
+        private bool _wallJump = true;
+        private bool _canJump = true;
+
+        private GravityProvider _gravityProvider;
         
         protected override void OnInitialize()
         {
             _currentMoveSpeed = 0;
             _currentMaxSpeed = _walkSpeed;
             _characterTransform = locomotionManager.CharacterController.transform;
+            _gravityProvider = locomotionManager.GetProvider<GravityProvider>();
         }
 
         public override void OnFixedUpdate(float deltaTime)
         {
-            /*
-            if (!locomotionManager.IsGrounded)
+            if (locomotionManager.IsGrounded)
             {
-                return;
+                _wallJump = true;
             }
-            */
 
             HandleMovement();
         }
@@ -56,9 +67,17 @@ namespace Locomotion
             
             input.Normalize();
 
-            if (UnityEngine.Input.GetKey(KeyCode.Space) && locomotionManager.IsGrounded)
+            if (UnityEngine.Input.GetKey(KeyCode.Space) && _canJump)
             {
-                Jump();
+                if (locomotionManager.IsGrounded)
+                {
+                    Jump(_jumpSpeed);
+                }
+                else if (locomotionManager.IsTouchingWall && _wallJump)
+                {
+                    Jump(_jumpSpeed / 2);
+                    StartCoroutine(_WallJumpCooldown());
+                }
             }
 
             if (UnityEngine.Input.GetKey(KeyCode.LeftShift) != _isSprinting)
@@ -75,9 +94,26 @@ namespace Locomotion
             _currentMaxSpeed = _isSprinting ? _sprintSpeed : _walkSpeed;
         }
         
-        public void Jump()
+        public void Jump(float speed)
         {
-            AddVelocityY(_jumpSpeed);
+            StartCoroutine(_JumpCooldown());
+            SetVelocityY(speed);
+        }
+
+        private IEnumerator _JumpCooldown()
+        {
+            _gravityProvider.SetActive(false);
+            _canJump = false;
+            yield return new WaitForSeconds(0.2f);
+            _canJump = true;
+            _gravityProvider.SetActive(true);
+        }
+
+        private IEnumerator _WallJumpCooldown()
+        {
+            _wallJump = false;
+            yield return new WaitForSeconds(_wallJumpCooldown);
+            _wallJump = true;
         }
         
         public void Move(Transform relativeTo, Vector2 input)
@@ -93,7 +129,11 @@ namespace Locomotion
             input.Normalize();
             
             var targetVelocity = (forward * input.y + right * input.x);
-            if (locomotionManager.IsGrounded)
+            if (targetVelocity == Vector3.zero)
+            {
+                _currentMoveSpeed = 0;
+            }
+            else if (locomotionManager.IsGrounded)
             {
                 if (locomotionManager.VelocityXZ.magnitude > _currentMaxSpeed)
                 {
@@ -109,6 +149,11 @@ namespace Locomotion
             else
             {
                 _currentMoveSpeed += _currentMaxSpeed * Time.fixedDeltaTime;
+
+                if (_currentMoveSpeed > _maxSpeed)
+                {
+                    _currentMoveSpeed = _maxSpeed;
+                }
             }
 
             float horizontalSpeed = _currentMoveSpeed > _currentMaxSpeed ? _currentMaxSpeed : _currentMoveSpeed;

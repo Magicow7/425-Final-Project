@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Stat;
 using UnityEngine;
 using Utils;
 using Utils.Singleton;
@@ -21,11 +22,15 @@ namespace Locomotion
         [SerializeField, Tooltip("All Locomotion Providers should be a first level child of this transform.")] 
         private Transform _providerHolder = null!;
         [SerializeField] private SphereCollider _groundCheckSphere = null!;
+        [SerializeField] private SphereCollider _wallCheckSphere = null!;
+        [SerializeField] private SphereCollider _ceilingCheckSphere = null!;
 
         [SerializeField] private LayerMask _groundLayer;
+        [SerializeField] private LayerMask _wallLayer;
         
         
-        private RaycastNonAllocWrapper _raycastWrapper = null!;
+        private RaycastNonAllocWrapper _groundRaycastWrapper = null!;
+        private RaycastNonAllocWrapper _wallRaycastWrapper = null!;
 
         private Vector2 _velocityXZ;
         private float _velocityY;
@@ -37,6 +42,8 @@ namespace Locomotion
         private List<LocomotionProvider> _providers = new();
         private bool _wasGrounded = true;
         private bool _isGrounded = true;
+        private bool _isTouchingWall = false;
+        private bool _isTouchingCeiling = false;
 
         /// <summary>
         /// A list of all providers found.
@@ -52,6 +59,16 @@ namespace Locomotion
         /// True if the player is currently grounded.
         /// </summary>
         public bool IsGrounded => _isGrounded;
+        
+        /// <summary>
+        /// True if the player is currently grounded.
+        /// </summary>
+        public bool IsTouchingWall => _isTouchingWall;
+        
+        /// <summary>
+        /// True if the player is currently grounded.
+        /// </summary>
+        public bool IsTouchingCeiling => _isTouchingCeiling;
         
         /// <summary>
         /// The current velocity of the player.
@@ -107,7 +124,8 @@ namespace Locomotion
 
         private void Start()
         {
-            _raycastWrapper = new RaycastNonAllocWrapper(_groundLayer);
+            _groundRaycastWrapper = new RaycastNonAllocWrapper(_groundLayer);
+            _wallRaycastWrapper = new RaycastNonAllocWrapper(_wallLayer);
             CustomUpdateManager.Register(this);
         }
 
@@ -118,7 +136,7 @@ namespace Locomotion
 
         public void CustomUpdate(float deltaTime)
         {
-            HandleGround();
+            HandleCollisions();
             ProcessUpdate(deltaTime);
         }
 
@@ -206,11 +224,20 @@ namespace Locomotion
         private void SetVelocityY(float velocity) => _velocityY = velocity;
         private void SetRotation(float rotation) => _rotation = rotation;
 
-        private void HandleGround()
+        private void HandleCollisions()
         {
             _wasGrounded = IsGrounded;
-            _isGrounded = _raycastWrapper.OverlapSphere(_groundCheckSphere.transform.position, _groundCheckSphere.radius, out _);
+            _isGrounded = _groundRaycastWrapper.OverlapSphere(_groundCheckSphere.transform.position, _groundCheckSphere.radius, out _);
+            
+            _isTouchingWall = _wallRaycastWrapper.OverlapSphere(_wallCheckSphere.transform.position, _wallCheckSphere.radius, out _);
+            _isTouchingCeiling = _groundRaycastWrapper.OverlapSphere(_ceilingCheckSphere.transform.position, _ceilingCheckSphere.radius, out _);
 
+
+            if (IsTouchingCeiling)
+            {
+                _velocityY = MathF.Min(_velocityY, 0);
+            }
+            
             bool groundedChanged = _wasGrounded != IsGrounded;
 
             if (groundedChanged && State is MovementState.Idle or MovementState.Airborne)

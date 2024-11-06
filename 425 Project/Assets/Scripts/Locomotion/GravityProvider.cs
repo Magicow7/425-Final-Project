@@ -14,9 +14,14 @@ namespace Locomotion
             _enabled = true;
         }
 
+        public void SetActive(bool active)
+        {
+            _enabled = active;
+        }
+
         public override void OnFixedUpdate(float deltaTime)
         {
-            if (!_enabled || locomotionManager.IsGrounded)
+            if (!_enabled)
             {
                 return;
             }

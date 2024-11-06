@@ -18,7 +18,6 @@ namespace Utils
         
         private void OnTriggerStay(Collider other)
         {
-            Debug.Log(other.name);
             OnTriggerStayEvent?.Invoke(gameObject, other);
         }
         
