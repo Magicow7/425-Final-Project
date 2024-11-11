@@ -11,6 +11,8 @@ public class DungeonGenerator : MonoBehaviour
 {
     public static List<Vector3> possibleSpawnPoints;
 
+    public static DungeonGenerator instance;
+
     //parameter structs   
     [Serializable]
     struct DungeonRoomParameters{
@@ -89,6 +91,7 @@ public class DungeonGenerator : MonoBehaviour
         //base door parameters
         public DungeonDoorParameters parameters;
         public GameObject spawnedBlocker;
+        public GameObject spawnedOpenDoorway;
         public NavMeshLink spawnedNavMeshLink;
         
         //can we branch off this room, will be set to false if the generator deems no room can be spawned here.
@@ -175,16 +178,26 @@ public class DungeonGenerator : MonoBehaviour
     //the limit of how far a room can be from the center of the graph without being removed
     [SerializeField]
     private int maxGraphDistanceFromCenter;
+    public int getMaxGraphDistanceFromCenter()
+    {
+        return maxGraphDistanceFromCenter;
+    }
+
     [SerializeField]
     private float precentageOfDoorsToBeUsable;
     [SerializeField]
-    private Transform player;
+    public Transform player;
     [SerializeField]
     private GameObject navMeshLinkHolder;
     [SerializeField]
     private float doorWidth;
-    [Header("Settings for Debugging")]
 
+    [Header("Settings for Enemies")]
+    [SerializeField]
+    EnemySpawner enemySpawner;
+    
+
+    [Header("Settings for Debugging")]
     // visualize bounding boxes for debuging
     [SerializeField]
     private bool visualizeBoundingBoxes = false;
@@ -200,8 +213,6 @@ public class DungeonGenerator : MonoBehaviour
     //seed value, can set if random seed is false
     [SerializeField]
     private int seed = 0;
-    [SerializeField]
-    EnemySpawner enemySpawner;
     
     //parameters of the start room
     [SerializeField]
@@ -211,11 +222,13 @@ public class DungeonGenerator : MonoBehaviour
     [SerializeField]
     private GameObject doorwayBlocker;
 
+    //this is for open doors
+    [SerializeField]
+    private GameObject doorwayOpen;
+
     //list of possible room parameters that can be added
     [SerializeField]
     private List<DungeonRoomParameters> possibleRoomParameters = new List<DungeonRoomParameters>();
-
-    
 
     //private vars 
     private List<DungeonRoom> rooms = new List<DungeonRoom>();
@@ -223,9 +236,15 @@ public class DungeonGenerator : MonoBehaviour
     //private List<GameObject> spawnedPrefabs = new List<GameObject>();
     //current room player is in
     private DungeonRoom currentCenterRoom;
+    public Vector3 getCurrentCenterRoomWorldPosition()
+    {
+        return this.currentCenterRoom.worldPosition;
+    }
 
     void Start()
     {
+        //set singleton instance
+        instance = this;
         //randomize seed if needed
         if(randomSeed){
             random = new Random();
@@ -385,11 +404,20 @@ public class DungeonGenerator : MonoBehaviour
                 
             }
             //update door blockers and navmesh links
+
+            //this should probably be rewritten, but it will work for now.
             foreach(DungeonDoorway door in room.doorways){
                 if(door.connectingRooms.Count == 2){
                     //open door
                     if(door.spawnedBlocker != null){
                         Destroy(door.spawnedBlocker);
+                    }
+                    if(door.spawnedOpenDoorway == null){
+                        //block off door if no blocker already
+                        //bandaid fix, add 1 to y
+                        GameObject openDoor = Instantiate(doorwayOpen, door.worldPosition + new Vector3(0,1,0), room.worldRotation * Quaternion.Euler(door.parameters.angle));
+                        door.parentRoom.spawnedPrefabs.Add(openDoor);
+                        door.spawnedOpenDoorway = openDoor;
                     }
                     //create navMeshLink if null
                     if(door.spawnedNavMeshLink == null){
@@ -407,9 +435,14 @@ public class DungeonGenerator : MonoBehaviour
                     if(door.spawnedNavMeshLink != null){
                         Destroy(door.spawnedNavMeshLink);
                     }
+                    if(door.spawnedOpenDoorway != null){
+                        Destroy(door.spawnedOpenDoorway);
+                    }
                     if(door.spawnedBlocker == null){
                         //block off door if no blocker already
-                        GameObject blocker = Instantiate(doorwayBlocker, door.worldPosition, room.worldRotation * Quaternion.Euler(door.parameters.angle));
+                        //add 180 because the door was backwards, bandaid fix
+                        //another bandaid fix, add 1 to y
+                        GameObject blocker = Instantiate(doorwayBlocker, door.worldPosition + new Vector3(0,1,0), room.worldRotation * Quaternion.Euler(door.parameters.angle + new Vector3(0,180,0)));
                         door.parentRoom.spawnedPrefabs.Add(blocker);
                         door.spawnedBlocker = blocker;
                     }
@@ -824,24 +857,9 @@ public class DungeonGenerator : MonoBehaviour
         LocomotionManager.Instance.Teleport(currentCenterRoom.worldPosition + new Vector3(0.5f,0.5f,0.5f));
     }
 
-    void SetupEnemies(){
-        
-        //navMeshSetup.SetupNavMesh();
-        //StartCoroutine(_SpawnEnemies());
-    }
-
-    IEnumerator _SpawnEnemies()
+    void SetupEnemies()
     {
-        yield return new WaitForSeconds(5);
-        List<Vector3> possibleSpawnPositions = new List<Vector3>();
-        foreach(DungeonRoom room in rooms){
-            if(room.graphDistanceFromCenter == maxGraphDistanceFromCenter){
-                possibleSpawnPositions.Add(room.worldPosition);
-            }
-        }
-        enemySpawner.SpawnEnemies(possibleSpawnPositions, new Vector3(0.5f,0.5f,0.5f));
-        StartCoroutine(_SpawnEnemies());
-        yield break;
+        enemySpawner.SpawnEnemies();
     }
 
 }
