@@ -423,7 +423,7 @@ public class DungeonGenerator : MonoBehaviour
                     if(door.spawnedNavMeshLink == null){
                         
                         NavMeshLink link = navMeshLinkHolder.AddComponent<NavMeshLink>();
-                        Vector3 posDistanceFromDoor = Quaternion.Euler(door.parentRoom.worldRotation.eulerAngles + door.parameters.angle) * new Vector3(0,0,1);
+                        Vector3 posDistanceFromDoor = GetOutVectorFromAngle(door.parentRoom.worldRotation.eulerAngles + door.parameters.angle);
                         link.startPoint = door.worldPosition - posDistanceFromDoor;
                         link.endPoint = door.worldPosition + posDistanceFromDoor;
                         link.width = doorWidth;
