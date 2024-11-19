@@ -317,7 +317,7 @@ MonoBehaviour:
       relativePosition: {x: 0, y: 4, z: 5}
     - angle: {x: 0, y: 180, z: 0}
       relativePosition: {x: 0, y: 4, z: -5}
-  - spawnWeight: 5
+  - spawnWeight: 1
     roomObject: {fileID: 6046074833151094813, guid: 41e7fc8681b191c4089242a96e19be5a, type: 3}
     verticalRoom: 1
     boundingBoxMinPoint: {x: -5, y: 0, z: -3}
@@ -333,6 +333,40 @@ MonoBehaviour:
       relativePosition: {x: -5, y: 4, z: 0}
     - angle: {x: 0, y: 90, z: 0}
       relativePosition: {x: 9, y: 4, z: 0}
+  - spawnWeight: 1
+    roomObject: {fileID: 8704413857048061525, guid: 9d8b7acc932830d4cac907d4e27a65f1, type: 3}
+    verticalRoom: 0
+    boundingBoxMinPoint: {x: -19, y: 0, z: -14}
+    boundingBoxMaxPoint: {x: 5, y: 4, z: 14}
+    centerPoint: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    relativeDoorParameters:
+    - angle: {x: 0, y: 90, z: 0}
+      relativePosition: {x: 5, y: 0, z: 0}
+    - angle: {x: 0, y: -30, z: 0}
+      relativePosition: {x: -14.3, y: 0, z: 11.14}
+    - angle: {x: 0, y: -150, z: 0}
+      relativePosition: {x: -14.3, y: 0, z: -11.14}
+  - spawnWeight: 5
+    roomObject: {fileID: 6997683341755679932, guid: 741eba4436cf10749a0f3f48aed5c55d, type: 3}
+    verticalRoom: 0
+    boundingBoxMinPoint: {x: -5, y: 0, z: -5}
+    boundingBoxMaxPoint: {x: 5, y: 4, z: 15}
+    centerPoint: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    relativeDoorParameters:
+    - angle: {x: 0, y: 180, z: 0}
+      relativePosition: {x: 0, y: 0, z: -15}
+    - angle: {x: 0, y: 0, z: 0}
+      relativePosition: {x: 0, y: 0, z: 5}
+    - angle: {x: 0, y: -90, z: 0}
+      relativePosition: {x: -5, y: 0, z: 0}
+    - angle: {x: 0, y: 90, z: 0}
+      relativePosition: {x: 5, y: 0, z: 0}
+    - angle: {x: 0, y: -90, z: 0}
+      relativePosition: {x: -5, y: 0, z: -10}
+    - angle: {x: 0, y: 90, z: 0}
+      relativePosition: {x: 5, y: 0, z: -10}
 --- !u!1 &267409496
 GameObject:
   m_ObjectHideFlags: 0
