@@ -12,6 +12,9 @@ public class Bullet : MonoBehaviour
 
     [SerializeField] 
     private Explosion _explosion;
+    
+    [SerializeField] 
+    private LayerMask _layerMask;
 
     private float _damage = 0;
     private float _explosionRadius = 0;
@@ -45,6 +48,12 @@ public class Bullet : MonoBehaviour
         if (other.gameObject.TryGetComponent(out IDamageable damageable))
         {
             damageable.TakeDamage(_damage);
+            ExplodeAndDestroy();
+            return;
+        }
+
+        if ((_layerMask & (1 << other.gameObject.layer)) != 0)
+        {
             ExplodeAndDestroy();
         }
     }

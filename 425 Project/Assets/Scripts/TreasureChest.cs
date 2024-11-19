@@ -75,16 +75,4 @@ public class TreasureChest : DungeonRoomContainedObject
         _inRoom = false;
         Debug.LogWarning("Stopping Treasure Countdown" + _countdownTime);
     }
-    
-    private IEnumerator RunAfterSeconds(Action action, float time)
-    {
-        yield return new WaitForSeconds(time);
-        action();
-    }
-
-    private IEnumerator RunAfterSeconds(Action action)
-    {
-        yield return new WaitForEndOfFrame();
-        action();
-    }
 }

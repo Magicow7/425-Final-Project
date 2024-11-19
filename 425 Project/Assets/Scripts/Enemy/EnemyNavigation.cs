@@ -29,8 +29,6 @@ public class EnemyNavigation : MonoBehaviour
         if(!linkTraversing){
             agent.destination = player.position;
         }
-            
-        
     }
 
     private IEnumerator CheckHasPath()

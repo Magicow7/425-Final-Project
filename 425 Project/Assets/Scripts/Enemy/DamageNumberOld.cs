@@ -1,23 +1,24 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Stat;
 using TMPro;
 using UnityEngine;
 
-public class DamageNumber : MonoBehaviour
+public class DamageNumberOld : MonoBehaviour
 {
+    [SerializeField] private float _speed = 1;
+    [SerializeField] private float _alphaSpeed = 2;
+    [SerializeField] private float _textAlphaSpeed = 4;
+    [SerializeField] private float _yDistance = 0.5f;
     [SerializeField] private float _maxVisibleTime = 1f;
-    
-    [SerializeField] private List<DamageThreshold> _thresholds = new List<DamageThreshold>();
     
     private LookAtCamera _lookAtCamera;
     private CanvasGroup _group;
     private RectTransform _rectTransform;
     private TextMeshProUGUI _textMesh;
+    private CanvasGroup _textMeshGroup;
 
     private Vector3 _initialPosition;
-    private ResourceStat _maxHealth;
 
     private bool _showing = false;
     private bool _isMaxHeight = false;
@@ -27,28 +28,67 @@ public class DamageNumber : MonoBehaviour
     private String _switchTo = "";
     private float _damageTotal = 0;
     
+    
     private void Start()
     {
         _lookAtCamera = gameObject.AddComponent<LookAtCamera>();
         _group = GetComponent<CanvasGroup>();
         _rectTransform = GetComponent<RectTransform>();
         _textMesh = GetComponentInChildren<TextMeshProUGUI>();
+        _textMeshGroup = _textMesh.GetComponent<CanvasGroup>();
 
         _initialPosition = _rectTransform.position;
-    }
-    
-    public void Initialize(ResourceStat maxHealth)
-    {
-        _maxHealth = maxHealth;
     }
 
     private void Update()
     {
         _lookAtCamera.enabled = _showing;
 
-        if (Time.time > _hideTime)
+        if (_showing && _switchTo != "")
         {
-            _group.alpha = 0;
+            if (_textMeshGroup.alpha > 0)
+            {
+                _textMeshGroup.alpha -= _textAlphaSpeed * Time.deltaTime;
+            }
+            else
+            {
+                _textMesh.text = _switchTo;
+                _switchTo = "";
+            }
+        }
+        else if (_showing && _switchTo == "" && _textMeshGroup.alpha < 1)
+        {
+            _textMeshGroup.alpha += _textAlphaSpeed * Time.deltaTime;
+        }
+        
+        if (_showing && !_isMaxHeight)
+        {
+            if (_rectTransform.position.y < _initialPosition.y + _yDistance)
+            {
+                var vector3 = _rectTransform.position;
+                vector3.y += _speed * Time.deltaTime;
+                _rectTransform.position = vector3;
+
+                _group.alpha += _alphaSpeed * Time.deltaTime;
+            }
+            else {
+                _isMaxHeight = true;
+            }
+        }
+        else if (_showing && Time.time >= _hideTime)
+        {
+            if (_group.alpha > 0)
+            {
+                _group.alpha -= _alphaSpeed * Time.deltaTime;
+            }
+            else
+            {
+                Reset();
+            }
+        }
+        else if (_showing && _isMaxHeight && _group.alpha < 1)
+        {
+            _group.alpha += _alphaSpeed * Time.deltaTime;
         }
     }
 
@@ -90,38 +130,16 @@ public class DamageNumber : MonoBehaviour
             result = _damageTotal.ToString("0.00");
         }
 
-        float damagePercent = _damageTotal / _maxHealth.MaxValue;
-
-        DamageThreshold prevThres = _thresholds[0];
-        DamageThreshold threshold = _thresholds[0];
-
-        foreach (var t in _thresholds)
+        _hideTime = Time.time + _maxVisibleTime + _yDistance / _speed;
+        if (!_showing || _lastTime - Time.time < 1 / _textAlphaSpeed)
         {
-            if (damagePercent < t.threshold)
-            {
-                threshold = t;
-                break;
-            }
-            prevThres = t;
+            _textMesh.text = result;
         }
-
-        float size = Mathf.Lerp(threshold.size, prevThres.size, (threshold.threshold - damagePercent) / (threshold.threshold - prevThres.threshold));
-        _group.transform.localScale = new Vector3(size, size, size);
-        _textMesh.color = Color.Lerp(threshold.color, prevThres.color, (threshold.threshold - damagePercent) / (threshold.threshold - prevThres.threshold));
-
-        _hideTime = Time.time + _maxVisibleTime;
-        _textMesh.text = result;
-        _group.alpha = 1;
-            
+        else
+        {
+            _switchTo = result;
+        }
         _lastTime = Time.time;
         _showing = true;
-    }
-    
-    [Serializable]
-    private class DamageThreshold
-    {
-        public float threshold;
-        public Color color;
-        public float size;
     }
 }

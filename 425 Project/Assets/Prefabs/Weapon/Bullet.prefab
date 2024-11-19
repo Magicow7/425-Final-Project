@@ -148,3 +148,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Rigidbody>k__BackingField: {fileID: 8257713624074929682}
   _explosion: {fileID: -6459102635863166519, guid: 4c09ca8e75b61824db861c36ea2d7c4e, type: 3}
+  _layerMask:
+    serializedVersion: 2
+    m_Bits: 576

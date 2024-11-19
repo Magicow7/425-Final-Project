@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Stat;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -8,21 +9,25 @@ namespace Combat
 {
     public class Enemy : MonoBehaviour, IDamageable
     {
-        [field: SerializeField]
-        public float Health { get; private set; } = 10;
-        [field: SerializeField]
-        public float MaxHealth { get; private set; } = 10;
+        [SerializeField] 
+        private float _health = 10f;
 
         [SerializeField] 
         private DamageNumber _damageNumber;
+        
+        [SerializeField] 
+        private Animator _enemyAnimatior;
 
         private NavMeshAgent agent;
         private bool isCrossingLink = false;
+        
+        public ResourceStat Health { get; private set; }
 
-        private void Start()
+        private void Awake()
         {
+            Health = new ResourceStat(_health);
             agent = transform.GetComponent<NavMeshAgent>();
-            Health = MaxHealth;
+            _damageNumber.Initialize(Health);
         }
 
         private void Update(){
@@ -70,9 +75,9 @@ namespace Combat
         {
             _damageNumber.ShowDamageNumber(damage);
             
-            Health -= damage;
+            Health.Value -= damage;
             
-            if (Health <= 0)
+            if (Health.Value <= 0)
             {
                 Death();
                 return false;
@@ -83,7 +88,10 @@ namespace Combat
 
         public void Death()
         {
-            Destroy(gameObject);
+            agent.isStopped = true;
+            // TODO: Death Animation
+            _enemyAnimatior.gameObject.SetActive(false);
+            Destroy(gameObject, 3f);
         }
     }
 }

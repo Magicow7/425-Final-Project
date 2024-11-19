@@ -461,6 +461,24 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &373063839 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8207149538130277800, guid: 4d225e546ee18da40ad5665daa40cd30, type: 3}
+  m_PrefabInstance: {fileID: 888061375}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &373063844
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 373063839}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18a8b6e97d44c4d4fa04967bdffbf9a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  postEffectMaterial: {fileID: 2100000, guid: edd6640880643fd44899959f41d64fd9, type: 2}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -642,6 +660,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 886753919930358335, guid: 4d225e546ee18da40ad5665daa40cd30, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1270018818250842937, guid: 4d225e546ee18da40ad5665daa40cd30, type: 3}
       propertyPath: m_Height
       value: 0.75
@@ -676,7 +698,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4177839901416758948, guid: 4d225e546ee18da40ad5665daa40cd30, type: 3}
       propertyPath: _damage
-      value: 0
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4177839901416758948, guid: 4d225e546ee18da40ad5665daa40cd30, type: 3}
       propertyPath: _fireRate
@@ -692,7 +714,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4177839901416758948, guid: 4d225e546ee18da40ad5665daa40cd30, type: 3}
       propertyPath: _explosionDamage
-      value: 0
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4177839901416758948, guid: 4d225e546ee18da40ad5665daa40cd30, type: 3}
       propertyPath: _explosionRadius
@@ -700,7 +722,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4177839901416758948, guid: 4d225e546ee18da40ad5665daa40cd30, type: 3}
       propertyPath: _explosionDamageOverTime
-      value: 5
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4532945438175109839, guid: 4d225e546ee18da40ad5665daa40cd30, type: 3}
       propertyPath: m_Enabled
@@ -766,7 +788,10 @@ PrefabInstance:
     - {fileID: 4532945438175109839, guid: 4d225e546ee18da40ad5665daa40cd30, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8207149538130277800, guid: 4d225e546ee18da40ad5665daa40cd30, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 373063844}
   m_SourcePrefab: {fileID: 100100000, guid: 4d225e546ee18da40ad5665daa40cd30, type: 3}
 --- !u!1 &951243910
 GameObject:
@@ -798,7 +823,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemy: {fileID: 6256646944060083910, guid: d25797a5408da4cb183fdc6369789f98, type: 3}
-  player: {fileID: 1154326406}
   waveInterval: 5
   spawnInterval: 0.1
   enemiesPerWave: 5
@@ -1917,6 +1941,14 @@ MonoBehaviour:
   maxVelocityChange: 10
   jumpHeight: 5
   floorStick: 3
+  input: {x: 0, y: 0}
+  rb: {fileID: 0}
+  sprinting: 0
+  jumping: 0
+  recentJump: 0
+  grounded: 0
+  inPortal1: 0
+  inPortal2: 0
 --- !u!114 &7954816268036119064
 MonoBehaviour:
   m_ObjectHideFlags: 0
