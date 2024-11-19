@@ -297,9 +297,9 @@ public class DungeonGenerator : SingletonMonoBehaviour<DungeonGenerator>
                 }
             }
             
-            currentCenterRoom.ExitedRoom();
+            //currentCenterRoom.ExitedRoom();
             currentCenterRoom = newCenterRoom;
-            currentCenterRoom.EnteredRoom();
+            //currentCenterRoom.EnteredRoom();
             
             if(!newCenterFound){
                 Debug.Log("DYNAMIC WORLD GENERATION LOST PLAYER, LIKELY OUT OF BOUNDS");
@@ -413,6 +413,8 @@ public class DungeonGenerator : SingletonMonoBehaviour<DungeonGenerator>
                     Vector3 center = room.worldPosition + new Vector3(0,(room.parameters.boundingBoxMaxPoint.y - room.parameters.boundingBoxMinPoint.y)/2,0);;
                     boundingBoxVisualization.transform.position = center;
                     boundingBoxVisualization.transform.localScale = size;
+
+                    GameObject worldTransformVisualization = Instantiate(testObject, room.worldPosition, room.worldRotation);
                 }
                 //spawn in room object and block unsued doors
                 DungeonRoomObject roomObject = Instantiate(room.parameters.roomObject, room.worldPosition, room.worldRotation);
