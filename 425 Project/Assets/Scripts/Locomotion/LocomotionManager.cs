@@ -165,9 +165,9 @@ namespace Locomotion
 
         public void Teleport(Vector3 location)
         {
-            _characterController.enabled = false;
-            _characterController.transform.position = location;
-            _characterController.enabled = true;
+            CharacterController.enabled = false;
+            CharacterController.transform.position = location;
+            CharacterController.enabled = true;
         }
 
         private void ApplyMovement(float deltaTime)
@@ -176,9 +176,9 @@ namespace Locomotion
 
             var totalVelocity = _velocity;
 
-            if (_characterController.enabled)
+            if (CharacterController.enabled)
             {
-                _characterController.Move(totalVelocity * deltaTime);
+                CharacterController.Move(totalVelocity * deltaTime);
                 
                 CharacterController.transform.Rotate(Vector3.up, _rotation * deltaTime);
             }
@@ -228,10 +228,8 @@ namespace Locomotion
         {
             _wasGrounded = IsGrounded;
             _isGrounded = _groundRaycastWrapper.OverlapSphere(_groundCheckSphere.transform.position, _groundCheckSphere.radius, out _);
-            
             _isTouchingWall = _wallRaycastWrapper.OverlapSphere(_wallCheckSphere.transform.position, _wallCheckSphere.radius, out _);
             _isTouchingCeiling = _groundRaycastWrapper.OverlapSphere(_ceilingCheckSphere.transform.position, _ceilingCheckSphere.radius, out _);
-
 
             if (IsTouchingCeiling)
             {

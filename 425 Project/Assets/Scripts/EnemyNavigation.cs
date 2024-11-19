@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 public class EnemyNavigation : MonoBehaviour
 {
-    public GameObject playerObject;
+    [SerializeField]
     private Transform player;
     private NavMeshAgent agent;
     private bool linkTraversing = false;
@@ -13,7 +13,7 @@ public class EnemyNavigation : MonoBehaviour
     void Start()
     {
         //this wasn't getting updated so I added this -Silas
-        player = DungeonGenerator.instance.player;
+        player = DungeonGenerator.Instance?.player;
         agent = GetComponent<NavMeshAgent>();
         agent.autoTraverseOffMeshLink = false;
 

@@ -24,6 +24,9 @@ namespace Locomotion
         [SerializeField]
         private float _wallJumpCooldown = 2f;
         
+        [SerializeField]
+        private float _wallJumpDistanceThreshold = 5f;
+        
         private bool _isSprinting = false;
         private float _currentMoveSpeed;
         private float _currentMaxSpeed;
@@ -32,6 +35,8 @@ namespace Locomotion
 
         private bool _wallJump = true;
         private bool _canJump = true;
+        
+        private Vector3 _lastWallJumpPos = Vector3.zero;
 
         private GravityProvider _gravityProvider;
         
@@ -60,7 +65,7 @@ namespace Locomotion
             
             var input = new Vector2(horizontal, vertical);
             
-            if (_isSprinting && input == Vector2.zero)
+            if (_isSprinting && input == Vector2.zero && vertical > 0)
             {
                 ToggleSprint();
             }
@@ -72,9 +77,12 @@ namespace Locomotion
                 if (locomotionManager.IsGrounded)
                 {
                     Jump(_jumpSpeed);
+                    _lastWallJumpPos = Vector3.zero;
                 }
-                else if (locomotionManager.IsTouchingWall && _wallJump)
+                else if (locomotionManager.IsTouchingWall && _wallJump && 
+                         (locomotionManager.CharacterController.transform.position - _lastWallJumpPos).magnitude >= _wallJumpDistanceThreshold)
                 {
+                    _lastWallJumpPos = locomotionManager.CharacterController.transform.position;
                     Jump(_jumpSpeed / 2);
                     StartCoroutine(_WallJumpCooldown());
                 }
@@ -148,7 +156,10 @@ namespace Locomotion
             }
             else
             {
-                _currentMoveSpeed += _currentMaxSpeed * Time.fixedDeltaTime;
+                if (_isSprinting)
+                {
+                    _currentMoveSpeed += _currentMaxSpeed * Time.fixedDeltaTime;
+                }
 
                 if (_currentMoveSpeed > _maxSpeed)
                 {

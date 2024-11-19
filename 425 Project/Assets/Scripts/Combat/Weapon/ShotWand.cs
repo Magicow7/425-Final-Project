@@ -24,6 +24,14 @@ public class ShotWand : Weapon
     private float _bulletLifespan = 10f;
     [SerializeField]
     private float _fireRate = 0.1f;
+    [SerializeField]
+    private float _explosionRadius = 0f;
+    [SerializeField]
+    private float _explosionDamage = 0f;
+    [SerializeField]
+    private float _explosionTime = 0f;
+    [SerializeField]
+    private float _explosionDamageOverTime = 0f;
 
     protected override bool Fire()
     {
@@ -48,8 +56,11 @@ public class ShotWand : Weapon
             Vector3 direction = (targetPoint - _bulletSpawnPoint.position).normalized;
 
             var bullet = Instantiate(_bulletPrefab, _bulletSpawnPoint.position, _bulletSpawnPoint.rotation);
-            bullet.Setup(_damage, _bulletLifespan);
-            bullet.Rigidbody.velocity = direction * _bulletSpeed;
+            bullet.Setup(_damage, _explosionRadius, _explosionDamage, _explosionTime, _explosionDamageOverTime, _bulletLifespan);
+            if (bullet.Rigidbody != null)
+            {
+                bullet.Rigidbody.velocity = direction * _bulletSpeed;
+            }
 
             return true;
         }

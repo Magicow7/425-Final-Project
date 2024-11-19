@@ -16,8 +16,7 @@ public class EnemySpawner : MonoBehaviour
 
     private Vector3 modifier = new Vector3(0.5f,0.5f,0.5f);
 
-   
-
+    
     public void SpawnEnemies()
     {
         StartCoroutine(SpawnWaves());

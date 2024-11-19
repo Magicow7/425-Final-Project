@@ -12,7 +12,7 @@ public class DamageNumber : MonoBehaviour
     [SerializeField] private float _yDistance = 0.5f;
     [SerializeField] private float _maxVisibleTime = 1f;
     
-    private Camera _camera;
+    private LookAtCamera _lookAtCamera;
     private CanvasGroup _group;
     private RectTransform _rectTransform;
     private TextMeshProUGUI _textMesh;
@@ -30,7 +30,7 @@ public class DamageNumber : MonoBehaviour
     
     private void Start()
     {
-        _camera = Camera.main;
+        _lookAtCamera = gameObject.AddComponent<LookAtCamera>();
         _group = GetComponent<CanvasGroup>();
         _rectTransform = GetComponent<RectTransform>();
         _textMesh = GetComponentInChildren<TextMeshProUGUI>();
@@ -41,10 +41,7 @@ public class DamageNumber : MonoBehaviour
 
     private void Update()
     {
-        if (_showing)
-        {
-            transform.LookAt(_camera.transform);
-        }
+        _lookAtCamera.enabled = _showing;
 
         if (_showing && _switchTo != "")
         {

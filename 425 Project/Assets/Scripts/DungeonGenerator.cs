@@ -5,13 +5,12 @@ using System;
 using Random = System.Random;
 using Locomotion;
 using Unity.AI.Navigation;
+using Utils.Singleton;
 
 
-public class DungeonGenerator : MonoBehaviour
+public class DungeonGenerator : SingletonMonoBehaviour<DungeonGenerator>
 {
     public static List<Vector3> possibleSpawnPoints;
-
-    public static DungeonGenerator instance;
 
     //parameter structs   
     [Serializable]
@@ -50,6 +49,7 @@ public class DungeonGenerator : MonoBehaviour
     class DungeonRoom{
         public readonly int roomId;
         public List<GameObject> spawnedPrefabs = new List<GameObject>();
+        public List<DungeonRoomContainedObject> dungeonRoomObjects = new List<DungeonRoomContainedObject>();
         //room position in world space
         public Vector3 worldPosition;
         //room rotation in worldspace
@@ -79,6 +79,20 @@ public class DungeonGenerator : MonoBehaviour
             }
         }
 
+        public void EnteredRoom()
+        {
+            foreach (DungeonRoomContainedObject roomObject in dungeonRoomObjects)
+            {
+                roomObject.OnPlayerEnter();
+            }
+        }
+        public void ExitedRoom()
+        {
+            foreach (DungeonRoomContainedObject roomObject in dungeonRoomObjects)
+            {
+                roomObject.OnPlayerExit();
+            }
+        }
     }
 
     class DungeonDoorway{
@@ -243,8 +257,6 @@ public class DungeonGenerator : MonoBehaviour
 
     void Start()
     {
-        //set singleton instance
-        instance = this;
         //randomize seed if needed
         if(randomSeed){
             random = new Random();
@@ -256,6 +268,7 @@ public class DungeonGenerator : MonoBehaviour
         AddRoomToDungeon();
         //set center room to start room
         currentCenterRoom = rooms[0];
+        currentCenterRoom.EnteredRoom();
         if(generationMode == GenerationMode.StaticGeneration){
             GenerateStaticDungeon();
         }else if(generationMode == GenerationMode.DynamicGeneration){
@@ -283,7 +296,11 @@ public class DungeonGenerator : MonoBehaviour
                     newCenterFound = true;
                 }
             }
+            
+            currentCenterRoom.ExitedRoom();
             currentCenterRoom = newCenterRoom;
+            currentCenterRoom.EnteredRoom();
+            
             if(!newCenterFound){
                 Debug.Log("DYNAMIC WORLD GENERATION LOST PLAYER, LIKELY OUT OF BOUNDS");
             }else{
@@ -332,7 +349,7 @@ public class DungeonGenerator : MonoBehaviour
         foreach(DungeonRoom room in roomsToDestroy){
             //remove prefabs
             foreach(GameObject prefab in room.spawnedPrefabs){
-                Destroy(prefab.gameObject);
+                Destroy(prefab);
             }
             //cleanse from graph
             List<DungeonRoom> neighbors = GetDungeonRoomNeighbors(room);
@@ -400,8 +417,10 @@ public class DungeonGenerator : MonoBehaviour
                 //spawn in room object and block unsued doors
                 DungeonRoomObject roomObject = Instantiate(room.parameters.roomObject, room.worldPosition, room.worldRotation);
                 room.spawnedPrefabs.Add(roomObject.gameObject);
-                
-                
+                foreach (DungeonRoomContainedObject obj in room.parameters.roomObject.GetComponentsInChildren<DungeonRoomContainedObject>())
+                {
+                    room.dungeonRoomObjects.Add(obj);
+                }
             }
             //update door blockers and navmesh links
 
