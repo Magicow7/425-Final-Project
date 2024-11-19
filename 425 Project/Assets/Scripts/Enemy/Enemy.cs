@@ -19,6 +19,7 @@ namespace Combat
         private Animator _enemyAnimatior;
 
         private NavMeshAgent agent;
+        private Collider collider;
         private bool isCrossingLink = false;
         
         public ResourceStat Health { get; private set; }
@@ -26,7 +27,8 @@ namespace Combat
         private void Awake()
         {
             Health = new ResourceStat(_health);
-            agent = transform.GetComponent<NavMeshAgent>();
+            agent = GetComponent<NavMeshAgent>();
+            collider = GetComponent<Collider>();
             _damageNumber.Initialize(Health);
         }
 
@@ -88,10 +90,19 @@ namespace Combat
 
         public void Death()
         {
-            agent.isStopped = true;
             // TODO: Death Animation
-            _enemyAnimatior.gameObject.SetActive(false);
-            Destroy(gameObject, 3f);
+            if (agent.isOnNavMesh)
+            {
+                agent.isStopped = true;
+                collider.enabled = false;
+                _enemyAnimatior.gameObject.SetActive(false);
+                Destroy(gameObject, 3f);
+            }
+            else
+            {
+                // TODO: Death on the mesh link is a pain
+                Destroy(gameObject);
+            }
         }
     }
 }

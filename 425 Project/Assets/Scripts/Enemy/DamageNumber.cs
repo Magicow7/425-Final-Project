@@ -63,6 +63,11 @@ public class DamageNumber : MonoBehaviour
 
     public void ShowDamageNumber(float damage)
     {
+        if (damage <= 0.01)
+        {
+            return;
+        }
+        
         string result = "";
 
         _damageTotal += damage;

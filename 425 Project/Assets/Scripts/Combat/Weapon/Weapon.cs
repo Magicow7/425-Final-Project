@@ -12,7 +12,7 @@ namespace Combat.Weapon
         protected float _damage = 10;
 
 
-        private void Update()
+        private void LateUpdate()
         {
             if (!PlayerStats.Instance)
             {
