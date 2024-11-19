@@ -46,7 +46,6 @@ public class Explosion : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        Debug.Log(other);
         if (!_canHit)
         {
             return;

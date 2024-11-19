@@ -7,7 +7,6 @@ using Random = UnityEngine.Random;
 public class EnemySpawner : MonoBehaviour
 {
     public GameObject enemy;
-    public GameObject player;
 
     private int waveNumber = 0;
     public float waveInterval = 5f; // time spent waiting after running SpawnWave() to completion
