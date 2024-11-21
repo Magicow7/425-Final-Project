@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.5748172, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -209,7 +209,7 @@ MonoBehaviour:
   navMeshLinkHolder: {fileID: 1319546172}
   doorWidth: 0.7
   enemySpawner: {fileID: 951243911}
-  visualizeBoundingBoxes: 1
+  visualizeBoundingBoxes: 0
   testObject: {fileID: 618944413139982630, guid: 3b7e0ec4b6be70c44b9994abfbdf1dce, type: 3}
   randomSeed: 1
   seed: 47714497
@@ -660,9 +660,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemy: {fileID: 6256646944060083910, guid: d25797a5408da4cb183fdc6369789f98, type: 3}
-  waveInterval: 5
+  waveInterval: 1000
   spawnInterval: 0.1
-  enemiesPerWave: 5
+  enemiesPerWave: 0
 --- !u!4 &951243912
 Transform:
   m_ObjectHideFlags: 0
