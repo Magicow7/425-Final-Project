@@ -19,6 +19,8 @@ namespace Combat
         private Animator _enemyAnimatior;
 
         private NavMeshAgent agent;
+        private AudioSource damageAudioSource;
+        private AudioSource ambientAudioSource;
         private Collider collider;
         private bool isCrossingLink = false;
         
@@ -30,6 +32,14 @@ namespace Combat
             agent = GetComponent<NavMeshAgent>();
             collider = GetComponent<Collider>();
             _damageNumber.Initialize(Health);
+            damageAudioSource = gameObject.AddComponent<AudioSource>();
+            ambientAudioSource = gameObject.AddComponent<AudioSource>();
+            damageAudioSource.spatialBlend = 1.0f;
+            ambientAudioSource.spatialBlend = 1.0f;
+            damageAudioSource.rolloffMode = AudioRolloffMode.Custom;
+            ambientAudioSource.rolloffMode = AudioRolloffMode.Custom;
+            agent = transform.GetComponent<NavMeshAgent>();
+            StartCoroutine(AmbientSound());
         }
 
         private void Update(){
@@ -38,6 +48,21 @@ namespace Combat
             {
                 // Start traversing the NavMeshLink
                 StartCoroutine(CrossLink());
+            }
+        }
+        private IEnumerator AmbientSound()
+        {
+            while (true)
+            {
+                if (!damageAudioSource.isPlaying)
+                {
+                    if (UnityEngine.Random.value < 0.04f)
+                    {
+                        SoundManager.Sound[] items = { SoundManager.Sound.MobNoise1, SoundManager.Sound.MobNoise2, SoundManager.Sound.MobNoise3 };
+                        SoundManager.PlaySound(items[UnityEngine.Random.Range(0, items.Length)], ambientAudioSource, true);
+                    }
+                }
+                yield return new WaitForSeconds(1);
             }
         }
 
@@ -78,7 +103,8 @@ namespace Combat
             _damageNumber.ShowDamageNumber(damage);
             
             Health.Value -= damage;
-            
+            SoundManager.PlaySound(SoundManager.Sound.MobHit, damageAudioSource, true);
+
             if (Health.Value <= 0)
             {
                 Death();
@@ -90,6 +116,7 @@ namespace Combat
 
         public void Death()
         {
+            SoundManager.PlaySound(SoundManager.Sound.MobDeath, agent.transform.position, true);
             // TODO: Death Animation
             if (agent.isOnNavMesh)
             {

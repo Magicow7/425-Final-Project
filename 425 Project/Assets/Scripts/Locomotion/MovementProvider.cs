@@ -98,6 +98,14 @@ namespace Locomotion
         
         public void ToggleSprint()
         {
+            if (_isSprinting)
+            {
+                SoundManager.SetWait(SoundManager.Sound.Walking, 0.45f);
+            }
+            else
+            {
+                SoundManager.SetWait(SoundManager.Sound.Walking, 0.25f);
+            }
             _isSprinting = !_isSprinting;
             _currentMaxSpeed = _isSprinting ? _sprintSpeed : _walkSpeed;
         }
@@ -105,6 +113,7 @@ namespace Locomotion
         public void Jump(float speed)
         {
             StartCoroutine(_JumpCooldown());
+            SoundManager.PlaySound(SoundManager.Sound.Jumping);
             SetVelocityY(speed);
         }
 
@@ -143,6 +152,7 @@ namespace Locomotion
             }
             else if (locomotionManager.IsGrounded)
             {
+                SoundManager.PlaySound(SoundManager.Sound.Walking);
                 if (locomotionManager.VelocityXZ.magnitude > _currentMaxSpeed)
                 {
                     _currentMoveSpeed -= Mathf.Max(
@@ -164,6 +174,11 @@ namespace Locomotion
                 if (_currentMoveSpeed > _maxSpeed)
                 {
                     _currentMoveSpeed = _maxSpeed;
+                }
+                if (_currentMoveSpeed >= 4.5)
+                {
+                    SoundManager.SetVolume(SoundManager.Sound.AirborneMovement, (0.2f * _currentMoveSpeed - 0.75f) / 1.5f);
+                    SoundManager.PlaySound(SoundManager.Sound.AirborneMovement);
                 }
             }
 
