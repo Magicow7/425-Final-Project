@@ -158,6 +158,9 @@ public class DungeonGenerator : SingletonMonoBehaviour<DungeonGenerator>
     [Header("Settings for Static Generation")]
     [SerializeField]
     private int roomsToSpawn = 5;
+
+    [SerializeField]
+    private Vector3 playerStartOffset;
     //if bounding boxes are farther away from eachother than this value, they will not test for collision
     [SerializeField]
     private int boundingBoxCheckPruneDistance = 50;
@@ -257,6 +260,8 @@ public class DungeonGenerator : SingletonMonoBehaviour<DungeonGenerator>
 
     void Start()
     {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
         //randomize seed if needed
         if(randomSeed){
             random = new Random();
@@ -875,7 +880,7 @@ public class DungeonGenerator : SingletonMonoBehaviour<DungeonGenerator>
     }
 
     void PlacePlayer(){
-        LocomotionManager.Instance.Teleport(currentCenterRoom.worldPosition + new Vector3(0.5f,0.5f,0.5f));
+        LocomotionManager.Instance.Teleport(currentCenterRoom.worldPosition + new Vector3(0.5f,0.5f,0.5f) + playerStartOffset);
     }
 
     void SetupEnemies()
