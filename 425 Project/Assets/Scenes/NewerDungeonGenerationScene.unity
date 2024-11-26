@@ -871,10 +871,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemy: {fileID: 6256646944060083910, guid: d25797a5408da4cb183fdc6369789f98, type: 3}
-  waveInterval: 1000
   waveInterval: 20
   spawnInterval: 0.1
-  enemiesPerWave: 0
   enemiesPerWave: 10
 --- !u!4 &951243912
 Transform:
@@ -2105,7 +2103,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3959563117498608410, guid: d5f799c854aabf64ea9c2c4389f1764f, type: 3}
       propertyPath: m_IsActive
-      value: 1
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4645166081935907982, guid: d5f799c854aabf64ea9c2c4389f1764f, type: 3}
