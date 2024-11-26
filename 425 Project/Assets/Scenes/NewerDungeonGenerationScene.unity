@@ -2133,7 +2133,6 @@ PrefabInstance:
       propertyPath: _explosionRadius
       value: 3
       objectReference: {fileID: 0}
-<<<<<<< HEAD
     - target: {fileID: 7127555681823560156, guid: d5f799c854aabf64ea9c2c4389f1764f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.49
@@ -2145,11 +2144,9 @@ PrefabInstance:
     - target: {fileID: 7127555681823560156, guid: d5f799c854aabf64ea9c2c4389f1764f, type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
-=======
     - target: {fileID: 9066198954317489977, guid: d5f799c854aabf64ea9c2c4389f1764f, type: 3}
       propertyPath: m_IsActive
       value: 1
->>>>>>> a0a7feb58b1ab145e701ebfee3db668eb93deb9e
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -2577,8 +2574,5 @@ SceneRoots:
   - {fileID: 120325908447901138}
   - {fileID: 1713062181}
   - {fileID: 1924210277490697963}
-<<<<<<< HEAD
   - {fileID: 1684505847}
-=======
   - {fileID: 1595328929}
->>>>>>> a0a7feb58b1ab145e701ebfee3db668eb93deb9e
