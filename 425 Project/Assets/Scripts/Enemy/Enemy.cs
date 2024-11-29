@@ -9,8 +9,6 @@ namespace Combat
 {
     public class Enemy : MonoBehaviour, IDamageable
     {
-        [SerializeField] 
-        private float _health = 10f;
         private ResourceStat _playerhealth;
         [SerializeField] 
         private DamageNumber _damageNumber;
@@ -25,8 +23,8 @@ namespace Combat
         private AudioSource ambientAudioSource;
         private Collider collider;
         private bool isCrossingLink = false;
-        
-        public ResourceStat Health { get; private set; }
+
+        public EnemyStats enemyStats { get; private set; }
 
         public static event Action EnemyDeath;
 
@@ -36,11 +34,14 @@ namespace Combat
             {
                 Debug.LogError("Player Stats Not Initialized?");
             }
+
+            enemyStats = new EnemyStats();
+            transform.localScale = transform.localScale * enemyStats.Scale;
+
             _playerhealth = PlayerStats.Instance.Health;
-            Health = new ResourceStat(_health);
             agent = GetComponent<NavMeshAgent>();
             collider = GetComponent<Collider>();
-            _damageNumber.Initialize(Health);
+            _damageNumber.Initialize(enemyStats.Health);
             damageAudioSource = gameObject.AddComponent<AudioSource>();
             ambientAudioSource = gameObject.AddComponent<AudioSource>();
             damageAudioSource.spatialBlend = 1.0f;
@@ -111,10 +112,9 @@ namespace Combat
         {
             _damageNumber.ShowDamageNumber(damage);
             
-            Health.Value -= damage;
             SoundManager.PlaySound(SoundManager.Sound.MobHit, damageAudioSource, true);
 
-            if (Health.Value <= 0)
+            if (!enemyStats.Health.TrySpendResource(damage))
             {
                 Death();
                 return false;
@@ -164,7 +164,7 @@ namespace Combat
                 // check if enemy is not moving much
                 if (agent.velocity.magnitude < 0.1f && inRangeOfPlayer) {
                     _enemyAnimatior.SetTrigger("TrAttack");
-                    _playerhealth.TrySpendResource(20);
+                    _playerhealth.TrySpendResource(enemyStats.AttackDamage.Value);
                 }
                 yield return new WaitForSeconds(1f); 
             }
