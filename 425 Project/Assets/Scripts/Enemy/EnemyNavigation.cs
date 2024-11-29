@@ -60,7 +60,6 @@ public class EnemyNavigation : MonoBehaviour
 
     private void Respawn()
     {
-        Debug.Log("respawning enemy");
         Vector3 randomValidSpawnPoint = DungeonGenerator.possibleSpawnPoints[Random.Range(0, DungeonGenerator.possibleSpawnPoints.Count)];
         randomValidSpawnPoint.y += 0.5f;
         agent.Warp(randomValidSpawnPoint);
