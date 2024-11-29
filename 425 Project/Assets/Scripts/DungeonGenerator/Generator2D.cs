@@ -643,17 +643,7 @@ public class Generator2D : MonoBehaviour {
 
     void SetupEnemies(){
         navMeshSetup.SetupNavMesh();
-        StartCoroutine(_SpawnEnemies());
     }
-
-    IEnumerator _SpawnEnemies()
-    {
-        yield return new WaitForSeconds(5);
-        //enemySpawner.SpawnEnemies(spawnedThings, new Vector3(0.5f,0.5f,0.5f));
-        StartCoroutine(_SpawnEnemies());
-    }
-
-   
 
     void OnDrawGizmos(){
         /*
