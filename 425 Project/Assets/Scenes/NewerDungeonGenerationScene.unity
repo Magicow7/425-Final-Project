@@ -775,6 +775,7 @@ GameObject:
   - component: {fileID: 894277682}
   - component: {fileID: 894277684}
   - component: {fileID: 894277683}
+  - component: {fileID: 894277685}
   m_Layer: 5
   m_Name: KillCounter
   m_TagString: Untagged
@@ -898,6 +899,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 894277681}
   m_CullTransparentMesh: 1
+--- !u!114 &894277685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 894277681}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fabb0ee288424cf5ae9a35bf3a28ac5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &951243910
 GameObject:
   m_ObjectHideFlags: 0
@@ -928,7 +941,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemy: {fileID: 6256646944060083910, guid: d25797a5408da4cb183fdc6369789f98, type: 3}
-  waveNumber: 0
   waveInterval: 20
   spawnInterval: 0.1
   enemiesPerWave: 10
@@ -1204,7 +1216,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 857fdd0cf4602436fbc9c07ebaf96c9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemySpawner: {fileID: 951243911}
 --- !u!20 &1152955964 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 7177488736485681708, guid: d5f799c854aabf64ea9c2c4389f1764f, type: 3}
