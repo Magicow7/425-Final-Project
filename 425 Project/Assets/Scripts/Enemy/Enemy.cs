@@ -11,9 +11,11 @@ namespace Combat
     {
         [SerializeField] 
         private float _health = 10f;
-
+        private ResourceStat _playerhealth;
         [SerializeField] 
         private DamageNumber _damageNumber;
+
+        private bool inRangeOfPlayer = false;
         
         [SerializeField] 
         private Animator _enemyAnimatior;
@@ -30,6 +32,11 @@ namespace Combat
 
         private void Awake()
         {
+            if (PlayerStats.Instance == null)
+            {
+                Debug.LogError("Player Stats Not Initialized?");
+            }
+            _playerhealth = PlayerStats.Instance.Health;
             Health = new ResourceStat(_health);
             agent = GetComponent<NavMeshAgent>();
             collider = GetComponent<Collider>();
@@ -134,6 +141,44 @@ namespace Combat
             {
                 // TODO: Death on the mesh link is a pain
                 Destroy(gameObject);
+            }
+        }
+
+        void OnTriggerEnter(Collider other)
+        {
+            if (other.name == "PlayerModel")
+            {
+                inRangeOfPlayer = true;
+                Debug.LogWarning("ENTERED!");
+                agent.isStopped = true;
+                
+                StartCoroutine(AttackWhileNearby(other));
+                
+            }
+        }
+
+        private IEnumerator AttackWhileNearby(Collider player)
+        {
+            while ((player.transform.position - transform.position).magnitude <= 3)
+            {
+                // check if enemy is not moving much
+                if (agent.velocity.magnitude < 0.1f && inRangeOfPlayer) {
+                    _enemyAnimatior.SetTrigger("TrAttack");
+                    _playerhealth.TrySpendResource(20);
+                }
+                yield return new WaitForSeconds(1f); 
+            }
+
+            agent.isStopped = false;
+        }
+
+        void OnTriggerExit(Collider other)
+        {
+            if (other.name == "PlayerModel")
+            {
+                inRangeOfPlayer = false;
+
+                agent.isStopped = false;
             }
         }
     }

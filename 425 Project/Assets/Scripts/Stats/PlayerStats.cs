@@ -12,8 +12,9 @@ namespace Stat
         [SerializeField]
         private int _maxMana = 500;
         
-        [SerializeField]
-        private int _healthRegen = 5;
+        
+        private int _healthRegen = 20;
+
         [SerializeField]
         private int _manaRegen = 20;
         
@@ -32,6 +33,7 @@ namespace Stat
 
         public void CustomUpdate(float deltaTime)
         {
+          
             Mana.Value += _manaRegen * deltaTime;
             Health.Value += _healthRegen * deltaTime;
         }
