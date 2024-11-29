@@ -41,7 +41,20 @@ public class Chest : MonoBehaviour
             hasWand = true;
             Debug.LogWarning("Presed e");
             TextUpdates.Instance.UpdateTaskText("Now practice shooting your wand using left click.");
-            
+
+            GameObject playerwand = GameObject.FindWithTag("MainCamera")?.transform.Find("wand")?.gameObject;
+            MeshRenderer chestWandRender = wand.GetComponent<MeshRenderer>();
+            chestWandRender.enabled = false;
+            if (playerwand != null)
+            {
+                Debug.LogWarning("found");
+                MeshRenderer meshRenderer = playerwand.GetComponent<MeshRenderer>();
+                if (meshRenderer != null)
+                {
+                    meshRenderer.enabled = true; 
+                }
+            }
+
             canFire = true;
         }
 

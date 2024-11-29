@@ -27,7 +27,7 @@ namespace Locomotion
         [SerializeField]
         private float _wallJumpDistanceThreshold = 5f;
         
-        private bool _isSprinting = false;
+        private bool _isSprinting = true;
         private float _currentMoveSpeed;
         private float _currentMaxSpeed;
         
@@ -88,10 +88,10 @@ namespace Locomotion
                 }
             }
 
-            if (UnityEngine.Input.GetKey(KeyCode.LeftShift) != _isSprinting)
-            {
+            //if (UnityEngine.Input.GetKey(KeyCode.LeftShift) != _isSprinting)
+            //{
                 ToggleSprint();
-            }
+            //}
             
             Move(LocomotionManager.Instance.Camera.transform, new Vector2(horizontal, vertical));
         }
