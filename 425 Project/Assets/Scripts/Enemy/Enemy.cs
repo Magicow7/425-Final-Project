@@ -26,6 +26,8 @@ namespace Combat
         
         public ResourceStat Health { get; private set; }
 
+        public static event Action EnemyDeath;
+
         private void Awake()
         {
             Health = new ResourceStat(_health);
@@ -116,6 +118,9 @@ namespace Combat
 
         public void Death()
         {
+            // Used for killCounter UI + enemySpawner wave spawn time calculation
+            EnemyDeath?.Invoke();
+            
             SoundManager.PlaySound(SoundManager.Sound.MobDeath, agent.transform.position, true);
             // TODO: Death Animation
             if (agent.isOnNavMesh)
