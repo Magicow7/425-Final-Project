@@ -11,6 +11,7 @@ public class ManaBar : MonoBehaviour
 
     private bool canShakeBar = true;
     private RectTransform _rectTransform;
+    private bool lowMana = false;
 
     // Start is called before the first frame update
     void Start()
@@ -29,6 +30,11 @@ public class ManaBar : MonoBehaviour
     void Update()
     {
         _barImage.fillAmount = _mana.Percentage;
+        if (!lowMana && _mana.Percentage < .25)
+        {
+            lowMana = true;
+            StartCoroutine(LowManaSound());
+        }
     }
 
     private IEnumerator ShakeBar()
@@ -67,5 +73,15 @@ public class ManaBar : MonoBehaviour
 
         }
         return success;
+    }
+
+    private IEnumerator LowManaSound()
+    {
+        SoundManager.PlaySound(SoundManager.Sound.LowMana);
+        while (_mana.Percentage < .3)
+        {
+            yield return null;
+        }
+        lowMana = false;
     }
 }

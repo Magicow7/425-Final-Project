@@ -164,7 +164,15 @@ namespace Combat
                 // check if enemy is not moving much
                 if (agent.velocity.magnitude < 0.1f && inRangeOfPlayer) {
                     _enemyAnimatior.SetTrigger("TrAttack");
-                    _playerhealth.TrySpendResource(enemyStats.AttackDamage.Value);
+                    if (_playerhealth.TrySpendResource(enemyStats.AttackDamage.Value))
+                    {
+                        SoundManager.PlaySound(SoundManager.Sound.PlayerHit);
+                    }
+                    else
+                    {
+                        // Player HP too low, cannot take another hit.
+                        SoundManager.PlaySound(SoundManager.Sound.PlayerDeath);
+                    }
                 }
                 yield return new WaitForSeconds(1f); 
             }

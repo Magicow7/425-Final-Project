@@ -45,7 +45,7 @@ public class LaserWand : Weapon
         if (Time.time > _nextFireTime)
         {
             _nextFireTime = Time.time + _fireRate;
-            
+            SoundManager.PlaySound(SoundManager.Sound.LaserShoot);
             Ray ray = _mainCamera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2));
             RaycastHit hit;
             Vector3[] hitList = new Vector3[_bounces + 2];
@@ -64,6 +64,7 @@ public class LaserWand : Weapon
             }
 
             hitList[1] = targetPoint;
+            SoundManager.PlaySound(SoundManager.Sound.LaserBlast, targetPoint);
             Instantiate(_explosion, targetPoint, Quaternion.identity)
                 .Explode(_explosionRadius, _explosionDamage, _explosionTime, _explosionDamageOverTime);
 
@@ -77,9 +78,9 @@ public class LaserWand : Weapon
                 {
                     break;
                 }
-
                 targetPoint = hit.point;
                 hitList[_bounces - bounces + 2] = targetPoint;
+                SoundManager.PlaySound(SoundManager.Sound.LaserBlast, targetPoint);
                 Instantiate(_explosion, targetPoint, Quaternion.identity)
                     .Explode(_explosionRadius, _explosionDamage, _explosionTime, _explosionDamageOverTime);
                 bounces--;
