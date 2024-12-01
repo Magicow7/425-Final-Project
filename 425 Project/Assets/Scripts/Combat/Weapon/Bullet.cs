@@ -45,6 +45,10 @@ public class Bullet : MonoBehaviour
             return;
         }
 
+        if (gameObject.name == "Bullet(Clone)")
+        {
+            SoundManager.PlaySound(SoundManager.Sound.GrenadeBoom, gameObject.transform.position);
+        }
         if (other.gameObject.TryGetComponent(out IDamageable damageable))
         {
             damageable.TakeDamage(_damage);

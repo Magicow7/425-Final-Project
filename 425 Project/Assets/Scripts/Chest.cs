@@ -38,6 +38,7 @@ public class Chest : MonoBehaviour
 
     private float maxTimeRemaining;
     private float timeRemaining;
+    private bool uniqueFail = true;
 
     private Camera mainCam;
 
@@ -68,9 +69,11 @@ public class Chest : MonoBehaviour
         if(charging && !opened){
             playerInChargeRadius = Vector3.Distance(transform.position, mainCam.transform.position) < dechargeDistance;
             if(playerInChargeRadius){
+                uniqueFail = true;
                 timerText.color = new Color(1,1,0,1);
                 timeRemaining -= Time.deltaTime;
                 if(timeRemaining < 0){
+                    SoundManager.PlaySound(SoundManager.Sound.StoodGroundSuccess);
                     opened = true;
                     MeshRenderer chestWandRender = wand.GetComponent<MeshRenderer>();
                     chestWandRender.enabled = true;
@@ -79,6 +82,11 @@ public class Chest : MonoBehaviour
                     chestWeaponEffects[weaponIndex].SetActive(true);
                 }
             }else{
+                if (uniqueFail)
+                {
+                    SoundManager.PlaySound(SoundManager.Sound.StoodGroundFail);
+                    uniqueFail = false;
+                }
                 timerText.color = new Color(1,0,0,1);
                 timeRemaining += Time.deltaTime;
                 if(timeRemaining > maxTimeRemaining){

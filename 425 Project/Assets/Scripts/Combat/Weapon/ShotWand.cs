@@ -37,6 +37,14 @@ public class ShotWand : Weapon
     {
         if (Time.time > _nextFireTime)
         {
+            if (_bulletPrefab.name == "Bullet 1")
+            {
+                SoundManager.PlaySound(SoundManager.Sound.ShotSpellCast);
+            }
+            else
+            {
+                SoundManager.PlaySound(SoundManager.Sound.GrenadeThrow);
+            }
             _nextFireTime = Time.time + _fireRate;
             
             Ray ray = _mainCamera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2));

@@ -23,17 +23,19 @@ public class SoundManager : MonoBehaviour
         MobNoise2,          // FUNCTIONAL
         MobNoise3,          // FUNCTIONAL
         MobDeath,           // FUNCTIONAL
-        StoodGroundSuccess, // Standing Ground mechanic unimplemented in this version
-        StoodGroundFail,    // Standing Ground mechanic unimplemented in this version
-        OpenChest,          // Plays when tutorial chets is opened, rest is unimplemented
-        SpendGold,          // Gold unimplemented in this version
+        StoodGroundSuccess, // FUNCTIONAL
+        StoodGroundFail,    // FUNCTIONAL
+        OpenChest,          // FUNCTIONAL
+        ShotSpellCast,      // FUNCTIONAL
         NormalBackground,   // FUNCTIONAL
         LowHPBackground,    // FUNCTIONAL
-        MenuButtonMove,     // Menu Buttons not implemented
-        MenuButtonPress,    // Menu Buttons not implemented
+        MenuButtonMove,     // Menu Buttons not implemented (death screen)
+        MenuButtonPress,    // Menu Buttons not implemented (death screen)
         LaserShoot,         // FUNCTIONAL
         LaserBlast,         // FUNCTIONAL
-
+        GrenadeThrow,       // FUNCTIONAL
+        GrenadeBoom,        // FUNCTIONAL
+        SpendGold,          // Gold unimplemented in this version 
     }
 
     [System.Serializable]
