@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Stat;
 using UnityEngine;
 using UnityEngine.AI;
-
+using UnityEngine.UI;
 namespace Combat
 {
     public class Enemy : MonoBehaviour, IDamageable
@@ -23,7 +23,8 @@ namespace Combat
         private AudioSource ambientAudioSource;
         private Collider collider;
         private bool isCrossingLink = false;
-
+        [SerializeField]
+        
         public EnemyStats enemyStats { get; private set; }
 
         public static event Action EnemyDeath;
@@ -164,7 +165,14 @@ namespace Combat
                 // check if enemy is not moving much
                 if (agent.velocity.magnitude < 0.1f && inRangeOfPlayer) {
                     _enemyAnimatior.SetTrigger("TrAttack");
-                    _playerhealth.TrySpendResource(enemyStats.AttackDamage.Value);
+                    bool isAlive = _playerhealth.TrySpendResource(enemyStats.AttackDamage.Value);
+                    if (!isAlive)
+                    {
+                        PlayerStats.Instance.Health.Value = 0;
+                        
+
+                        TextUpdates.Instance.ShowDeathScreen();
+                    }
                 }
                 yield return new WaitForSeconds(1f); 
             }
