@@ -13,6 +13,8 @@ public class LaserWand : Weapon
     private Camera _mainCamera;
     [SerializeField]
     private LayerMask _bulletLayer;
+    [SerializeField]
+    private float _lineRemoveTime = 2f;
 
     private float _nextFireTime = 0f;
     
@@ -34,6 +36,7 @@ public class LaserWand : Weapon
     private Explosion _explosion;
     
     private LineRenderer _lineRenderer;
+    private Coroutine _removeLineCoroutine = null!; 
 
     private void Awake()
     {
@@ -49,6 +52,12 @@ public class LaserWand : Weapon
             Ray ray = _mainCamera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2));
             RaycastHit hit;
             Vector3[] hitList = new Vector3[_bounces + 2];
+
+            if (_removeLineCoroutine != null)
+            {
+                StopCoroutine(_removeLineCoroutine);
+            }
+            
             _lineRenderer.positionCount = hitList.Length;
             hitList[0] = _bulletSpawnPoint.position;
 
@@ -87,10 +96,17 @@ public class LaserWand : Weapon
             }
 
             _lineRenderer.SetPositions(hitList);
+            _removeLineCoroutine = StartCoroutine(_RemoveLine());
 
             return true;
         }
 
         return false;
+    }
+
+    private IEnumerator _RemoveLine()
+    {
+        yield return new WaitForSeconds(Mathf.Min(_explosionTime, _lineRemoveTime));
+        _lineRenderer.positionCount = 0;
     }
 }

@@ -23,6 +23,7 @@ namespace Combat
         private AudioSource ambientAudioSource;
         private Collider collider;
         private bool isCrossingLink = false;
+        private bool isDead = false;
 
         public EnemyStats enemyStats { get; private set; }
 
@@ -125,6 +126,7 @@ namespace Combat
 
         public void Death()
         {
+            isDead = true;
             // Used for killCounter UI + enemySpawner wave spawn time calculation
             EnemyDeath?.Invoke();
             
@@ -146,10 +148,9 @@ namespace Combat
 
         void OnTriggerEnter(Collider other)
         {
-            if (other.name == "PlayerModel")
+            if (!isDead && other.name == "PlayerModel")
             {
                 inRangeOfPlayer = true;
-                Debug.LogWarning("ENTERED!");
                 agent.isStopped = true;
                 
                 StartCoroutine(AttackWhileNearby(other));
@@ -159,7 +160,7 @@ namespace Combat
 
         private IEnumerator AttackWhileNearby(Collider player)
         {
-            while ((player.transform.position - transform.position).magnitude <= 3)
+            while (!isDead && (player.transform.position - transform.position).magnitude <= 3)
             {
                 // check if enemy is not moving much
                 if (agent.velocity.magnitude < 0.1f && inRangeOfPlayer) {
