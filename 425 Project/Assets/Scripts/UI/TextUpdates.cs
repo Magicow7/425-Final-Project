@@ -1,12 +1,13 @@
 using TMPro;
 using UnityEngine;
 using System.Collections;
-
+using UnityEngine.SceneManagement;
 public class TextUpdates : MonoBehaviour
 {
     public static TextUpdates Instance { get; private set; }
 
     [SerializeField] private TextMeshProUGUI taskText;
+    [SerializeField] private GameObject deathScreenText;
 
     private void Awake()
     {
@@ -20,6 +21,19 @@ public class TextUpdates : MonoBehaviour
             Destroy(gameObject); 
         }
     }
+
+    public void ShowDeathScreen()
+    {
+        deathScreenText.SetActive(true);
+        MouseLook.instance.UnlockCursor();
+    }
+
+    public void HideDeathScreen()
+    {
+        deathScreenText.SetActive(false);
+        MouseLook.instance.LockCursor();
+    }
+
 
     public void UpdateTaskText(string newText)
     {

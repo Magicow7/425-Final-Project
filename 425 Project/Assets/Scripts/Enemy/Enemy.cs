@@ -4,18 +4,18 @@ using System.Collections.Generic;
 using Stat;
 using UnityEngine;
 using UnityEngine.AI;
-
+using UnityEngine.UI;
 namespace Combat
 {
     public class Enemy : MonoBehaviour, IDamageable
     {
         private ResourceStat _playerhealth;
-        [SerializeField] 
+        [SerializeField]
         private DamageNumber _damageNumber;
 
         private bool inRangeOfPlayer = false;
-        
-        [SerializeField] 
+
+        [SerializeField]
         private Animator _enemyAnimatior;
 
         private NavMeshAgent agent;
@@ -53,7 +53,8 @@ namespace Combat
             StartCoroutine(AmbientSound());
         }
 
-        private void Update(){
+        private void Update()
+        {
             // Check if the agent is on NavMeshLink
             if (agent.isOnOffMeshLink && !isCrossingLink)
             {
@@ -84,7 +85,7 @@ namespace Combat
             // Get the link data (start and end points)
             OffMeshLinkData linkData = agent.currentOffMeshLinkData;
             Vector3 startPos = agent.transform.position;
-            Vector3 endPos = linkData.endPos + new Vector3(0,agent.transform.position.y,0);
+            Vector3 endPos = linkData.endPos + new Vector3(0, agent.transform.position.y, 0);
 
             // Get the total distance to travel across the link
             float distance = Vector3.Distance(startPos, endPos);
@@ -112,7 +113,7 @@ namespace Combat
         public bool TakeDamage(float damage)
         {
             _damageNumber.ShowDamageNumber(damage);
-            
+
             SoundManager.PlaySound(SoundManager.Sound.MobHit, damageAudioSource, true);
 
             if (!enemyStats.Health.TrySpendResource(damage))
@@ -129,7 +130,7 @@ namespace Combat
             isDead = true;
             // Used for killCounter UI + enemySpawner wave spawn time calculation
             EnemyDeath?.Invoke();
-            
+
             SoundManager.PlaySound(SoundManager.Sound.MobDeath, agent.transform.position, true);
             // TODO: Death Animation
             if (agent.isOnNavMesh)
@@ -152,9 +153,9 @@ namespace Combat
             {
                 inRangeOfPlayer = true;
                 agent.isStopped = true;
-                
+
                 StartCoroutine(AttackWhileNearby(other));
-                
+
             }
         }
 
@@ -163,19 +164,27 @@ namespace Combat
             while (!isDead && (player.transform.position - transform.position).magnitude <= 3)
             {
                 // check if enemy is not moving much
-                if (agent.velocity.magnitude < 0.1f && inRangeOfPlayer) {
+                if (agent.velocity.magnitude < 0.1f && inRangeOfPlayer)
+                {
                     _enemyAnimatior.SetTrigger("TrAttack");
-                    if (_playerhealth.TrySpendResource(enemyStats.AttackDamage.Value))
+
+                    bool isAlive = _playerhealth.TrySpendResource(enemyStats.AttackDamage.Value);
+                    if (!isAlive)
                     {
-                        SoundManager.PlaySound(SoundManager.Sound.PlayerHit);
-                    }
-                    else
-                    {
+                        PlayerStats.Instance.Health.Value = 0;
+
+                        TextUpdates.Instance.ShowDeathScreen();
                         // Player HP too low, cannot take another hit.
                         SoundManager.PlaySound(SoundManager.Sound.PlayerDeath);
                     }
+                    else
+                    {
+                        SoundManager.PlaySound(SoundManager.Sound.PlayerHit);
+
+                    }
+
                 }
-                yield return new WaitForSeconds(1f); 
+                yield return new WaitForSeconds(1f);
             }
 
             agent.isStopped = false;

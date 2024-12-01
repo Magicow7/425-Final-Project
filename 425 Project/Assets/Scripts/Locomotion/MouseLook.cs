@@ -51,6 +51,13 @@ public class MouseLook : MonoBehaviour
         Cursor.visible = false;
     }
 
+    public void UnlockCursor()
+    {
+        // make the cursor hidden and locked
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
     void Update()
     {
         // Allow the script to clamp based on a desired target value.

@@ -13,7 +13,7 @@ namespace Stat
         private int _maxMana = 500;
         
         
-        private int _healthRegen = 20;
+        private int _healthRegen = 5;
 
         [SerializeField]
         private int _manaRegen = 20;
@@ -35,7 +35,11 @@ namespace Stat
         {
           
             Mana.Value += _manaRegen * deltaTime;
-            Health.Value += _healthRegen * deltaTime;
+
+            if (Health.Value > 0) {
+                Health.Value += _healthRegen * deltaTime;
+            }
+            
         }
     }
 }
