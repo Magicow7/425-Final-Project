@@ -28,6 +28,9 @@ public class DungeonGenerator : SingletonMonoBehaviour<DungeonGenerator>
         public Vector3 centerPoint;
         //should be 0 by default, used when trying to spawn rooms.
         public Vector3 rotation;
+
+        public Vector3 chestPosition;
+        public Vector3 chestRotation;
         //list of door parameters for doors on this room
         public List<DungeonDoorParameters> relativeDoorParameters;
     }
@@ -243,6 +246,13 @@ public class DungeonGenerator : SingletonMonoBehaviour<DungeonGenerator>
     [SerializeField]
     private GameObject doorwayOpen;
 
+    [SerializeField]
+    private GameObject chest;
+
+    [SerializeField]
+    //out of 100
+    private float chestChance;
+
     //list of possible room parameters that can be added
     [SerializeField]
     private List<DungeonRoomParameters> possibleRoomParameters = new List<DungeonRoomParameters>();
@@ -427,6 +437,9 @@ public class DungeonGenerator : SingletonMonoBehaviour<DungeonGenerator>
                 foreach (DungeonRoomContainedObject obj in room.parameters.roomObject.GetComponentsInChildren<DungeonRoomContainedObject>())
                 {
                     room.dungeonRoomObjects.Add(obj);
+                }
+                if(RandomFloat(0,100) < chestChance){
+                    roomObject.SpawnChest(chest);
                 }
             }
             //update door blockers and navmesh links

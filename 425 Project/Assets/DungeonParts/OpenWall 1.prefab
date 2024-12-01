@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 2703781717441547490}
   - component: {fileID: 3209854971362874833}
   - component: {fileID: 1120378762778756099}
-  m_Layer: 0
+  - component: {fileID: 6900444489793629347}
+  m_Layer: 9
   m_Name: OpenWall 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -84,6 +85,28 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &6900444489793629347
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3031658577760281181}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 6894428203817054813, guid: a64e6d1966f4cfb4cb41fa3d799a6193, type: 3}
 --- !u!1001 &7450991765671202880
 PrefabInstance:
   m_ObjectHideFlags: 0
