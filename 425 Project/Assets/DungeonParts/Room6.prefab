@@ -8134,7 +8134,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6877148226849193128}
   m_Layer: 6
-  m_Name: TutorialChest
+  m_Name: ChestPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8392,6 +8392,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   navMeshSurface: {fileID: 0}
   chestSpawnPoint: {fileID: 0}
+  spawnedChest: {fileID: 0}
 --- !u!1 &4406937445918084497
 GameObject:
   m_ObjectHideFlags: 0
@@ -12339,6 +12340,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   navMeshSurface: {fileID: 0}
   chestSpawnPoint: {fileID: 4335343768022373837}
+  spawnedChest: {fileID: 0}
 --- !u!114 &6735692429229810222
 MonoBehaviour:
   m_ObjectHideFlags: 0

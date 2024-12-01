@@ -9663,6 +9663,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8564563868333351777, guid: 36cf6331b3d853949b3881c1ee87447b, type: 3}
+      propertyPath: tutorialChest
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

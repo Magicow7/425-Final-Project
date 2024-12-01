@@ -5078,7 +5078,7 @@ MonoBehaviour:
   doorwayBlocker: {fileID: 2864111009131059760, guid: 84cdf6b4a9194b641b3bea14f8b539a5, type: 3}
   doorwayOpen: {fileID: 3031658577760281181, guid: 98e70e85352ad5d47992455b04135198, type: 3}
   chest: {fileID: 5659535475768338145, guid: 36cf6331b3d853949b3881c1ee87447b, type: 3}
-  chestChance: 100
+  chestChance: 15
   possibleRoomParameters:
   - spawnWeight: 1
     roomObject: {fileID: 5772717485600044260, guid: aed48743edfdc7646999ce69d06af5af, type: 3}
