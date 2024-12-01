@@ -174,7 +174,7 @@ namespace Combat
                     {
                         PlayerStats.Instance.Health.Value = 0;
 
-                        // TextUpdates.Instance.ShowDeathScreen();
+                        TextUpdates.Instance.ShowDeathScreen();
                         // Player HP too low, cannot take another hit.
                         SoundManager.PlaySound(SoundManager.Sound.PlayerDeath);
                     }

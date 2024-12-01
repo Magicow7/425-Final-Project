@@ -10,7 +10,8 @@ public class EnemySpawner : MonoBehaviour
     public GameObject enemyPrefab;
 
     public int waveNumber { get; private set; } = 0;
-    public float waveInterval = 5f; // time in between waves
+    private float waveInterval = 10.0f; // time in between waves
+    private float spawnInterval = 0.01f; // lag time so enemies don't spawn on top of one another
     
     private Vector3 modifier = new Vector3(0.2f, 0.2f, 0.2f); // ensures enemy spawns above floor
 
@@ -40,15 +41,15 @@ public class EnemySpawner : MonoBehaviour
         while (true)
         {
             waveNumber += 1;
-            SpawnWave(waveNumber);
+            yield return StartCoroutine(SpawnWave(waveNumber));
             yield return new WaitForSeconds(waveInterval);
 
             // Decrease wave interval as game progresses
-            waveInterval = Mathf.Max(1f, waveInterval - 0.5f);
+            waveInterval = Mathf.Max(5f, waveInterval - 1.0f);
         }
     }
 
-    private void SpawnWave(int waveNumber)
+    private IEnumerator SpawnWave(int waveNumber)
     {
         // Endless mode: small = 15 = 5X, normal = 20 + 5X, large = 3 + X, X = # waves beyond 9
         (int smallCount, int normalCount, int largeCount) = waveConfig.ContainsKey(waveNumber) ?
@@ -58,18 +59,21 @@ public class EnemySpawner : MonoBehaviour
         for (int i = 0; i < smallCount; i++)
         {
             SpawnEnemy("small");
+            yield return new WaitForSeconds(spawnInterval);
         }
 
         // Spawn normal enemies
         for (int i = 0; i < normalCount; i++)
         {
             SpawnEnemy("normal");
+            yield return new WaitForSeconds(spawnInterval);
         }
 
         // Spawn large enemies
         for (int i = 0; i < largeCount; i++)
         {
             SpawnEnemy("large");
+            yield return new WaitForSeconds(spawnInterval);
         }
     }
 
