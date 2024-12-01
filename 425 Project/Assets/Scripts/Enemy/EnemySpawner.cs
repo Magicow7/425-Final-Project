@@ -87,17 +87,21 @@ public class EnemySpawner : MonoBehaviour
 
         if (enemy != null)
         {
+            // Scale stats based on wave number
+            float healthMultiplier = 1 + (waveNumber * 0.05f); // 5% flat increase per wave
+            float attackDamageMultiplier = 1 + (waveNumber * 0.05f); // 5% flat increase per wave
+
             // Health, Speed, Scale, AttackDamage
             switch (variant)
             {
                 case "small":
-                    enemy.ConfigureStats(20, 5, 0.75f, 5);
+                    enemy.ConfigureStats(20 * healthMultiplier, 5, 0.75f, 5 * attackDamageMultiplier);
                     break;
                 case "normal":
-                    enemy.ConfigureStats(50, 2, 1, 10);
+                    enemy.ConfigureStats(50 * healthMultiplier, 2, 1, 10 * attackDamageMultiplier);
                     break;
                 case "large":
-                    enemy.ConfigureStats(150, 1, 1.5f, 20);
+                    enemy.ConfigureStats(150 * healthMultiplier, 1, 1.5f, 20 * attackDamageMultiplier);
                     break;
             }
         }
