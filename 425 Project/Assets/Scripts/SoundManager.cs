@@ -12,11 +12,10 @@ public class SoundManager : MonoBehaviour
         Walking,            // FUNCTIONAL (WALKING/SPRINTING)
         AirborneMovement,   // FUNCTIONAL (SCALES WITH SPEED)
         Jumping,            // FUNCTIONAL
-        PlayerHit,          // Health scripts unimplemented in this version
-        PlayerLowHP,        // Health scripts unimplemented in this version
-        PlayerDeath,        // Health scripts unimplemented in this version
-        LowMana,            // Mana scripts underimplemented in this version                        (NEED TO FIND SOUND)
-        OutOfMana,          // Mana scripts underimplemented in this version                        (NEED TO FIND SOUND)
+        PlayerHit,          // FUNCTIONAL
+        PlayerLowHP,        // FUNCTIONAL
+        PlayerDeath,        // FUNCTIONAL
+        LowMana,            // FUNCTIONAL
         FireSpellStart,     // FUNCTIONAL
         FireSpellStop,      // FUNCTIONAL
         MobHit,             // FUNCTIONAL
@@ -24,14 +23,17 @@ public class SoundManager : MonoBehaviour
         MobNoise2,          // FUNCTIONAL
         MobNoise3,          // FUNCTIONAL
         MobDeath,           // FUNCTIONAL
-        StoodGroundSuccess, // Standing Ground mechanic unimplemented in this version               (NEED TO FIND SOUND)
-        StoodGroundFail,    // Standing Ground mechanic unimplemented in this version               (NEED TO FIND SOUND)
-        OpenChest,          // Interactable scripts not added
+        StoodGroundSuccess, // Standing Ground mechanic unimplemented in this version
+        StoodGroundFail,    // Standing Ground mechanic unimplemented in this version
+        OpenChest,          // Plays when tutorial chets is opened, rest is unimplemented
         SpendGold,          // Gold unimplemented in this version
-        GainLotsOfGold,     // Gold unimplemented in this version                                   (NEED TO FIND SOUND)
-        NormalBackground,   // FUNCTIONAL                                                           (USING A TEMPORARY SOUND)
+        NormalBackground,   // FUNCTIONAL
         LowHPBackground,    // FUNCTIONAL
-        IntenseBackground,  // FUNCTIONAL                                                           (USING A TEMPORARY SOUND)
+        MenuButtonMove,     // Menu Buttons not implemented
+        MenuButtonPress,    // Menu Buttons not implemented
+        LaserShoot,         // FUNCTIONAL
+        LaserBlast,         // FUNCTIONAL
+
     }
 
     [System.Serializable]
@@ -69,24 +71,6 @@ public class SoundManager : MonoBehaviour
         backgroundMusic = Player.AddComponent<AudioSource>();
         backgroundMusic.loop = true;
         ChangeBackgroundMusic(SoundManager.Sound.NormalBackground);
-    }
-
-    // Temporary to hear the different backgrounds
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            ChangeBackgroundMusic(SoundManager.Sound.NormalBackground);
-        }
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            SoundManager.PlaySound(SoundManager.Sound.PlayerLowHP);
-            ChangeBackgroundMusic(SoundManager.Sound.LowHPBackground);
-        }
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            ChangeBackgroundMusic(SoundManager.Sound.IntenseBackground);
-        }
     }
 
     // Plays a Sound on the Player
@@ -181,12 +165,24 @@ public class SoundManager : MonoBehaviour
         vols[sound] = newVolume;
     }
 
+    // Returns the volume for a sound
+    public static float GetVolume(Sound sound)
+    {
+        return vols[sound];
+    }
+
+    // Changes the volume of the currentBackground audio source
+    public static void ChangeBackgroundVolume(float newVolume)
+    {
+        backgroundMusic.volume = newVolume;
+    }
+
     // Checks if a given sound can be played given it's wait time
     private static bool canPlay(Sound sound)
     {
         float previousPlay = lastPlayed[sound];
         float wait = waits[sound];
-        if ((Time.time < wait && previousPlay == 0) || previousPlay + wait < Time.time)
+        if (wait == 0 || (Time.time < wait && previousPlay == 0) || previousPlay + wait < Time.time)
         {
             lastPlayed[sound] = Time.time;
             return true;

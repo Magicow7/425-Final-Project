@@ -31,7 +31,7 @@ public class Chest : MonoBehaviour
         if (playerInRange && !opened)
         {
             opened = true;
-            
+            SoundManager.PlaySound(SoundManager.Sound.OpenChest, gameObject.transform.position);
             StartCoroutine(setLid(true));
             StartCoroutine(moveWand());
         }
