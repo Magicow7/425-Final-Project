@@ -50,6 +50,7 @@ namespace Combat
             damageAudioSource.rolloffMode = AudioRolloffMode.Custom;
             ambientAudioSource.rolloffMode = AudioRolloffMode.Custom;
             agent = transform.GetComponent<NavMeshAgent>();
+            agent.speed = enemyStats.Speed.Value;
             StartCoroutine(AmbientSound());
         }
 
@@ -173,7 +174,7 @@ namespace Combat
                     {
                         PlayerStats.Instance.Health.Value = 0;
 
-                        TextUpdates.Instance.ShowDeathScreen();
+                        // TextUpdates.Instance.ShowDeathScreen();
                         // Player HP too low, cannot take another hit.
                         SoundManager.PlaySound(SoundManager.Sound.PlayerDeath);
                     }
@@ -198,6 +199,15 @@ namespace Combat
 
                 agent.isStopped = false;
             }
+        }
+
+        public void ConfigureStats(float health, float speed, float scale, float attackDamage)
+        {
+            enemyStats = new EnemyStats(health, speed, scale, attackDamage);
+
+            transform.localScale = transform.localScale * enemyStats.Scale;
+            _damageNumber.Initialize(enemyStats.Health);
+            agent.speed = enemyStats.Speed.Value;
         }
     }
 }
