@@ -1696,6 +1696,37 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4579454407841743219, guid: 23abed701bc7fb8488736d0d5154e080, type: 3}
+--- !u!1 &1578007368119305020
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8555854786255366745}
+  m_Layer: 6
+  m_Name: ChestPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8555854786255366745
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1578007368119305020}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -1, z: -0, w: 0.00000058114523}
+  m_LocalPosition: {x: -0.6981003, y: 0.126, z: -0.6871557}
+  m_LocalScale: {x: 1.1945684, y: 1.1945684, z: 1.1945684}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3670858861376454270}
+  m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
 --- !u!1 &1594727038511389091
 GameObject:
   m_ObjectHideFlags: 0
@@ -7325,6 +7356,7 @@ Transform:
   - {fileID: 191148805447916548}
   - {fileID: 7122989148706218744}
   - {fileID: 432775018577167989}
+  - {fileID: 8555854786255366745}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5772717485600044260
@@ -7340,6 +7372,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   navMeshSurface: {fileID: 0}
+  chestSpawnPoint: {fileID: 1578007368119305020}
 --- !u!114 &648566054040358525
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -7540,7 +7540,7 @@ Transform:
   - {fileID: 191148805447916548}
   - {fileID: 7122989148706218744}
   - {fileID: 432775018577167989}
-  - {fileID: 8145822805049664815}
+  - {fileID: 1064450370432867024}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5772717485600044260
@@ -7556,6 +7556,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   navMeshSurface: {fileID: 0}
+  chestSpawnPoint: {fileID: 0}
+  spawnedChest: {fileID: 7899061095821734837}
 --- !u!114 &648566054040358525
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9601,7 +9603,7 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4579454407841743219, guid: 23abed701bc7fb8488736d0d5154e080, type: 3}
---- !u!1001 &6691160364706867883
+--- !u!1001 &2528119939129890132
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -9609,18 +9611,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3670858861376454270}
     m_Modifications:
-    - target: {fileID: 3301138837371375492, guid: 36cf6331b3d853949b3881c1ee87447b, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1.1945684
-      objectReference: {fileID: 0}
-    - target: {fileID: 3301138837371375492, guid: 36cf6331b3d853949b3881c1ee87447b, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1.1945684
-      objectReference: {fileID: 0}
-    - target: {fileID: 3301138837371375492, guid: 36cf6331b3d853949b3881c1ee87447b, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1.1945684
-      objectReference: {fileID: 0}
     - target: {fileID: 3301138837371375492, guid: 36cf6331b3d853949b3881c1ee87447b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -9665,13 +9655,30 @@ PrefabInstance:
       propertyPath: m_Name
       value: TutorialChest
       objectReference: {fileID: 0}
+    - target: {fileID: 7932025382430371246, guid: 36cf6331b3d853949b3881c1ee87447b, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8215645629360543424, guid: 36cf6331b3d853949b3881c1ee87447b, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8564563868333351777, guid: 36cf6331b3d853949b3881c1ee87447b, type: 3}
+      propertyPath: tutorialChest
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 36cf6331b3d853949b3881c1ee87447b, type: 3}
---- !u!4 &8145822805049664815 stripped
+--- !u!4 &1064450370432867024 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3301138837371375492, guid: 36cf6331b3d853949b3881c1ee87447b, type: 3}
-  m_PrefabInstance: {fileID: 6691160364706867883}
+  m_PrefabInstance: {fileID: 2528119939129890132}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7899061095821734837 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5659535475768338145, guid: 36cf6331b3d853949b3881c1ee87447b, type: 3}
+  m_PrefabInstance: {fileID: 2528119939129890132}
   m_PrefabAsset: {fileID: 0}
