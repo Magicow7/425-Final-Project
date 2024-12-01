@@ -15516,6 +15516,74 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 765832751}
   m_CullTransparentMesh: 1
+--- !u!1 &791155919
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 791155922}
+  - component: {fileID: 791155921}
+  - component: {fileID: 791155920}
+  m_Layer: 0
+  m_Name: EventSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &791155920
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 791155919}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SendPointerHoverToParent: 1
+  m_HorizontalAxis: Horizontal
+  m_VerticalAxis: Vertical
+  m_SubmitButton: Submit
+  m_CancelButton: Cancel
+  m_InputActionsPerSecond: 10
+  m_RepeatDelay: 0.5
+  m_ForceModuleActive: 0
+--- !u!114 &791155921
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 791155919}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_FirstSelected: {fileID: 0}
+  m_sendNavigationEvents: 1
+  m_DragThreshold: 10
+--- !u!4 &791155922
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 791155919}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &820664278 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 9066198954317489977, guid: d5f799c854aabf64ea9c2c4389f1764f, type: 3}
@@ -15697,10 +15765,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b37ef1c9ace4b497e86757d46dcadf77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemy: {fileID: 6256646944060083910, guid: d25797a5408da4cb183fdc6369789f98, type: 3}
+  enemyPrefab: {fileID: 6256646944060083910, guid: d25797a5408da4cb183fdc6369789f98, type: 3}
   waveInterval: 20
-  spawnInterval: 0.1
-  enemiesPerWave: 10
 --- !u!4 &951243912
 Transform:
   m_ObjectHideFlags: 0
@@ -20880,7 +20946,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1595328927
+--- !u!1 &1596174503
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -20888,8 +20954,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1595328929}
-  - component: {fileID: 1595328928}
+  - component: {fileID: 1596174505}
+  - component: {fileID: 1596174504}
   m_Layer: 0
   m_Name: SoundManager
   m_TagString: Untagged
@@ -20897,13 +20963,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1595328928
+--- !u!114 &1596174504
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1595328927}
+  m_GameObject: {fileID: 1596174503}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bd8d3b2d606996c4d932055e49aa2afc, type: 3}
@@ -20927,7 +20993,7 @@ MonoBehaviour:
     wait: 0.25
   - sound: 3
     clip: {fileID: 8300000, guid: 3f52d79c32455a3439d2b5b17fba7c77, type: 3}
-    volume: 0.06
+    volume: 0.12
     maxDistance: 1
     wait: -1
   - sound: 4
@@ -20939,99 +21005,104 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 1505762405544bc49b1ea48e123ec7f6, type: 3}
     volume: 0.15
     maxDistance: 1
-    wait: -1
+    wait: 1000
   - sound: 6
-    clip: {fileID: 8300000, guid: fc492d5871193de419bcd7a01cd412a7, type: 3}
-    volume: 0
+    clip: {fileID: 8300000, guid: 47d035577ee535543ba441bef397042a, type: 3}
+    volume: 0.1
     maxDistance: 1
     wait: -1
   - sound: 7
-    clip: {fileID: 8300000, guid: fc492d5871193de419bcd7a01cd412a7, type: 3}
-    volume: 0
-    maxDistance: 1
-    wait: -1
-  - sound: 8
     clip: {fileID: 8300000, guid: 94bdd8dd4d691c8419618dbf9ea888f5, type: 3}
     volume: 0.2
     maxDistance: 1
-    wait: -1
-  - sound: 9
+    wait: 0
+  - sound: 8
     clip: {fileID: 8300000, guid: 1b329b08ec26cbf4b99a63247fd7ad75, type: 3}
     volume: 0.2
     maxDistance: 1
     wait: -1
-  - sound: 10
+  - sound: 9
     clip: {fileID: 8300000, guid: 9b808f520dcd4f6459da46959ebdfbb7, type: 3}
     volume: 0.09
     maxDistance: 10
     wait: 0
-  - sound: 11
+  - sound: 10
     clip: {fileID: 8300000, guid: a6db7600af745c94fa6d923c8ecf4c86, type: 3}
     volume: 0.08
     maxDistance: 10
     wait: 0
-  - sound: 12
+  - sound: 11
     clip: {fileID: 8300000, guid: 7a18087dbddcd0f4798eb42e221994c6, type: 3}
     volume: 0.08
     maxDistance: 10
     wait: 0
-  - sound: 13
+  - sound: 12
     clip: {fileID: 8300000, guid: 17d3c4a7dacab5543bdfb77f621af371, type: 3}
     volume: 0.08
     maxDistance: 10
     wait: 0
-  - sound: 14
+  - sound: 13
     clip: {fileID: 8300000, guid: 3c3eb551dcace6b4c845adb628cff395, type: 3}
     volume: 0.08
     maxDistance: 10
     wait: 0
+  - sound: 14
+    clip: {fileID: 8300000, guid: d97736392735c20428171b556879e11c, type: 3}
+    volume: 0.05
+    maxDistance: 1
+    wait: 0
   - sound: 15
-    clip: {fileID: 8300000, guid: fc492d5871193de419bcd7a01cd412a7, type: 3}
+    clip: {fileID: 8300000, guid: 78593a1e549149a4ab3eb6a444f67528, type: 3}
     volume: 0.05
     maxDistance: 1
     wait: 0
   - sound: 16
-    clip: {fileID: 8300000, guid: fc492d5871193de419bcd7a01cd412a7, type: 3}
-    volume: 0.05
-    maxDistance: 1
-    wait: 0
-  - sound: 17
     clip: {fileID: 8300000, guid: a0d5f2981630db64e95c4850b7d439a6, type: 3}
     volume: 0.05
     maxDistance: 5
     wait: 0
-  - sound: 18
+  - sound: 17
     clip: {fileID: 8300000, guid: fb4662ad0a3183e4f9ed3e792627500e, type: 3}
     volume: 0.05
     maxDistance: 5
     wait: 0
-  - sound: 19
-    clip: {fileID: 8300000, guid: fc492d5871193de419bcd7a01cd412a7, type: 3}
-    volume: 0.05
-    maxDistance: 5
-    wait: 0
-  - sound: 20
-    clip: {fileID: 8300000, guid: 4fe243870eab47e4bbb9c6ef07f29b35, type: 3}
-    volume: 0.025
+  - sound: 18
+    clip: {fileID: 8300000, guid: d51053f104850d54fab8f155c21623f0, type: 3}
+    volume: 0.08
     maxDistance: 1
     wait: -1
-  - sound: 21
+  - sound: 19
     clip: {fileID: 8300000, guid: 9cbe7cf85306d3a4b943b19aa404beb9, type: 3}
     volume: 0.15
     maxDistance: 1
     wait: -1
-  - sound: 22
-    clip: {fileID: 8300000, guid: a536a04b90c90ad4ebcc9c1efc72998c, type: 3}
+  - sound: 20
+    clip: {fileID: 8300000, guid: 07ce4b81580e76d49add5956bfc25ebd, type: 3}
     volume: 0.15
     maxDistance: 1
-    wait: -1
---- !u!4 &1595328929
+    wait: 0
+  - sound: 21
+    clip: {fileID: 8300000, guid: 3cb4574ef7ab2f648a0d18ea6f701bbc, type: 3}
+    volume: 0.15
+    maxDistance: 1
+    wait: 0
+  - sound: 22
+    clip: {fileID: 8300000, guid: e4219e0d108f0f044aebaf083367b903, type: 3}
+    volume: 0.15
+    maxDistance: 1
+    wait: 0
+  - sound: 23
+    clip: {fileID: 8300000, guid: 997d2f46cbee6eb48a1a0d712d2e899a, type: 3}
+    volume: 0.08
+    maxDistance: 10
+    wait: 10
+--- !u!4 &1596174505
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1595328927}
+  m_GameObject: {fileID: 1596174503}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -14.803305, y: -5.491242, z: -9.379114}
@@ -21150,6 +21221,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   taskText: {fileID: 765832753}
+  deathScreenText: {fileID: 0}
 --- !u!4 &1684505847
 Transform:
   m_ObjectHideFlags: 0
@@ -27674,4 +27746,5 @@ SceneRoots:
   - {fileID: 1713062181}
   - {fileID: 1924210277490697963}
   - {fileID: 1684505847}
-  - {fileID: 1595328929}
+  - {fileID: 791155922}
+  - {fileID: 1596174505}

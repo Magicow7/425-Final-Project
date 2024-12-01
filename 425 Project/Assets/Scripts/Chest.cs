@@ -94,7 +94,7 @@ public class Chest : MonoBehaviour
         if (playerInRange && !opened && !charging)
         {            
             if(tutorialChest){
-                TextUpdates.Instance.UpdateTaskText("Defend the chest untill it opens.");
+                TextUpdates.Instance.UpdateTaskText("Defend the chest until it opens.");
             }
             charging = true; 
         }
