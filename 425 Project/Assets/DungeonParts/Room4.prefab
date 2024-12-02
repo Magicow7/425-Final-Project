@@ -9246,13 +9246,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3015595680720837687}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -0.92387956, z: 0, w: 0.38268343}
-  m_LocalPosition: {x: -1.89, y: 0.128, z: -1.97}
+  m_LocalRotation: {x: 0, y: 0.38268343, z: 0, w: 0.92387956}
+  m_LocalPosition: {x: -6.396, y: 0.128, z: -6.476}
   m_LocalScale: {x: 1.1945684, y: 1.1945684, z: 1.1945684}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3670858861376454270}
-  m_LocalEulerAnglesHint: {x: 0, y: -135, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 45, z: 0}
 --- !u!1 &3034814342585373004
 GameObject:
   m_ObjectHideFlags: 0
@@ -17159,8 +17159,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91d34f98c454488469894e6679f5809c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  navMeshSurface: {fileID: 0}
-  chestSpawnPoint: {fileID: 3015595680720837687}
+  _navMeshSurface: {fileID: 0}
+  _chestSpawnPoint: {fileID: 3015595680720837687}
+  _spawnedChest: {fileID: 0}
 --- !u!114 &648566054040358525
 MonoBehaviour:
   m_ObjectHideFlags: 0
