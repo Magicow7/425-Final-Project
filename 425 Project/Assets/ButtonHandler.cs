@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 using UnityEngine.SceneManagement;
 
-public class ResetScene : MonoBehaviour
+public class ButtonHandler : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
@@ -17,10 +18,10 @@ public class ResetScene : MonoBehaviour
         
     }
 
-    public void DoReset()
+    public void BeginGame()
     {
-        Debug.LogWarning("RESTING SCENE");
-        TextUpdates.Instance.HideDeathScreen();
-        SceneManager.LoadScene("TitleScreen");
+        Debug.LogWarning("LOADING PLAYING SCENE");
+        //TextUpdates.Instance.HideDeathScreen();
+        SceneManager.LoadScene("MergedDungeonScene");
     }
 }
