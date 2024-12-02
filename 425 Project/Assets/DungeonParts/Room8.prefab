@@ -1566,6 +1566,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   navMeshSurface: {fileID: 0}
   chestSpawnPoint: {fileID: 0}
+  spawnedChest: {fileID: 0}
 --- !u!1 &664896192955369305
 GameObject:
   m_ObjectHideFlags: 0
@@ -7565,7 +7566,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.49999997, y: -0.49999997, z: 0.49999994, w: 0.5000002}
   m_LocalPosition: {x: -6, y: 3.99, z: 4}
-  m_LocalScale: {x: 100, y: 100, z: 100}
+  m_LocalScale: {x: 100, y: 107.53, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2593401794172412494}
@@ -10427,7 +10428,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.49999997, y: -0.49999997, z: 0.49999994, w: 0.5000002}
   m_LocalPosition: {x: -6, y: 3.99, z: 2}
-  m_LocalScale: {x: 100, y: 100, z: 100}
+  m_LocalScale: {x: 100, y: 107.53, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2593401794172412494}
@@ -14793,6 +14794,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   navMeshSurface: {fileID: 0}
   chestSpawnPoint: {fileID: 5078459225519787525}
+  spawnedChest: {fileID: 0}
 --- !u!114 &1625425198245742920
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16019,7 +16021,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.49999997, y: -0.49999997, z: 0.49999994, w: 0.5000002}
   m_LocalPosition: {x: -6, y: 3.99, z: -4}
-  m_LocalScale: {x: 100, y: 100, z: 100}
+  m_LocalScale: {x: 100, y: 107.53, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2593401794172412494}
@@ -27392,7 +27394,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.49999997, y: -0.49999997, z: 0.49999994, w: 0.5000002}
   m_LocalPosition: {x: -6, y: 3.99, z: -2}
-  m_LocalScale: {x: 100, y: 100, z: 100}
+  m_LocalScale: {x: 100, y: 107.53, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2593401794172412494}
@@ -30042,7 +30044,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.49999997, y: -0.49999997, z: 0.49999994, w: 0.5000002}
   m_LocalPosition: {x: -6, y: 3.99, z: 0}
-  m_LocalScale: {x: 100, y: 100, z: 100}
+  m_LocalScale: {x: 100, y: 107.53, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2593401794172412494}
@@ -31622,6 +31624,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   navMeshSurface: {fileID: 0}
   chestSpawnPoint: {fileID: 0}
+  spawnedChest: {fileID: 0}
 --- !u!1 &9130860565085971088
 GameObject:
   m_ObjectHideFlags: 0
