@@ -3,8 +3,10 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
+using Utils.Singleton;
 
-public class TextUpdates : MonoBehaviour
+[SingletonAttribute(SingletonCreationMode.Auto, false)]
+public class TextUpdates : SingletonMonoBehaviour<TextUpdates>
 {
     public static TextUpdates Instance { get; private set; }
 
@@ -16,6 +18,8 @@ public class TextUpdates : MonoBehaviour
     [SerializeField] private TextMeshProUGUI timeUI;
 
     [SerializeField] private TextMeshProUGUI finalScoreUI;
+
+    [SerializeField] private GameObject restartButton;
 
     private bool gameOver = false;
 
@@ -29,7 +33,7 @@ public class TextUpdates : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); 
+            //DontDestroyOnLoad(gameObject); 
         }
         else
         {
@@ -41,7 +45,7 @@ public class TextUpdates : MonoBehaviour
     {
         if(!gameOver){
             gameOver = true;
-            deathScreenText.SetActive(true);
+            _deathScreenText.SetActive(true);
             MouseLook.instance.UnlockCursor();
             StartCoroutine(DeathScreen());
         }
@@ -109,15 +113,15 @@ public class TextUpdates : MonoBehaviour
 
     private IEnumerator DeathScreen(){
     
-        deathScreenText.transform.localScale = new Vector3(0,0,0);
+        _deathScreenText.transform.localScale = new Vector3(0,0,0);
         float timePassed = 0;
         while(timePassed < 3){
             timePassed+= Time.deltaTime;
             float tempVal = Mathf.Lerp(0,1,timePassed);
-            deathScreenText.transform.localScale = new Vector3(tempVal, tempVal, tempVal);
+            _deathScreenText.transform.localScale = new Vector3(tempVal, tempVal, tempVal);
             yield return null;
         }
-        deathScreenText.transform.localScale = new Vector3(1,1,1);
+        _deathScreenText.transform.localScale = new Vector3(1,1,1);
         yield return new WaitForSeconds(1);
         killsUI.text = kills.ToString();
         SoundManager.PlaySound(SoundManager.Sound.MenuButtonPress);
@@ -127,6 +131,10 @@ public class TextUpdates : MonoBehaviour
         SoundManager.PlaySound(SoundManager.Sound.MenuButtonPress);
         yield return new WaitForSeconds(1);
         finalScoreUI.text = (((int)(timeSurvived)*5) + (kills * 100)).ToString();
+        SoundManager.PlaySound(SoundManager.Sound.MenuButtonPress);
+
+        yield return new WaitForSeconds(1);
+        restartButton.SetActive(true);
         SoundManager.PlaySound(SoundManager.Sound.MenuButtonPress);
 
     }
