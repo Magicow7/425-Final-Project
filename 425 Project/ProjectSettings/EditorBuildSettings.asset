@@ -12,6 +12,6 @@ EditorBuildSettings:
     path: Assets/Scenes/TitleScreen.unity
     guid: 0e869446717df734fb81a47f8104e392
   - enabled: 1
-    path: Assets/Scenes/MergedDungeonScene.unity
+    path: Assets/Scenes/SilasMergeScene.unity
     guid: 8a7beb109d9a0334fabc837d29a1333b
   m_configObjects: {}
