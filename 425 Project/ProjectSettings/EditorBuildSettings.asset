@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SilasMergeScene.unity
     guid: 8a7beb109d9a0334fabc837d29a1333b
+  - enabled: 1
+    path: Assets/Scenes/MergedDungeonScene.unity
+    guid: 9fb3c3081a827b0408f1cf7146b35bef
   m_configObjects: {}
