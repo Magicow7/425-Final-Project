@@ -19,7 +19,8 @@ public class KillCounter : MonoBehaviour
 
     public void IncrementKillCounter()
     {
-        _killCount++;
-        _killCounter.text = "Kills: " + _killCount;
+        killCount++;
+        killCounter.text = "Kills: " + killCount;
+        TextUpdates.Instance.setKills(killCount);
     }
 }

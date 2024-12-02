@@ -11,6 +11,19 @@ public class TextUpdates : MonoBehaviour
     [FormerlySerializedAs("taskText"),SerializeField] private TextMeshProUGUI _taskText;
     [FormerlySerializedAs("deathScreenText"),SerializeField] private GameObject _deathScreenText;
 
+    [SerializeField] private TextMeshProUGUI killsUI;
+
+    [SerializeField] private TextMeshProUGUI timeUI;
+
+    [SerializeField] private TextMeshProUGUI finalScoreUI;
+
+    private bool gameOver = false;
+
+    private int kills;
+
+    private float timeSurvived;
+
+
     private void Awake()
     {
         if (Instance == null)
@@ -26,8 +39,13 @@ public class TextUpdates : MonoBehaviour
 
     public void ShowDeathScreen()
     {
-        _deathScreenText.SetActive(true);
-        MouseLook.instance.UnlockCursor();
+        if(!gameOver){
+            gameOver = true;
+            deathScreenText.SetActive(true);
+            MouseLook.instance.UnlockCursor();
+            StartCoroutine(DeathScreen());
+        }
+        
     }
 
     public void HideDeathScreen()
@@ -75,5 +93,41 @@ public class TextUpdates : MonoBehaviour
         }
         _taskText.text = text;
         yield return null;
+    }
+
+    public void setTimeAlive(float val){
+        if(!gameOver){
+            timeSurvived = val;
+        }   
+    }
+
+    public void setKills(int val){
+        if(!gameOver){
+            kills = val;
+        }   
+    }
+
+    private IEnumerator DeathScreen(){
+    
+        deathScreenText.transform.localScale = new Vector3(0,0,0);
+        float timePassed = 0;
+        while(timePassed < 3){
+            timePassed+= Time.deltaTime;
+            float tempVal = Mathf.Lerp(0,1,timePassed);
+            deathScreenText.transform.localScale = new Vector3(tempVal, tempVal, tempVal);
+            yield return null;
+        }
+        deathScreenText.transform.localScale = new Vector3(1,1,1);
+        yield return new WaitForSeconds(1);
+        killsUI.text = kills.ToString();
+        SoundManager.PlaySound(SoundManager.Sound.MenuButtonPress);
+        yield return new WaitForSeconds(1);
+        string formattedTime = ((int)timeSurvived/60) + ":" + ((int)timeSurvived%60);
+        timeUI.text = formattedTime;
+        SoundManager.PlaySound(SoundManager.Sound.MenuButtonPress);
+        yield return new WaitForSeconds(1);
+        finalScoreUI.text = (((int)(timeSurvived)*5) + (kills * 100)).ToString();
+        SoundManager.PlaySound(SoundManager.Sound.MenuButtonPress);
+
     }
 }
