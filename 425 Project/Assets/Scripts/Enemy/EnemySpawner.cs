@@ -115,7 +115,7 @@ public class EnemySpawner : MonoBehaviour
         switch (variant)
         {
             case EnemyType.Small:
-                _spawnedEnemies[_currentSpawnedEnemy].ConfigureStats(20 * healthMultiplier, 3.5, 0.75f, 3 * attackDamageMultiplier, 1);
+                _spawnedEnemies[_currentSpawnedEnemy].ConfigureStats(20 * healthMultiplier, 3.5f, 0.75f, 3 * attackDamageMultiplier, 1);
                 break;
             case EnemyType.Medium:
                 _spawnedEnemies[_currentSpawnedEnemy].ConfigureStats(50 * healthMultiplier, 2, 1, 5 * attackDamageMultiplier, 1);
