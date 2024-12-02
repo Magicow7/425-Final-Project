@@ -11,6 +11,8 @@ public class EnemyNavigation : MonoBehaviour
     private Transform _player;
     private NavMeshAgent _agent;
     private bool _linkTraversing = false;
+    [SerializeField]
+    private LayerMask _groundLayer;
     
     void Start()
     {
@@ -37,8 +39,10 @@ public class EnemyNavigation : MonoBehaviour
         try
         {
             // Code that might throw an exception
-            _agent.destination = _player.position;
-                
+            if (Physics.Raycast(_player.position, Vector3.down, out RaycastHit hit, _groundLayer))
+            {
+                _agent.destination = hit.point;
+            }
         }
         catch (Exception e)
         {

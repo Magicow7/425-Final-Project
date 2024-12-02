@@ -95,7 +95,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a0edd884201246e888bc1e1826b28a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
+  _player: {fileID: 0}
+  _groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!114 &1876492872497398210
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -259,27 +262,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _maxVisibleTime: 1
   _thresholds:
-  - threshold: 0.25
-    color: {r: 1, g: 0.8746814, b: 0, a: 1}
-    size: 0.5
-  - threshold: 0.5
-    color: {r: 1, g: 0.62277794, b: 0, a: 1}
-    size: 0.625
-  - threshold: 0.75
-    color: {r: 1, g: 0.5254831, b: 0, a: 1}
-    size: 0.75
-  - threshold: 1.5
-    color: {r: 1, g: 0.14646244, b: 0, a: 1}
-    size: 1
-  - threshold: 3
-    color: {r: 1, g: 0, b: 0.083632946, a: 1}
-    size: 1.25
-  - threshold: 10
-    color: {r: 1, g: 0, b: 0.49870205, a: 1}
-    size: 1.5
-  - threshold: 100
-    color: {r: 0.37434292, g: 0, b: 1, a: 1}
-    size: 1.75
+  - _threshold: 0.25
+    _color: {r: 1, g: 0.8746814, b: 0, a: 1}
+    _size: 0.5
+  - _threshold: 0.5
+    _color: {r: 1, g: 0.62277794, b: 0, a: 1}
+    _size: 0.625
+  - _threshold: 0.75
+    _color: {r: 1, g: 0.5254831, b: 0, a: 1}
+    _size: 0.75
+  - _threshold: 1.5
+    _color: {r: 1, g: 0.14646244, b: 0, a: 1}
+    _size: 1
+  - _threshold: 3
+    _color: {r: 1, g: 0, b: 0.083632946, a: 1}
+    _size: 1.25
+  - _threshold: 10
+    _color: {r: 1, g: 0, b: 0.49870205, a: 1}
+    _size: 1.5
+  - _threshold: 100
+    _color: {r: 0.37434292, g: 0, b: 1, a: 1}
+    _size: 1.75
 --- !u!1 &6763126151487185086
 GameObject:
   m_ObjectHideFlags: 0
