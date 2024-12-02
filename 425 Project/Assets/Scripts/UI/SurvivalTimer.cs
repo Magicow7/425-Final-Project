@@ -25,5 +25,6 @@ public class SurvivalTimer : MonoBehaviour
         TimeSpan timeSpan = TimeSpan.FromSeconds(currentTime);
         string formattedTime = string.Format("{0:D2}:{1:D2}:{2:D2}", timeSpan.Hours, timeSpan.Minutes, timeSpan.Seconds);
         timer.text = formattedTime;
+        TextUpdates.Instance.setTimeAlive(currentTime);
     }
 }

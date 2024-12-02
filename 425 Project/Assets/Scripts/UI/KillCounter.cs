@@ -21,5 +21,6 @@ public class KillCounter : MonoBehaviour
     {
         killCount++;
         killCounter.text = "Kills: " + killCount;
+        TextUpdates.Instance.setKills(killCount);
     }
 }

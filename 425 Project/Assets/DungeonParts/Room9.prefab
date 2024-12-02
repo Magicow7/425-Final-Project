@@ -3133,6 +3133,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   navMeshSurface: {fileID: 0}
   chestSpawnPoint: {fileID: 2792169136838751241}
+  spawnedChest: {fileID: 0}
 --- !u!114 &7375336875445187414
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5627,7 +5628,7 @@ Transform:
   m_GameObject: {fileID: 2792169136838751241}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -1, z: -0, w: 0.00000058114523}
-  m_LocalPosition: {x: 0, y: 0.126, z: 0}
+  m_LocalPosition: {x: 0, y: 0.126, z: 2.48}
   m_LocalScale: {x: 1.1945684, y: 1.1945684, z: 1.1945684}
   m_ConstrainProportionsScale: 0
   m_Children: []
