@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Combat;
 using Combat.Weapon;
+using Stat;
 using UnityEngine;
 using Utils;
 
@@ -78,5 +79,13 @@ public class ConeWand : Weapon
         }
 
         return false;
+    }
+
+    public override void SetStats()
+    {
+        float mult = Random.Range(0.8f, 1.3f);
+        _manaPerShot = 3 * Mathf.Pow(mult, 2);
+        _damage = 2 * (1 + PlayerStats.Instance.WeaponPower.Value) * mult;
+        _rate = 0.05f;
     }
 }

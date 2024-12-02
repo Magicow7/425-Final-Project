@@ -137,7 +137,7 @@ public class Chest : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E) && _playerInRange && _opened && !_hasWand)
         {
             _hasWand = true;
-            Debug.LogWarning("Presed e");
+            Debug.LogWarning("Pressed e");
             if (_tutorialChest)
             {
                 TextUpdates.Instance.UpdateTaskText("Now practice shooting your wand using left click.");

@@ -10403,10 +10403,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _weapons:
-  - {fileID: 2025500132}
-  - {fileID: 820664278}
-  - {fileID: 436213901}
-  - {fileID: 2077026110}
+  - {fileID: 2025500140}
+  - {fileID: 820664280}
+  - {fileID: 436213903}
+  - {fileID: 2077026112}
   _weaponVisuals:
   - {fileID: 329706639}
   - {fileID: 527731352}
@@ -10546,11 +10546,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 412049469}
   m_CullTransparentMesh: 1
---- !u!1 &436213901 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6625531393817372155, guid: d5f799c854aabf64ea9c2c4389f1764f, type: 3}
+--- !u!114 &436213903 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3431231471813526088, guid: d5f799c854aabf64ea9c2c4389f1764f, type: 3}
   m_PrefabInstance: {fileID: 1924210277490697963}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f85884368b173db43857531aa55a7221, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &527731352
 GameObject:
   m_ObjectHideFlags: 0
@@ -16162,11 +16168,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 801553136}
   m_CullTransparentMesh: 1
---- !u!1 &820664278 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 9066198954317489977, guid: d5f799c854aabf64ea9c2c4389f1764f, type: 3}
+--- !u!114 &820664280 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6752951616222054425, guid: d5f799c854aabf64ea9c2c4389f1764f, type: 3}
   m_PrefabInstance: {fileID: 1924210277490697963}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd2e3792b7f649ab9453ac0e602ac5fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &883185851
 GameObject:
   m_ObjectHideFlags: 0
@@ -16567,8 +16579,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _enemyPrefab: {fileID: 3772942569494810990, guid: d25797a5408da4cb183fdc6369789f98, type: 3}
   _maxEnemies: 50
-  _healthScaling: 0.05
-  _damageScaling: 0.05
+  _healthScaling: 0.1
+  _damageScaling: 0.1
 --- !u!4 &951243912
 Transform:
   m_ObjectHideFlags: 0
@@ -28579,6 +28591,17 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!114 &2025500140 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6549928528712400245, guid: d5f799c854aabf64ea9c2c4389f1764f, type: 3}
+  m_PrefabInstance: {fileID: 1924210277490697963}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2025500132}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7f9cbb900a54f82b5cd8b0878201182, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2036205693
 GameObject:
   m_ObjectHideFlags: 0

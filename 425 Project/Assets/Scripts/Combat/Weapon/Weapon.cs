@@ -43,6 +43,8 @@ namespace Combat.Weapon
             }
         }
 
+        public abstract void SetStats();
+
         protected abstract bool Fire();
 
         protected virtual void FireStart() { }

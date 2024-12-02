@@ -15,6 +15,7 @@ namespace Stat
 
         public ResourceStat Mana { get; private set; }
         public ResourceStat Health { get; private set; }
+        public AttributeStat WeaponPower { get; private set; }
 
         private float _healthRegen = 0;
 
@@ -24,6 +25,7 @@ namespace Stat
 
             Mana = new ResourceStat(_maxMana);
             Health = new ResourceStat(_maxHealth);
+            WeaponPower = new AttributeStat(0);
 
             CustomUpdateManager.RegisterUpdate(this);
         }

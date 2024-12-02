@@ -62,6 +62,7 @@ public class EnemySpawner : MonoBehaviour
             if (PlayerStats.Instance)
             {
                 PlayerStats.Instance.RegenerateHealth(PlayerStats.Instance.Health.MaxValue / 25, 5);
+                PlayerStats.Instance.WeaponPower.Value += 0.1f;
             }
 
             // Decrease wave interval as game progresses

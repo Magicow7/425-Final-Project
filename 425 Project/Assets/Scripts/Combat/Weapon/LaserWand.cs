@@ -1,5 +1,6 @@
 using System.Collections;
 using Combat.Weapon;
+using Stat;
 using UnityEngine;
 
 public class LaserWand : Weapon
@@ -102,5 +103,41 @@ public class LaserWand : Weapon
     {
         yield return new WaitForSeconds(Mathf.Min(_explosionTime, _lineRemoveTime));
         _lineRenderer.positionCount = 0;
+    }
+
+    public override void SetStats()
+    {
+        float mult = Random.Range(0.8f, 1.3f);
+        _manaPerShot = 3 * Mathf.Pow(mult, 2);
+        _explosionRadius = Random.Range(1f, 3f) * mult;
+        _explosionDamage = 10 * 1 + PlayerStats.Instance.WeaponPower.Value * mult;
+        _explosionTime = 1;
+        _fireRate = 1 * (1 + PlayerStats.Instance.WeaponPower.Value) * mult;
+        _bounces = (int)(2 * (1 + PlayerStats.Instance.WeaponPower.Value) * mult);
+        _explosionDamageOverTime = 0;
+
+        int type = Random.Range(1, 6);
+        if (type == 1)
+        {
+            _explosionDamage *= 1.5f;
+        }
+        else if (type == 2)
+        {
+            _fireRate *= 1.5f;
+        }
+        else if (type == 3)
+        {
+            _explosionRadius *= 1.5f;
+        }
+        else if (type == 4)
+        {
+            _bounces = 2 * _bounces + 1;
+        }
+        else if (type == 5)
+        {
+            _explosionDamage = 0;
+            _explosionTime = 2 * (1 + PlayerStats.Instance.WeaponPower.Value) * mult;
+            _explosionDamageOverTime = 3f / _explosionRadius * 2 * (1 + PlayerStats.Instance.WeaponPower.Value) * mult;
+        }
     }
 }
