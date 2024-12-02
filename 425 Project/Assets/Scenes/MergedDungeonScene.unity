@@ -16579,8 +16579,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _enemyPrefab: {fileID: 3772942569494810990, guid: d25797a5408da4cb183fdc6369789f98, type: 3}
   _maxEnemies: 50
-  _healthScaling: 0.1
-  _damageScaling: 0.1
+  _healthScaling: 0.15
+  _damageScaling: 0.05
 --- !u!4 &951243912
 Transform:
   m_ObjectHideFlags: 0
