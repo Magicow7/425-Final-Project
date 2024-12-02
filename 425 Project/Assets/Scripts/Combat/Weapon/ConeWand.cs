@@ -17,7 +17,7 @@ public class ConeWand : Weapon
     private float _nextFireTime = 0f;
     private AudioSource _sfx;
 
-    private List<IDamageable> _enemies = new();
+    private readonly List<IDamageable> _enemies = new();
 
     private void Start()
     {

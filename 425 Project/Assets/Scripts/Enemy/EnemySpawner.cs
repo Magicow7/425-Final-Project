@@ -8,20 +8,20 @@ using UnityEngine.Serialization;
 
 public class EnemySpawner : MonoBehaviour
 {
-    [FormerlySerializedAs("enemyPrefab"),SerializeField]
-    private GameObject _enemyPrefab;
+    [SerializeField]
+    private Enemy _enemyPrefab;
     [SerializeField]
     private int _maxEnemies;
 
     public int WaveNumber { get; private set; } = 0;
     private float _waveInterval = 30.0f; // time in between waves
-    private float _spawnInterval = 0.01f; // lag time so enemies don't spawn on top of one another
+    private readonly float _spawnInterval = 0.01f; // lag time so enemies don't spawn on top of one another
     
-    private Vector3 _modifier = new Vector3(0.2f, 0.2f, 0.2f); // ensures enemy spawns above floor
+    private readonly Vector3 _modifier = new Vector3(0.2f, 0.2f, 0.2f); // ensures enemy spawns above floor
     private int[] _spawnedEnemies;
 
     // Waves 1-9 predefined to introduce enemy variants => endless mode after that
-    private Dictionary<int, (int smallCount, int normalCount, int largeCount)> _waveConfig = new Dictionary<int, (int, int, int)>
+    private readonly Dictionary<int, (int smallCount, int normalCount, int largeCount)> _waveConfig = new Dictionary<int, (int, int, int)>
     {
         { 1, (0, 10, 0) },
         { 2, (0, 15, 0) },
@@ -97,10 +97,7 @@ public class EnemySpawner : MonoBehaviour
     private void SpawnEnemy(EnemyType variant)
     {
         // Spawn enemy at a random spawner
-        GameObject enemyObject = Instantiate(_enemyPrefab, DungeonGenerator.possibleSpawnPoints[Random.Range(0, DungeonGenerator.possibleSpawnPoints.Count)] + _modifier, Quaternion.identity);
-
-        // Configure enemy stats based on variant
-        Enemy enemy = enemyObject.GetComponent<Enemy>();
+        Enemy enemy = Instantiate(_enemyPrefab, DungeonGenerator.possibleSpawnPoints[Random.Range(0, DungeonGenerator.possibleSpawnPoints.Count)] + _modifier, Quaternion.identity);
 
         if (enemy != null)
         {

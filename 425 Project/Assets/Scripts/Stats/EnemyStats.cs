@@ -5,7 +5,7 @@ using Stat;
 
 namespace Stat
 {
-    public class EnemyStats : MonoBehaviour
+    public class EnemyStats
     {
         public ResourceStat Health { get; private set; }
         public ResourceStat Speed { get; private set; }

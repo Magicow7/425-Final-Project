@@ -10,9 +10,9 @@ using Utils.Singleton;
 /// </summary>
 public class CustomUpdateManager : SingletonMonoBehaviour<CustomUpdateManager>
 {
-    private static UpdateQueue<ICustomUpdate> _updates = new();
-    private static UpdateQueue<ICustomFixedUpdate> _fixedUpdates = new();
-    private static UpdateQueue<ICustomLateUpdate> _lateUpdates = new();
+    private static readonly UpdateQueue<ICustomUpdate> _updates = new();
+    private static readonly UpdateQueue<ICustomFixedUpdate> _fixedUpdates = new();
+    private static readonly UpdateQueue<ICustomLateUpdate> _lateUpdates = new();
 
     /// <summary>
     /// Registers an object to all custom update types it implements.
@@ -152,9 +152,9 @@ public class CustomUpdateManager : SingletonMonoBehaviour<CustomUpdateManager>
 
     private class UpdateQueue<T> : IEnumerable<T>
     {
-        private HashSet<T> _items = new();
-        private HashSet<T> _addQueue = new();
-        private HashSet<T> _removeQueue = new();
+        private readonly HashSet<T> _items = new();
+        private readonly HashSet<T> _addQueue = new();
+        private readonly HashSet<T> _removeQueue = new();
 
         /// <summary>
         /// Adds an item to the update queue.

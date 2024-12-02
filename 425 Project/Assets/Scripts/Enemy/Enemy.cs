@@ -37,9 +37,13 @@ namespace Combat
             }
 
             EnemyStats = new EnemyStats();
-            transform.localScale = transform.localScale * EnemyStats.Scale;
+            transform.localScale *= EnemyStats.Scale;
 
-            _playerhealth = PlayerStats.Instance.Health;
+            if (PlayerStats.Instance != null)
+            {
+                _playerhealth = PlayerStats.Instance.Health;
+            }
+
             _agent = GetComponent<NavMeshAgent>();
             _collider = GetComponent<Collider>();
             _damageNumber.Initialize(EnemyStats.Health);

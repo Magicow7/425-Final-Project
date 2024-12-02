@@ -28,20 +28,23 @@ public class EnemyNavigation : MonoBehaviour
             StartCoroutine(TraverseOffMeshLink());
             _linkTraversing = true;
         }
-        if(!_linkTraversing){
-           try
-           {
-                // Code that might throw an exception
-                _agent.destination = _player.position;
+
+        if (_linkTraversing)
+        {
+            return;
+        }
+
+        try
+        {
+            // Code that might throw an exception
+            _agent.destination = _player.position;
                 
-            }
-            catch (Exception e)
-            {
-                // Code that handles the exception
-                Debug.LogError("failed to set agent destination, respawning enemy");
-                Respawn();
-            }
-            
+        }
+        catch (Exception e)
+        {
+            // Code that handles the exception
+            Debug.LogError("failed to set agent destination, respawning enemy");
+            Respawn();
         }
     }
 

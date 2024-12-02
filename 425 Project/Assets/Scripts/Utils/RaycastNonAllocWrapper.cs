@@ -8,10 +8,10 @@ namespace Utils
     /// </summary>
     public class RaycastNonAllocWrapper
     {
-        private RaycastHit[] _hits;
-        private Collider[] _colliders;
-        private LayerMask _layerMask;
-        private QueryTriggerInteraction _triggerInteraction;
+        private readonly RaycastHit[] _hits;
+        private readonly Collider[] _colliders;
+        private readonly LayerMask _layerMask;
+        private readonly QueryTriggerInteraction _triggerInteraction;
         
         public RaycastNonAllocWrapper(LayerMask layerMask, int maxHits = 1, QueryTriggerInteraction triggerInteraction = QueryTriggerInteraction.Ignore)
         {

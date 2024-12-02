@@ -52,18 +52,18 @@ public class DungeonGenerator : SingletonMonoBehaviour<DungeonGenerator>
     //connector structs with data for a graph
     class DungeonRoom{
         public readonly int roomId;
-        public List<GameObject> spawnedPrefabs = new List<GameObject>();
-        public List<DungeonRoomContainedObject> dungeonRoomObjects = new List<DungeonRoomContainedObject>();
+        public readonly List<GameObject> spawnedPrefabs = new List<GameObject>();
+        public readonly List<DungeonRoomContainedObject> dungeonRoomObjects = new List<DungeonRoomContainedObject>();
         //room position in world space
-        public Vector3 worldPosition;
+        public readonly Vector3 worldPosition;
         //room rotation in worldspace
         public Quaternion worldRotation;
         //rotated bounding box of room, used to check against new rooms to see if they overlap
-        public Obb boundingBox;
+        public readonly Obb boundingBox;
         //base parameters of room
-        public DungeonRoomParameters parameters;
+        public readonly DungeonRoomParameters parameters;
         //list of attatched doorways
-        public List<DungeonDoorway> doorways;
+        public readonly List<DungeonDoorway> doorways;
         public int graphDistanceFromCenter;
         public DungeonRoom(DungeonRoomParameters parameters, Vector3 worldPosition, Quaternion worldRotation, Obb boundingBox, int graphDistanceFromCenter){
             doorways = new List<DungeonDoorway>();
@@ -101,13 +101,13 @@ public class DungeonGenerator : SingletonMonoBehaviour<DungeonGenerator>
 
     class DungeonDoorway{
         //doorway position in worldspace
-        public Vector3 worldPosition;
+        public readonly Vector3 worldPosition;
         //parent room of door
-        public DungeonRoom parentRoom;
+        public readonly DungeonRoom parentRoom;
         //list of rooms this door connects, should be max 2
-        public List<DungeonRoom> connectingRooms;
+        public readonly List<DungeonRoom> connectingRooms;
         //base door parameters
-        public DungeonDoorParameters parameters;
+        public readonly DungeonDoorParameters parameters;
         public GameObject spawnedBlocker;
         public GameObject spawnedOpenDoorway;
         public NavMeshLink spawnedNavMeshLink;
@@ -128,8 +128,8 @@ public class DungeonGenerator : SingletonMonoBehaviour<DungeonGenerator>
 
     //struct for non-axis aligned bounding boxes
     struct Obb{
-        public Vector3 center;      // Center of the OBB
-        public Vector3[] axes;      // Local X, Y, and Z axes (3 unit vectors)
+        public readonly Vector3 center;      // Center of the OBB
+        public readonly Vector3[] axes;      // Local X, Y, and Z axes (3 unit vectors)
         public Vector3 halfExtents; // Half-width, half-height, and half-depth along each axis
 
         public Obb(DungeonRoomParameters roomParams, Vector3 worldPosition, Quaternion worldRotation){
@@ -259,8 +259,8 @@ public class DungeonGenerator : SingletonMonoBehaviour<DungeonGenerator>
     private List<DungeonRoomParameters> _possibleRoomParameters = new List<DungeonRoomParameters>();
 
     //private vars 
-    private List<DungeonRoom> _rooms = new List<DungeonRoom>();
-    private List<DungeonDoorway> _doorways = new List<DungeonDoorway>();
+    private readonly List<DungeonRoom> _rooms = new List<DungeonRoom>();
+    private readonly List<DungeonDoorway> _doorways = new List<DungeonDoorway>();
     //private List<GameObject> spawnedPrefabs = new List<GameObject>();
     //current room player is in
     private DungeonRoom _currentCenterRoom;

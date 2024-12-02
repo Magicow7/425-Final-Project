@@ -12,8 +12,8 @@ public class Tile : MonoBehaviour
         Door
     }
 
-    private static List<Transform> _activatedWalls = new List<Transform>();
-    private static List<Transform> _activatedFloors = new List<Transform>();
+    private static readonly List<Transform> _activatedWalls = new List<Transform>();
+    private static readonly List<Transform> _activatedFloors = new List<Transform>();
 
     public static void ClearActivatedWalls(){
         _activatedWalls.Clear();

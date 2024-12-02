@@ -14,7 +14,7 @@ namespace Stat
         private int _maxMana = 500;
         
         
-        private int _healthRegen = 5;
+        private readonly int _healthRegen = 5;
 
         [SerializeField]
         private int _manaRegen = 20;

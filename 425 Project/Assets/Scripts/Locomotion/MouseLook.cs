@@ -11,7 +11,7 @@ public class MouseLook : MonoBehaviour
     public Vector2 _clampInDegrees = new Vector2(360, 180);
     [FormerlySerializedAs("lockCursor")] public bool _lockCursor = true;
     [Space]
-    private Vector2 _sensitivity = new Vector2(2, 2);
+    private readonly Vector2 _sensitivity = new Vector2(2, 2);
     [FormerlySerializedAs("smoothing"),Space]
     public Vector2 _smoothing = new Vector2(3, 3);
 

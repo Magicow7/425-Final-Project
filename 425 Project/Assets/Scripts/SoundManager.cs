@@ -54,11 +54,11 @@ public class SoundManager : MonoBehaviour
     private static GameObject _player;
     private static Sound _currentBackground;
     private static AudioSource _backgroundMusic;
-    private static Dictionary<Sound, AudioClip> _sounds = new Dictionary<Sound, AudioClip>();
-    private static Dictionary<Sound, float> _waits = new Dictionary<Sound, float>();
-    private static Dictionary<Sound, float> _vols = new Dictionary<Sound, float>();
-    private static Dictionary<Sound, float> _dists = new Dictionary<Sound, float>();
-    private static Dictionary<Sound, float> _lastPlayed = new Dictionary<Sound, float>();
+    private static readonly Dictionary<Sound, AudioClip> _sounds = new Dictionary<Sound, AudioClip>();
+    private static readonly Dictionary<Sound, float> _waits = new Dictionary<Sound, float>();
+    private static readonly Dictionary<Sound, float> _vols = new Dictionary<Sound, float>();
+    private static readonly Dictionary<Sound, float> _dists = new Dictionary<Sound, float>();
+    private static readonly Dictionary<Sound, float> _lastPlayed = new Dictionary<Sound, float>();
 
     private void Start()
     {

@@ -21,7 +21,7 @@ namespace Utils.Singleton
         public static bool HasInstance => _instance != null;
         
         private static SingletonAttribute? _cachedAttribute;
-        private static List<Action<T>> _pendingActions = new();
+        private static readonly List<Action<T>> _pendingActions = new();
         
         public static T? Instance 
         {

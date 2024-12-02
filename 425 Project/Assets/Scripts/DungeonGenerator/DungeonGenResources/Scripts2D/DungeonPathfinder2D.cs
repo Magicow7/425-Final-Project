@@ -27,10 +27,10 @@ public class DungeonPathfinder2D {
         new Vector2Int(0, -1),
     };
 
-    Grid2D<Node> _grid;
+    readonly Grid2D<Node> _grid;
     SimplePriorityQueue<Node, float> _queue;
     HashSet<Node> _closed;
-    Stack<Vector2Int> _stack;
+    readonly Stack<Vector2Int> _stack;
 
     public DungeonPathfinder2D(Vector2Int size) {
         _grid = new Grid2D<Node>(size, Vector2Int.zero);

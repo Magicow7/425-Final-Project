@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Grid2D<T> {
-    T[] _data;
+    readonly T[] _data;
 
     public Vector2Int Size { get; private set; }
     public Vector2Int Offset { get; set; }

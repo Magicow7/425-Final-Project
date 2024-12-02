@@ -40,7 +40,7 @@ namespace Locomotion
 
         private Vector3 _velocity;
         
-        private List<LocomotionProvider> _providers = new();
+        private readonly List<LocomotionProvider> _providers = new();
         private bool _wasGrounded = true;
         private bool _isGrounded = true;
         private bool _isTouchingWall = false;

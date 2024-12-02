@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class DijkstrasGraph<TE> : MonoBehaviour
 {
-    private Dictionary<string, Dictionary<string, int>> _adjacencyMap;
-    private Dictionary<string, TE> _dataMap;
+    private readonly Dictionary<string, Dictionary<string, int>> _adjacencyMap;
+    private readonly Dictionary<string, TE> _dataMap;
 
     public DijkstrasGraph() {
 		_adjacencyMap = new Dictionary<string, Dictionary<string, int>>();
