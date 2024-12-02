@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Locomotion;
 using Stat;
 using UnityEngine;
 using UnityEngine.AI;
@@ -28,6 +29,7 @@ namespace Combat
 
         public void Death()
         {
+            LocomotionManager.Instance.CharacterController.enabled = false;
             TextUpdates.Instance.ShowDeathScreen();
             // Player HP too low, cannot take another hit.
             SoundManager.PlaySound(SoundManager.Sound.PlayerDeath);

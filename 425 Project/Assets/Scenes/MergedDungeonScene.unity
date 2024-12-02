@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.5748172, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -10616,7 +10616,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.000030517578, y: 227.89929}
+  m_AnchoredPosition: {x: 0.000061035156, y: 227.89929}
   m_SizeDelta: {x: -146.13562, y: -339.49872}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &618646040
@@ -16251,7 +16251,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _enemyPrefab: {fileID: 3772942569494810990, guid: d25797a5408da4cb183fdc6369789f98, type: 3}
-  _maxEnemies: 0
+  _maxEnemies: 50
+  _healthScaling: 0.05
+  _damageScaling: 0.05
 --- !u!4 &951243912
 Transform:
   m_ObjectHideFlags: 0
@@ -28589,6 +28591,9 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1009504799}
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1540055899979887970, guid: d5f799c854aabf64ea9c2c4389f1764f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8426822899199566930}
     - targetCorrespondingSourceObject: {fileID: 3959563117498608410, guid: d5f799c854aabf64ea9c2c4389f1764f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2025500138}
@@ -29014,6 +29019,18 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2328020530038696784, guid: d5f799c854aabf64ea9c2c4389f1764f, type: 3}
   m_PrefabInstance: {fileID: 1924210277490697963}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8426822899199566930
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 793397290726096253}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac0b7b1ba84646c1835bf144f7440586, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &8681234740162749661
 RectTransform:
   m_ObjectHideFlags: 0

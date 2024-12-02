@@ -24,6 +24,7 @@ namespace Combat
         private Collider _collider;
         private bool _isCrossingLink = false;
         private bool _isDead = false;
+        private float _lastPlayerTime = -1;
 
         public EnemyStats EnemyStats { get; private set; }
 
@@ -58,15 +59,6 @@ namespace Combat
             StartCoroutine(AmbientSound());
         }
 
-        private void Update()
-        {
-            // Check if the agent is on NavMeshLink
-            if (_agent.isOnOffMeshLink && !_isCrossingLink)
-            {
-                // Start traversing the NavMeshLink
-                StartCoroutine(CrossLink());
-            }
-        }
         private IEnumerator AmbientSound()
         {
             while (true)
@@ -151,52 +143,47 @@ namespace Combat
                 Destroy(gameObject);
             }
         }
-
-        void OnTriggerEnter(Collider other)
+        
+        private void Update()
         {
-            if (!_isDead && other.name == "PlayerModel" && !_isCrossingLink && !_agent.isOnOffMeshLink)
+            // Check if the agent is on NavMeshLink
+            if (_agent.isOnOffMeshLink && !_isCrossingLink)
             {
-                _inRangeOfPlayer = true;
-                //agent.isStopped = true;
+                // Start traversing the NavMeshLink
+                StartCoroutine(CrossLink());
+            }
 
-                StartCoroutine(AttackWhileNearby(other));
+            if (!Player.Instance)
+            {
+                return;
+            }
 
+            float playerDistance = (Player.Instance.transform.position - transform.position).magnitude;
+
+            if (Player.Instance && playerDistance <= 1)
+            {
+                _lastPlayerTime = _lastPlayerTime < 0 ? 0 : _lastPlayerTime + Time.deltaTime;
+                _enemyAnimatior.SetTrigger("TrAttack");
+            }
+            else if (Player.Instance && playerDistance <= 3)
+            {
+                _lastPlayerTime = _lastPlayerTime < 0 ? _lastPlayerTime : _lastPlayerTime + Time.deltaTime;
+            }
+            else
+            {
+                _lastPlayerTime = -1;
+            }
+
+            if (_lastPlayerTime > EnemyStats.AttackSpeed.Value)
+            {
+                Player.Instance.TakeDamage(EnemyStats.AttackDamage.Value);
+                _lastPlayerTime = -1;
             }
         }
 
-        private IEnumerator AttackWhileNearby(Collider player)
+        public void ConfigureStats(float health, float speed, float scale, float attackDamage, float attackSpeed)
         {
-            while (!_isDead && (player.transform.position - transform.position).magnitude <= 3)
-            {
-                // check if enemy is not moving much
-                if (_agent.velocity.magnitude < 0.1f && _inRangeOfPlayer)
-                {
-                    _enemyAnimatior.SetTrigger("TrAttack");
-
-                    if (Player.Instance)
-                    {
-                        Player.Instance.TakeDamage(EnemyStats.AttackDamage.Value);
-                    }
-                }
-                yield return new WaitForSeconds(1f);
-            }
-
-            //agent.isStopped = false;
-        }
-
-        void OnTriggerExit(Collider other)
-        {
-            if (other.name == "PlayerModel")
-            {
-                _inRangeOfPlayer = false;
-
-                //_agent.isStopped = false;
-            }
-        }
-
-        public void ConfigureStats(float health, float speed, float scale, float attackDamage)
-        {
-            EnemyStats = new EnemyStats(health, speed, scale, attackDamage);
+            EnemyStats = new EnemyStats(health, speed, scale, attackDamage, attackSpeed);
 
             transform.localScale = transform.localScale * EnemyStats.Scale;
             _damageNumber.Initialize(EnemyStats.Health);

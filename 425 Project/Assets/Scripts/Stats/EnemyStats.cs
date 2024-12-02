@@ -8,26 +8,29 @@ namespace Stat
     public class EnemyStats
     {
         public ResourceStat Health { get; private set; }
-        public ResourceStat Speed { get; private set; }
+        public AttributeStat Speed { get; private set; }
         public float Scale { get; private set; }
-        public ResourceStat AttackDamage { get; private set; }
+        public AttributeStat AttackDamage { get; private set; }
+        public AttributeStat AttackSpeed { get; private set; }
 
         // Base constructor
         public EnemyStats()
         {
             Health = new ResourceStat(10);
-            Speed = new ResourceStat(2);
+            Speed = new AttributeStat(2);
             Scale = 1.0f;
-            AttackDamage = new ResourceStat(5);
+            AttackDamage = new AttributeStat(5);
+            AttackSpeed = new AttributeStat(1);
         }
 
         // Custom constructor
-        public EnemyStats(float health, float speed, float scale, float attackDamage)
+        public EnemyStats(float health, float speed, float scale, float attackDamage, float attackTime)
         {
             Health = new ResourceStat(health);
-            Speed = new ResourceStat(speed);
+            Speed = new AttributeStat(speed);
             Scale = scale;
-            AttackDamage = new ResourceStat(attackDamage);
+            AttackDamage = new AttributeStat(attackDamage);
+            AttackSpeed = new AttributeStat(attackTime);
         }
     }
 }

@@ -101,8 +101,7 @@ public class EnemySpawner : MonoBehaviour
 
     private void SpawnEnemy(EnemyType variant)
     {
-        Debug.Log(_currentSpawnedEnemy);
-        if (_spawnedEnemies[_currentSpawnedEnemy] != null)
+        if (_spawnedEnemies[_currentSpawnedEnemy])
         {
             Destroy(_spawnedEnemies[_currentSpawnedEnemy].gameObject);
         }
@@ -118,13 +117,13 @@ public class EnemySpawner : MonoBehaviour
         switch (variant)
         {
             case EnemyType.Small:
-                _spawnedEnemies[_currentSpawnedEnemy].ConfigureStats(20 * healthMultiplier, 5, 0.75f, 5 * attackDamageMultiplier);
+                _spawnedEnemies[_currentSpawnedEnemy].ConfigureStats(20 * healthMultiplier, 5, 0.75f, 5 * attackDamageMultiplier, 1);
                 break;
             case EnemyType.Medium:
-                _spawnedEnemies[_currentSpawnedEnemy].ConfigureStats(50 * healthMultiplier, 2, 1, 10 * attackDamageMultiplier);
+                _spawnedEnemies[_currentSpawnedEnemy].ConfigureStats(50 * healthMultiplier, 2, 1, 10 * attackDamageMultiplier, 1);
                 break;
             case EnemyType.Large:
-                _spawnedEnemies[_currentSpawnedEnemy].ConfigureStats(150 * healthMultiplier, 1, 1.5f, 20 * attackDamageMultiplier);
+                _spawnedEnemies[_currentSpawnedEnemy].ConfigureStats(150 * healthMultiplier, 1, 1.5f, 20 * attackDamageMultiplier, 1);
                 break;
         }
 
