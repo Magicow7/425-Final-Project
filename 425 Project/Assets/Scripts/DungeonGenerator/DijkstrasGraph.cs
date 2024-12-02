@@ -57,7 +57,7 @@ public class DijkstrasGraph<TE> : MonoBehaviour
     }
 
     public List<string> GetVetricies(){
-        return new List<string>(this._dataMap.Keys);
+        return new List<string>(_dataMap.Keys);
     }
     
     public TE GetData(string vertex){

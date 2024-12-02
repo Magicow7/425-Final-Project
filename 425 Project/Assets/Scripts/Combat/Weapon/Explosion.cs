@@ -35,7 +35,7 @@ public class Explosion : MonoBehaviour
         Collider[] colliders = Physics.OverlapSphere(transform.position, _explosionRadius / 2);
         foreach (Collider other in colliders)
         {
-            if (other.gameObject.TryGetComponent(out IDamageable damageable))
+            if (other.gameObject.TryGetComponent(out IDamageable damageable) && Player.Instance && other.gameObject != Player.Instance.gameObject)
             {
                 damageable.TakeDamage(_explosionDamage);
             }
@@ -51,7 +51,7 @@ public class Explosion : MonoBehaviour
             return;
         }
 
-        if (other.gameObject.TryGetComponent(out IDamageable damageable))
+        if (other.gameObject.TryGetComponent(out IDamageable damageable) && Player.Instance && other.gameObject != Player.Instance.gameObject)
         {
             damageable.TakeDamage(_explosionDamageOverTime * Time.deltaTime);
         }

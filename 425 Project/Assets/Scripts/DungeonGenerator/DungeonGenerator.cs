@@ -39,8 +39,8 @@ public class DungeonGenerator : SingletonMonoBehaviour<DungeonGenerator>
     [Serializable]
     struct DungeonDoorParameters{
         public DungeonDoorParameters(Vector3 relativePosition, Vector3 angle){
-            this._relativePosition = relativePosition;
-            this._angle = angle;
+            _relativePosition = relativePosition;
+            _angle = angle;
         }
         //angle of the door in relation to the room's zForward. forward is 0, right is 90, back is 180, left is 270
         [FormerlySerializedAs("angle")] public Vector3 _angle;
@@ -134,8 +134,8 @@ public class DungeonGenerator : SingletonMonoBehaviour<DungeonGenerator>
 
         public Obb(DungeonRoomParameters roomParams, Vector3 worldPosition, Quaternion worldRotation){
             Vector3 localCenter = Vector3.Lerp(roomParams._boundingBoxMaxPoint,roomParams._boundingBoxMinPoint,0.5f);
-            this.center = worldPosition + localCenter;
-            this.axes = new Vector3[3];
+            center = worldPosition + localCenter;
+            axes = new Vector3[3];
 
             axes[0] = worldRotation * new Vector3(1,0,0);
             axes[1] = worldRotation * new Vector3(0,1,0);
@@ -144,7 +144,7 @@ public class DungeonGenerator : SingletonMonoBehaviour<DungeonGenerator>
             float halfWidth = Mathf.Abs(roomParams._boundingBoxMaxPoint.x - roomParams._boundingBoxMinPoint.x)/2f;
             float halfHeight = Mathf.Abs(roomParams._boundingBoxMaxPoint.y - roomParams._boundingBoxMinPoint.y)/2f;
             float halfDepth = Mathf.Abs(roomParams._boundingBoxMaxPoint.z - roomParams._boundingBoxMinPoint.z)/2f;
-            this.halfExtents = new Vector3(halfWidth, halfHeight, halfDepth);
+            halfExtents = new Vector3(halfWidth, halfHeight, halfDepth);
         }
     }
 
@@ -266,7 +266,7 @@ public class DungeonGenerator : SingletonMonoBehaviour<DungeonGenerator>
     private DungeonRoom _currentCenterRoom;
     public Vector3 GetCurrentCenterRoomWorldPosition()
     {
-        return this._currentCenterRoom.worldPosition;
+        return _currentCenterRoom.worldPosition;
     }
 
     void Start()

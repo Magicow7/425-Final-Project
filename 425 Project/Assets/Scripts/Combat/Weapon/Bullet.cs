@@ -49,7 +49,7 @@ public class Bullet : MonoBehaviour
         {
             SoundManager.PlaySound(SoundManager.Sound.GrenadeBoom, gameObject.transform.position);
         }
-        if (other.gameObject.TryGetComponent(out IDamageable damageable))
+        if (other.gameObject.TryGetComponent(out IDamageable damageable) && Player.Instance && other.gameObject != Player.Instance.gameObject)
         {
             damageable.TakeDamage(_damage);
             ExplodeAndDestroy();

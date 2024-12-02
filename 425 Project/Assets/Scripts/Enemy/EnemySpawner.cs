@@ -12,13 +12,18 @@ public class EnemySpawner : MonoBehaviour
     private Enemy _enemyPrefab;
     [SerializeField]
     private int _maxEnemies;
+    [SerializeField]
+    private float _healthScaling = 0.05f;
+    [SerializeField]
+    private float _damageScaling = 0.05f;
 
     public int WaveNumber { get; private set; } = 0;
     private float _waveInterval = 30.0f; // time in between waves
     private readonly float _spawnInterval = 0.01f; // lag time so enemies don't spawn on top of one another
     
     private readonly Vector3 _modifier = new Vector3(0.2f, 0.2f, 0.2f); // ensures enemy spawns above floor
-    private int[] _spawnedEnemies;
+    private Enemy[] _spawnedEnemies;
+    private int _currentSpawnedEnemy = 0;
 
     // Waves 1-9 predefined to introduce enemy variants => endless mode after that
     private readonly Dictionary<int, (int smallCount, int normalCount, int largeCount)> _waveConfig = new Dictionary<int, (int, int, int)>
@@ -43,7 +48,7 @@ public class EnemySpawner : MonoBehaviour
 
     private void Awake()
     {
-        _spawnedEnemies = new int[_maxEnemies];
+        _spawnedEnemies = new Enemy[_maxEnemies];
     }
 
     // called from dungeon generator script
@@ -96,29 +101,33 @@ public class EnemySpawner : MonoBehaviour
 
     private void SpawnEnemy(EnemyType variant)
     {
-        // Spawn enemy at a random spawner
-        Enemy enemy = Instantiate(_enemyPrefab, DungeonGenerator.possibleSpawnPoints[Random.Range(0, DungeonGenerator.possibleSpawnPoints.Count)] + _modifier, Quaternion.identity);
-
-        if (enemy != null)
+        Debug.Log(_currentSpawnedEnemy);
+        if (_spawnedEnemies[_currentSpawnedEnemy] != null)
         {
-            // Scale stats based on wave number
-            float healthMultiplier = 1 + (WaveNumber * 0.05f); // 5% flat increase per wave
-            float attackDamageMultiplier = 1 + (WaveNumber * 0.05f); // 5% flat increase per wave
-
-            // Health, Speed, Scale, AttackDamage
-            switch (variant)
-            {
-                case EnemyType.Small:
-                    enemy.ConfigureStats(20 * healthMultiplier, 5, 0.75f, 5 * attackDamageMultiplier);
-                    break;
-                case EnemyType.Medium:
-                    enemy.ConfigureStats(50 * healthMultiplier, 2, 1, 10 * attackDamageMultiplier);
-                    break;
-                case EnemyType.Large:
-                    enemy.ConfigureStats(150 * healthMultiplier, 1, 1.5f, 20 * attackDamageMultiplier);
-                    break;
-            }
+            Destroy(_spawnedEnemies[_currentSpawnedEnemy].gameObject);
         }
-    }
+        
+        // Spawn enemy at a random spawner
+        _spawnedEnemies[_currentSpawnedEnemy] = Instantiate(_enemyPrefab, DungeonGenerator.possibleSpawnPoints[Random.Range(0, DungeonGenerator.possibleSpawnPoints.Count)] + _modifier, Quaternion.identity);
+        
+        // Scale stats based on wave number
+        float healthMultiplier = 1 + (WaveNumber * _healthScaling); // 5% flat increase per wave
+        float attackDamageMultiplier = 1 + (WaveNumber * _damageScaling); // 5% flat increase per wave
 
+        // Health, Speed, Scale, AttackDamage
+        switch (variant)
+        {
+            case EnemyType.Small:
+                _spawnedEnemies[_currentSpawnedEnemy].ConfigureStats(20 * healthMultiplier, 5, 0.75f, 5 * attackDamageMultiplier);
+                break;
+            case EnemyType.Medium:
+                _spawnedEnemies[_currentSpawnedEnemy].ConfigureStats(50 * healthMultiplier, 2, 1, 10 * attackDamageMultiplier);
+                break;
+            case EnemyType.Large:
+                _spawnedEnemies[_currentSpawnedEnemy].ConfigureStats(150 * healthMultiplier, 1, 1.5f, 20 * attackDamageMultiplier);
+                break;
+        }
+
+        _currentSpawnedEnemy = (_currentSpawnedEnemy + 1) % _maxEnemies;
+    }
 }

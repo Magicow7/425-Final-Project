@@ -12,7 +12,7 @@ public class Room : MonoBehaviour
 
         public Room(Vector2Int location, Vector2Int size, string identifier) {
             _bounds = new RectInt(location, size);
-            this._identifier = identifier;
+            _identifier = identifier;
             //paths = new Dictionary<string, BetweenRoomPath>();
         }
 
