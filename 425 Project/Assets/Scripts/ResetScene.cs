@@ -21,6 +21,6 @@ public class ResetScene : MonoBehaviour
     {
         Debug.LogWarning("RESTING SCENE");
         TextUpdates.Instance.HideDeathScreen();
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene("TitleScreen");
     }
 }
