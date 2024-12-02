@@ -108,7 +108,7 @@ public class LaserWand : Weapon
     public override void SetStats()
     {
         float mult = Random.Range(0.8f, 1.3f);
-        _manaPerShot = 3 * Mathf.Pow(mult, 2);
+        _manaPerShot = 75 * Mathf.Pow(mult, 2);
         _explosionRadius = Random.Range(1f, 3f) * mult;
         _explosionDamage = 10 * 1 + PlayerStats.Instance.WeaponPower.Value * mult;
         _explosionTime = 1;
@@ -123,6 +123,7 @@ public class LaserWand : Weapon
         }
         else if (type == 2)
         {
+            _manaPerShot /= 1.5f;
             _fireRate *= 1.5f;
         }
         else if (type == 3)
@@ -131,10 +132,12 @@ public class LaserWand : Weapon
         }
         else if (type == 4)
         {
+            _manaPerShot *= 1.5f;
             _bounces = 2 * _bounces + 1;
         }
         else if (type == 5)
         {
+            _manaPerShot *= 1.5f;
             _explosionDamage = 0;
             _explosionTime = 2 * (1 + PlayerStats.Instance.WeaponPower.Value) * mult;
             _explosionDamageOverTime = 3f / _explosionRadius * 2 * (1 + PlayerStats.Instance.WeaponPower.Value) * mult;

@@ -75,7 +75,7 @@ public class ShotWand : Weapon
     public override void SetStats()
     {
         float mult = Random.Range(0.8f, 1.3f);
-        _manaPerShot = 3 * Mathf.Pow(mult, 2);
+        _manaPerShot = 30 * Mathf.Pow(mult, 2);
         _damage = 30 * Mathf.Pow(1 + PlayerStats.Instance.WeaponPower.Value, 2) * mult;
         _fireRate = 1 * (1 + PlayerStats.Instance.WeaponPower.Value) * mult;
         _bulletSpeed = 5 * mult;
@@ -85,6 +85,7 @@ public class ShotWand : Weapon
         if (type == 1)
         {
             _damage *= 2;
+            _manaPerShot *= 1;
             _explosionRadius = 0;
             _explosionDamage = 0;
             _explosionTime = 0;
@@ -93,6 +94,7 @@ public class ShotWand : Weapon
         else if (type == 2)
         {
             _fireRate *= 2;
+            _manaPerShot /= 2;
             _explosionRadius = 0;
             _explosionDamage = 0;
             _explosionTime = 0;
@@ -100,6 +102,7 @@ public class ShotWand : Weapon
         }
         else if (type == 3)
         {
+            _manaPerShot *= 1.2f;
             _explosionRadius = Random.Range(1f, 3f) * mult;
             _explosionDamage = 3f / _explosionRadius * 10 * (1 + PlayerStats.Instance.WeaponPower.Value) * mult;
             _explosionTime = 1;
@@ -107,6 +110,7 @@ public class ShotWand : Weapon
         }
         else if (type == 4)
         {
+            _manaPerShot *= 1.2f;
             _explosionRadius = Random.Range(1f, 3f) * mult;
             _explosionDamage = 0;
             _explosionTime = 2 * (1 + PlayerStats.Instance.WeaponPower.Value) * mult;
@@ -114,6 +118,7 @@ public class ShotWand : Weapon
         }
         else if (type == 5)
         {
+            _manaPerShot *= 1.2f;
             _explosionRadius = Random.Range(1f, 3f) * mult;
             _explosionDamage = 3f / _explosionRadius * 5 * (1 + PlayerStats.Instance.WeaponPower.Value) * mult;
             _explosionTime = 2 * (1 + PlayerStats.Instance.WeaponPower.Value) * mult;
