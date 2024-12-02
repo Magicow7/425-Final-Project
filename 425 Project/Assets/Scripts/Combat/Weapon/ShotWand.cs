@@ -85,6 +85,7 @@ public class ShotWand : Weapon
 
         if (_isExplode)
         {
+            _damage = 15 * Mathf.Pow(1 + PlayerStats.Instance.WeaponPower.Value, 2) * mult;
             int type = Random.Range(1, 4);
             if (type == 1)
             {
@@ -113,6 +114,7 @@ public class ShotWand : Weapon
         }
         else
         {
+            _damage = 45 * Mathf.Pow(1 + PlayerStats.Instance.WeaponPower.Value, 2) * mult;
             int type = Random.Range(1, 3);
             if (type == 1)
             {
