@@ -121,7 +121,7 @@ public class EnemySpawner : MonoBehaviour
                 _spawnedEnemies[_currentSpawnedEnemy].ConfigureStats(50 * healthMultiplier, 2, 1, 5 * attackDamageMultiplier, 1);
                 break;
             case EnemyType.Large:
-                _spawnedEnemies[_currentSpawnedEnemy].ConfigureStats(150 * healthMultiplier, 1, 1.5f, 10 * attackDamageMultiplier, 1);
+                _spawnedEnemies[_currentSpawnedEnemy].ConfigureStats(150 * Mathf.Pow(healthMultiplier, 1.5f), 1, 1.5f, 10 * attackDamageMultiplier, 1);
                 break;
         }
 
