@@ -7341,7 +7341,7 @@ Transform:
   m_GameObject: {fileID: 6481824416016409901}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -8.695952, y: 0, z: 3.5988173}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -7450,6 +7450,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   navMeshSurface: {fileID: 0}
   chestSpawnPoint: {fileID: 8692942286291541936}
+  spawnedChest: {fileID: 0}
 --- !u!114 &648566054040358525
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7479,7 +7480,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.16666667
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: 348c5e0d009c9044d9fa7e41c1f54224, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: 06c6b08c14f13f54a8bfbafe2b2f51ff, type: 2}
   m_BuildHeightMesh: 0
 --- !u!1 &6740107969924114379
 GameObject:

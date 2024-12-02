@@ -150,10 +150,10 @@ namespace Combat
 
         void OnTriggerEnter(Collider other)
         {
-            if (!isDead && other.name == "PlayerModel")
+            if (!isDead && other.name == "PlayerModel" && !isCrossingLink && !agent.isOnOffMeshLink)
             {
                 inRangeOfPlayer = true;
-                agent.isStopped = true;
+                //agent.isStopped = true;
 
                 StartCoroutine(AttackWhileNearby(other));
 
@@ -188,7 +188,7 @@ namespace Combat
                 yield return new WaitForSeconds(1f);
             }
 
-            agent.isStopped = false;
+            //agent.isStopped = false;
         }
 
         void OnTriggerExit(Collider other)

@@ -10,7 +10,7 @@ public class EnemySpawner : MonoBehaviour
     public GameObject enemyPrefab;
 
     public int waveNumber { get; private set; } = 0;
-    private float waveInterval = 10.0f; // time in between waves
+    private float waveInterval = 30.0f; // time in between waves
     private float spawnInterval = 0.01f; // lag time so enemies don't spawn on top of one another
     
     private Vector3 modifier = new Vector3(0.2f, 0.2f, 0.2f); // ensures enemy spawns above floor
@@ -45,7 +45,7 @@ public class EnemySpawner : MonoBehaviour
             yield return new WaitForSeconds(waveInterval);
 
             // Decrease wave interval as game progresses
-            waveInterval = Mathf.Max(5f, waveInterval - 1.0f);
+            waveInterval = Mathf.Max(10f, waveInterval - 1.0f);
         }
     }
 
@@ -87,17 +87,21 @@ public class EnemySpawner : MonoBehaviour
 
         if (enemy != null)
         {
+            // Scale stats based on wave number
+            float healthMultiplier = 1 + (waveNumber * 0.05f); // 5% flat increase per wave
+            float attackDamageMultiplier = 1 + (waveNumber * 0.05f); // 5% flat increase per wave
+
             // Health, Speed, Scale, AttackDamage
             switch (variant)
             {
                 case "small":
-                    enemy.ConfigureStats(20, 5, 0.75f, 5);
+                    enemy.ConfigureStats(20 * healthMultiplier, 5, 0.75f, 5 * attackDamageMultiplier);
                     break;
                 case "normal":
-                    enemy.ConfigureStats(50, 2, 1, 10);
+                    enemy.ConfigureStats(50 * healthMultiplier, 2, 1, 10 * attackDamageMultiplier);
                     break;
                 case "large":
-                    enemy.ConfigureStats(150, 1, 1.5f, 20);
+                    enemy.ConfigureStats(150 * healthMultiplier, 1, 1.5f, 20 * attackDamageMultiplier);
                     break;
             }
         }

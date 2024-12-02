@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -27,7 +28,19 @@ public class EnemyNavigation : MonoBehaviour
             linkTraversing = true;
         }
         if(!linkTraversing){
-            agent.destination = player.position;
+           try
+           {
+                // Code that might throw an exception
+                agent.destination = player.position;
+                
+            }
+            catch (Exception e)
+            {
+                // Code that handles the exception
+                Debug.LogError("failed to set agent destination, respawning enemy");
+                Respawn();
+            }
+            
         }
     }
 
@@ -60,7 +73,7 @@ public class EnemyNavigation : MonoBehaviour
 
     private void Respawn()
     {
-        Vector3 randomValidSpawnPoint = DungeonGenerator.possibleSpawnPoints[Random.Range(0, DungeonGenerator.possibleSpawnPoints.Count)];
+        Vector3 randomValidSpawnPoint = DungeonGenerator.possibleSpawnPoints[UnityEngine.Random.Range(0, DungeonGenerator.possibleSpawnPoints.Count)];
         randomValidSpawnPoint.y += 0.5f;
         agent.Warp(randomValidSpawnPoint);
     }
