@@ -5,6 +5,7 @@ using Utils.Singleton;
 
 namespace Stat
 {
+    [SingletonAttribute(SingletonCreationMode.Auto, false)]
     public class PlayerStats : SingletonMonoBehaviour<PlayerStats>, ICustomUpdate
     {
         [SerializeField]

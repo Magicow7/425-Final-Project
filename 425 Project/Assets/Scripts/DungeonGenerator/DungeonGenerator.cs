@@ -7,7 +7,7 @@ using Locomotion;
 using Unity.AI.Navigation;
 using Utils.Singleton;
 
-
+[SingletonAttribute(SingletonCreationMode.Auto, false)]
 public class DungeonGenerator : SingletonMonoBehaviour<DungeonGenerator>
 {
     public static List<Vector3> possibleSpawnPoints;

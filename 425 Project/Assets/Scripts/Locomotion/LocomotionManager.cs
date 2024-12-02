@@ -10,7 +10,8 @@ namespace Locomotion
 {
     /// <summary>
     /// Manages all locomotion providers that are a child of the provider holder.
-    /// </summary>  
+    /// </summary>
+    [SingletonAttribute(SingletonCreationMode.Auto, false)]
     public class LocomotionManager : SingletonMonoBehaviour<LocomotionManager>, ICustomUpdate, ICustomFixedUpdate
     {
         [field: SerializeField] 
