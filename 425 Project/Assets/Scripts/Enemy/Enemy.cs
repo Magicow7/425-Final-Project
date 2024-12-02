@@ -201,7 +201,7 @@ namespace Combat
             {
                 _inRangeOfPlayer = false;
 
-                _agent.isStopped = false;
+                //_agent.isStopped = false;
             }
         }
 
