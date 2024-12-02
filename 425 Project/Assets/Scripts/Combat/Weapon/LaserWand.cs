@@ -112,7 +112,7 @@ public class LaserWand : Weapon
         _explosionRadius = Random.Range(1f, 3f) * mult;
         _explosionDamage = 10 * 1 + PlayerStats.Instance.WeaponPower.Value * mult;
         _explosionTime = 1;
-        _fireRate = 1 * (1 + PlayerStats.Instance.WeaponPower.Value) * mult;
+        _fireRate = 1 / (1 + PlayerStats.Instance.WeaponPower.Value) / mult;
         _bounces = (int)(2 * (1 + PlayerStats.Instance.WeaponPower.Value) * mult);
         _explosionDamageOverTime = 0;
 
@@ -124,7 +124,7 @@ public class LaserWand : Weapon
         else if (type == 2)
         {
             _manaPerShot /= 1.5f;
-            _fireRate *= 1.5f;
+            _fireRate /= 1.5f;
         }
         else if (type == 3)
         {

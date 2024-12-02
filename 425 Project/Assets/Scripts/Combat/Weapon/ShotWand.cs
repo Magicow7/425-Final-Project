@@ -79,7 +79,7 @@ public class ShotWand : Weapon
         float mult = Random.Range(0.8f, 1.3f);
         _manaPerShot = 30 * Mathf.Pow(mult, 2);
         _damage = 45 * Mathf.Pow(1 + PlayerStats.Instance.WeaponPower.Value, 2) * mult;
-        _fireRate = 1 * (1 + PlayerStats.Instance.WeaponPower.Value) * mult;
+        _fireRate = 1 / (1 + PlayerStats.Instance.WeaponPower.Value) / mult;
         _bulletSpeed = 5 * mult;
         _bulletLifespan = 10 * mult;
 
@@ -125,7 +125,7 @@ public class ShotWand : Weapon
             }
             else if (type == 2)
             {
-                _fireRate *= 2;
+                _fireRate /= 2;
                 _manaPerShot /= 2;
                 _explosionRadius = 0;
                 _explosionDamage = 0;
