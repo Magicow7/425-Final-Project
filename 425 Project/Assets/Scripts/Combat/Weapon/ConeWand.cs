@@ -25,14 +25,14 @@ public class ConeWand : Weapon
         _damageCone.OnTriggerEnterEvent += (o, c) =>
         {
             Debug.Log(c.name);
-            if (c.TryGetComponent(out IDamageable damageable)) 
+            if (c.TryGetComponent(out IDamageable damageable) && Player.Instance && c.gameObject != Player.Instance.gameObject) 
             {
                 _enemies.Add(damageable);
             }
         };
         _damageCone.OnTriggerExitEvent += (o, c) =>
         {
-            if (c.TryGetComponent(out IDamageable damageable)) 
+            if (c.TryGetComponent(out IDamageable damageable) && Player.Instance && c.gameObject != Player.Instance.gameObject) 
             {
                 _enemies.Remove(damageable);
             }

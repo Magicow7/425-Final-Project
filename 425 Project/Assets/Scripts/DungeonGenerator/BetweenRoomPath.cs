@@ -11,9 +11,9 @@ public class BetweenRoomPath : MonoBehaviour
     [FormerlySerializedAs("blocked")] public bool _blocked;
     public BetweenRoomPath(List<Vector2> pathList, Room startRoom, Room endRoom){
         _blocked = false;
-        this._startRoom = startRoom;
-        this._endRoom = endRoom;
-        this._pathList = pathList;
+        _startRoom = startRoom;
+        _endRoom = endRoom;
+        _pathList = pathList;
 
 
     }

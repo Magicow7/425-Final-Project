@@ -66,7 +66,7 @@ public class Tile : MonoBehaviour
     }
 
     public void SetCellType(CellType cellType){
-        this._cellType = cellType;
+        _cellType = cellType;
     }
 
     public CellType GetCellType(){

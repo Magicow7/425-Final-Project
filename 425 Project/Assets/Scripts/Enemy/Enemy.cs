@@ -173,21 +173,10 @@ namespace Combat
                 {
                     _enemyAnimatior.SetTrigger("TrAttack");
 
-                    bool isAlive = _playerhealth.TrySpendResource(EnemyStats.AttackDamage.Value);
-                    if (!isAlive)
+                    if (Player.Instance)
                     {
-                        PlayerStats.Instance.Health.Value = 0;
-
-                        TextUpdates.Instance.ShowDeathScreen();
-                        // Player HP too low, cannot take another hit.
-                        SoundManager.PlaySound(SoundManager.Sound.PlayerDeath);
+                        Player.Instance.TakeDamage(EnemyStats.AttackDamage.Value);
                     }
-                    else
-                    {
-                        SoundManager.PlaySound(SoundManager.Sound.PlayerHit);
-
-                    }
-
                 }
                 yield return new WaitForSeconds(1f);
             }

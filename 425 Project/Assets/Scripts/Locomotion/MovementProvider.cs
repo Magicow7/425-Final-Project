@@ -60,8 +60,8 @@ namespace Locomotion
 
         private void HandleMovement()
         {
-            float vertical = UnityEngine.Input.GetAxisRaw("Vertical");
-            float horizontal = UnityEngine.Input.GetAxisRaw("Horizontal");
+            float vertical = Input.GetAxisRaw("Vertical");
+            float horizontal = Input.GetAxisRaw("Horizontal");
             
             var input = new Vector2(horizontal, vertical);
             
@@ -72,7 +72,7 @@ namespace Locomotion
             
             input.Normalize();
 
-            if (UnityEngine.Input.GetKey(KeyCode.Space) && _canJump)
+            if (Input.GetKey(KeyCode.Space) && _canJump)
             {
                 if (locomotionManager.IsGrounded)
                 {

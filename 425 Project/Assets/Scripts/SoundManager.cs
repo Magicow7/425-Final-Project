@@ -73,7 +73,7 @@ public class SoundManager : MonoBehaviour
         }
         _backgroundMusic = _player.AddComponent<AudioSource>();
         _backgroundMusic.loop = true;
-        ChangeBackgroundMusic(SoundManager.Sound.NormalBackground);
+        ChangeBackgroundMusic(Sound.NormalBackground);
     }
 
     // Plays a Sound on the Player
@@ -92,7 +92,7 @@ public class SoundManager : MonoBehaviour
             AudioSource source = _player.AddComponent<AudioSource>();
             if (randomPitch)
             {
-                source.pitch = UnityEngine.Random.Range(0.9f, 1.1f);
+                source.pitch = Random.Range(0.9f, 1.1f);
             }
             source.spatialBlend = 1.0f;
             source.maxDistance = _dists[sound];
@@ -110,7 +110,7 @@ public class SoundManager : MonoBehaviour
         {
             if (randomPitch)
             {
-                source.pitch = UnityEngine.Random.Range(0.9f, 1.1f);
+                source.pitch = Random.Range(0.9f, 1.1f);
             }
             Debug.Log("Playing " + sound + " on given source.");
             source.clip = GetAudioClip(sound);
@@ -131,14 +131,14 @@ public class SoundManager : MonoBehaviour
             AudioSource source = obj.AddComponent<AudioSource>();
             if (randomPitch)
             {
-                source.pitch = UnityEngine.Random.Range(0.9f, 1.1f);
+                source.pitch = Random.Range(0.9f, 1.1f);
             }
             source.spatialBlend = 1.0f;
             source.maxDistance = _dists[sound];
             source.volume = _vols[sound];
             source.rolloffMode = AudioRolloffMode.Custom;
             source.PlayOneShot(GetAudioClip(sound));
-            Object.Destroy(obj, GetAudioClip(sound).length);
+            Destroy(obj, GetAudioClip(sound).length);
         }
     }
 
@@ -199,6 +199,6 @@ public class SoundManager : MonoBehaviour
     // Returns the audioclip of a given sound
     public static AudioClip GetAudioClip(Sound sound)
     {
-        return SoundManager._sounds[sound];
+        return _sounds[sound];
     }
 }
