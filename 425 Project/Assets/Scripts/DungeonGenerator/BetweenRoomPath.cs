@@ -1,18 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class BetweenRoomPath : MonoBehaviour
 {
-    public Room startRoom;
-    public Room endRoom;
-    public List<Vector2> pathList;
-    public bool blocked;
+    [FormerlySerializedAs("startRoom")] public Room _startRoom;
+    [FormerlySerializedAs("endRoom")] public Room _endRoom;
+    [FormerlySerializedAs("pathList")] public List<Vector2> _pathList;
+    [FormerlySerializedAs("blocked")] public bool _blocked;
     public BetweenRoomPath(List<Vector2> pathList, Room startRoom, Room endRoom){
-        blocked = false;
-        this.startRoom = startRoom;
-        this.endRoom = endRoom;
-        this.pathList = pathList;
+        _blocked = false;
+        this._startRoom = startRoom;
+        this._endRoom = endRoom;
+        this._pathList = pathList;
 
 
     }

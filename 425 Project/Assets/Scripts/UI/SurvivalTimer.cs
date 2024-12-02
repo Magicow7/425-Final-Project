@@ -7,23 +7,23 @@ using System;
 
 public class SurvivalTimer : MonoBehaviour
 {
-    private float currentTime = 0;
-    private TMP_Text timer;
+    private float _currentTime = 0;
+    private TMP_Text _timer;
 
     // Start is called before the first frame update
     void Start()
     {
-        timer = GetComponent<TMP_Text>();
-        timer.text = currentTime.ToString();
+        _timer = GetComponent<TMP_Text>();
+        _timer.text = _currentTime.ToString();
     }
 
     // Update is called once per frame
     void Update()
     {
-        currentTime += Time.deltaTime;
+        _currentTime += Time.deltaTime;
 
-        TimeSpan timeSpan = TimeSpan.FromSeconds(currentTime);
+        TimeSpan timeSpan = TimeSpan.FromSeconds(_currentTime);
         string formattedTime = string.Format("{0:D2}:{1:D2}:{2:D2}", timeSpan.Hours, timeSpan.Minutes, timeSpan.Seconds);
-        timer.text = formattedTime;
+        _timer.text = formattedTime;
     }
 }

@@ -6,20 +6,20 @@ using TMPro;
 
 public class KillCounter : MonoBehaviour
 {
-    private TMP_Text killCounter;
-    private int killCount = 0;
+    private TMP_Text _killCounter;
+    private int _killCount = 0;
 
     // Start is called before the first frame update
     void Start()
     {
-        killCounter = GetComponent<TMP_Text>();
-        killCounter.text = "Kills: " + killCount;
+        _killCounter = GetComponent<TMP_Text>();
+        _killCounter.text = "Kills: " + _killCount;
         Combat.Enemy.EnemyDeath += IncrementKillCounter;
     }
 
     public void IncrementKillCounter()
     {
-        killCount++;
-        killCounter.text = "Kills: " + killCount;
+        _killCount++;
+        _killCounter.text = "Kills: " + _killCount;
     }
 }

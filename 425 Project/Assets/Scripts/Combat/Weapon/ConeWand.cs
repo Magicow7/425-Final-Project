@@ -15,13 +15,13 @@ public class ConeWand : Weapon
     [SerializeField]
     private float _rate = 0.05f;
     private float _nextFireTime = 0f;
-    private AudioSource sfx;
+    private AudioSource _sfx;
 
     private List<IDamageable> _enemies = new();
 
     private void Start()
     {
-        sfx = gameObject.AddComponent<AudioSource>();
+        _sfx = gameObject.AddComponent<AudioSource>();
         _damageCone.OnTriggerEnterEvent += (o, c) =>
         {
             Debug.Log(c.name);
@@ -41,15 +41,15 @@ public class ConeWand : Weapon
 
     protected override void FireStart()
     {
-        sfx.loop = true;
-        SoundManager.PlaySound(SoundManager.Sound.FireSpellStart, sfx);
+        _sfx.loop = true;
+        SoundManager.PlaySound(SoundManager.Sound.FireSpellStart, _sfx);
         SpawnCone();
     }
     
     protected override void FireEnd()
     {
-        sfx.loop = false;
-        sfx.Stop();
+        _sfx.loop = false;
+        _sfx.Stop();
         SoundManager.PlaySound(SoundManager.Sound.FireSpellStop);
         DespawnCone();
     }

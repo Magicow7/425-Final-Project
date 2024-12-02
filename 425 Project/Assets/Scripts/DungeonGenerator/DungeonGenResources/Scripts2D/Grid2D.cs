@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Grid2D<T> {
-    T[] data;
+    T[] _data;
 
     public Vector2Int Size { get; private set; }
     public Vector2Int Offset { get; set; }
@@ -12,7 +12,7 @@ public class Grid2D<T> {
         Size = size;
         Offset = offset;
 
-        data = new T[size.x * size.y];
+        _data = new T[size.x * size.y];
     }
 
     public int GetIndex(Vector2Int pos) {
@@ -35,15 +35,15 @@ public class Grid2D<T> {
     public T this[Vector2Int pos] {
         get {
             pos += Offset;
-            return data[GetIndex(pos)];
+            return _data[GetIndex(pos)];
         }
         set {
             pos += Offset;
-            data[GetIndex(pos)] = value;
+            _data[GetIndex(pos)] = value;
         }
     }
 
-    public T[][] getAs2DArray(){
+    public T[][] GetAs2DArray(){
         T[][] returnArray = new T[Size.x][];
         for(int i = 0; i < Size.x; i++){
             returnArray[i] = new T[Size.y];

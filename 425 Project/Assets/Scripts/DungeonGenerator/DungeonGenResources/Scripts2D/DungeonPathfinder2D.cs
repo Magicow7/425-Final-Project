@@ -20,38 +20,38 @@ public class DungeonPathfinder2D {
         public float cost;
     }
 
-    static readonly Vector2Int[] neighbors = {
+    static readonly Vector2Int[] _neighbors = {
         new Vector2Int(1, 0),
         new Vector2Int(-1, 0),
         new Vector2Int(0, 1),
         new Vector2Int(0, -1),
     };
 
-    Grid2D<Node> grid;
-    SimplePriorityQueue<Node, float> queue;
-    HashSet<Node> closed;
-    Stack<Vector2Int> stack;
+    Grid2D<Node> _grid;
+    SimplePriorityQueue<Node, float> _queue;
+    HashSet<Node> _closed;
+    Stack<Vector2Int> _stack;
 
     public DungeonPathfinder2D(Vector2Int size) {
-        grid = new Grid2D<Node>(size, Vector2Int.zero);
+        _grid = new Grid2D<Node>(size, Vector2Int.zero);
 
-        queue = new SimplePriorityQueue<Node, float>();
-        closed = new HashSet<Node>();
-        stack = new Stack<Vector2Int>();
+        _queue = new SimplePriorityQueue<Node, float>();
+        _closed = new HashSet<Node>();
+        _stack = new Stack<Vector2Int>();
 
         for (int x = 0; x < size.x; x++) {
             for (int y = 0; y < size.y; y++) {
-                    grid[x, y] = new Node(new Vector2Int(x, y));
+                    _grid[x, y] = new Node(new Vector2Int(x, y));
             }
         }
     }
 
     void ResetNodes() {
-        var size = grid.Size;
+        var size = _grid.Size;
 
         for (int x = 0; x < size.x; x++) {
             for (int y = 0; y < size.y; y++) {
-                var node = grid[x, y];
+                var node = _grid[x, y];
                 node.Previous = null;
                 node.Cost = float.PositiveInfinity;
             }
@@ -60,27 +60,27 @@ public class DungeonPathfinder2D {
 
     public List<Vector2Int> FindPath(Vector2Int start, Vector2Int end, Func<Node, Node, PathCost> costFunction) {
         ResetNodes();
-        queue.Clear();
-        closed.Clear();
+        _queue.Clear();
+        _closed.Clear();
 
-        queue = new SimplePriorityQueue<Node, float>();
-        closed = new HashSet<Node>();
+        _queue = new SimplePriorityQueue<Node, float>();
+        _closed = new HashSet<Node>();
 
-        grid[start].Cost = 0;
-        queue.Enqueue(grid[start], 0);
+        _grid[start].Cost = 0;
+        _queue.Enqueue(_grid[start], 0);
 
-        while (queue.Count > 0) {
-            Node node = queue.Dequeue();
-            closed.Add(node);
+        while (_queue.Count > 0) {
+            Node node = _queue.Dequeue();
+            _closed.Add(node);
 
             if (node.Position == end) {
                 return ReconstructPath(node);
             }
 
-            foreach (var offset in neighbors) {
-                if (!grid.InBounds(node.Position + offset)) continue;
-                var neighbor = grid[node.Position + offset];
-                if (closed.Contains(neighbor)) continue;
+            foreach (var offset in _neighbors) {
+                if (!_grid.InBounds(node.Position + offset)) continue;
+                var neighbor = _grid[node.Position + offset];
+                if (_closed.Contains(neighbor)) continue;
 
                 var pathCost = costFunction(node, neighbor);
                 if (!pathCost.traversable) continue;
@@ -91,10 +91,10 @@ public class DungeonPathfinder2D {
                     neighbor.Previous = node;
                     neighbor.Cost = newCost;
 
-                    if (queue.TryGetPriority(node, out float existingPriority)) {
-                        queue.UpdatePriority(node, newCost);
+                    if (_queue.TryGetPriority(node, out float existingPriority)) {
+                        _queue.UpdatePriority(node, newCost);
                     } else {
-                        queue.Enqueue(neighbor, neighbor.Cost);
+                        _queue.Enqueue(neighbor, neighbor.Cost);
                     }
                 }
             }
@@ -107,12 +107,12 @@ public class DungeonPathfinder2D {
         List<Vector2Int> result = new List<Vector2Int>();
 
         while (node != null) {
-            stack.Push(node.Position);
+            _stack.Push(node.Position);
             node = node.Previous;
         }
 
-        while (stack.Count > 0) {
-            result.Add(stack.Pop());
+        while (_stack.Count > 0) {
+            result.Add(_stack.Pop());
         }
 
         return result;

@@ -2,11 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
-public class PSX_Post_Process : MonoBehaviour
+public class PsxPostProcess : MonoBehaviour
 {
-     [SerializeField]
-    Material postEffectMaterial;
+     [FormerlySerializedAs("postEffectMaterial"),SerializeField]
+    Material _postEffectMaterial;
 
     private Camera _camera;
 
@@ -18,17 +19,17 @@ public class PSX_Post_Process : MonoBehaviour
     }
 
     void OnRenderImage(RenderTexture src, RenderTexture dest){
-        RenderTexture RT = RenderTexture.GetTemporary(src.width, src.height, 0, src.format);
+        RenderTexture rt = RenderTexture.GetTemporary(src.width, src.height, 0, src.format);
         
       
         /*postEffectMaterial.SetTexture("_SceneDepthTex", sceneDepth.depthTexture);
         postEffectMaterial.SetTexture("_BoidDepthTex", boidDepth.depthTexture);
         postEffectMaterial.SetTexture("_BoidColorTex", boidDepth.colorTexture);*/
 
-        Graphics.Blit(src, RT, postEffectMaterial, 0);
+        Graphics.Blit(src, rt, _postEffectMaterial, 0);
        
-        Graphics.Blit(RT, dest);
+        Graphics.Blit(rt, dest);
 
-        RenderTexture.ReleaseTemporary(RT);
+        RenderTexture.ReleaseTemporary(rt);
     }
 }

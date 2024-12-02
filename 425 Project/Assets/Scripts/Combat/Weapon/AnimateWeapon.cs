@@ -1,30 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class AnimateWeapon : MonoBehaviour
 {
     //This script is unfinished, but we could use it to animate the wand
-    [SerializeField]
-    private  AnimationCurve xAnimation;
-    [SerializeField]
-    private float animationRepeatTime = 1;
-    private float time = 0;
+    [FormerlySerializedAs("xAnimation"),SerializeField]
+    private  AnimationCurve _xAnimation;
+    [FormerlySerializedAs("animationRepeatTime"),SerializeField]
+    private float _animationRepeatTime = 1;
+    private float _time = 0;
 
-    private Vector3 startRot;
+    private Vector3 _startRot;
     // Start is called before the first frame update
     void Start()
     {
-        startRot = transform.rotation.eulerAngles;
+        _startRot = transform.rotation.eulerAngles;
     }
 
     // Update is called once per frame
     void Update()
     {
-        time += Time.deltaTime;
-        if(time >= animationRepeatTime){
-            time -= animationRepeatTime;
+        _time += Time.deltaTime;
+        if(_time >= _animationRepeatTime){
+            _time -= _animationRepeatTime;
         }
-        transform.rotation = Quaternion.Euler(startRot + new Vector3(xAnimation.Evaluate(time),0,0));
+        transform.rotation = Quaternion.Euler(_startRot + new Vector3(_xAnimation.Evaluate(_time),0,0));
     }
 }

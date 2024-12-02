@@ -36,7 +36,7 @@ namespace Utils.Singleton
 
                     CacheAttribute();
                         
-                    switch (_cachedAttribute!.CreationParams.CreationMode)
+                    switch (_cachedAttribute!.CreationParams.creationMode)
                     {
                         case SingletonCreationMode.Throw:
                             Debug.LogError("Instance of " + typeof(T).FullName + " does not exist, but it should. Are you sure this can't be auto-created? If not, make sure you call it later!");
@@ -49,7 +49,7 @@ namespace Utils.Singleton
                     var go = new GameObject(typeof(T).ToString());
                     _instance = go.AddComponent<T>();
 
-                    if (_cachedAttribute.CreationParams.DontDestroyOnLoad)
+                    if (_cachedAttribute.CreationParams.dontDestroyOnLoad)
                     {
                         DontDestroyOnLoad(go);
                     }
@@ -107,7 +107,7 @@ namespace Utils.Singleton
                 }
                 
                 CacheAttribute();
-                if(_cachedAttribute!.CreationParams.DontDestroyOnLoad)
+                if(_cachedAttribute!.CreationParams.dontDestroyOnLoad)
                 {
                     DontDestroyOnLoad(gameObject);
                 }

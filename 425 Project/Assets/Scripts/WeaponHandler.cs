@@ -1,15 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class WeaponHandler : MonoBehaviour
 {
     // Start is called before the first frame update
     public static WeaponHandler instance;
-    private GameObject activeWeapon;
+    private GameObject _activeWeapon;
 
-    public List<GameObject> weapons;
-    public List<GameObject> weaponVisuals;
+    [FormerlySerializedAs("weapons")] public List<GameObject> _weapons;
+    [FormerlySerializedAs("weaponVisuals")] public List<GameObject> _weaponVisuals;
     void Start()
     {
         instance = this;
@@ -17,11 +18,11 @@ public class WeaponHandler : MonoBehaviour
 
     //activate the new weapon
     public void ActivateWeapon(int index){
-        for(int i = 0; i < weapons.Count; i++){
-            weapons[i].SetActive(false);
-            weaponVisuals[i].SetActive(false);
+        for(int i = 0; i < _weapons.Count; i++){
+            _weapons[i].SetActive(false);
+            _weaponVisuals[i].SetActive(false);
         }
-        weapons[index].SetActive(true);
-        weaponVisuals[index].SetActive(true);
+        _weapons[index].SetActive(true);
+        _weaponVisuals[index].SetActive(true);
     }
 }

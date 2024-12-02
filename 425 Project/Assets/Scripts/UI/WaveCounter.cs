@@ -6,19 +6,19 @@ using TMPro;
 
 public class WaveCounter : MonoBehaviour
 {
-    private TMP_Text waveCounter;
-    private EnemySpawner enemySpawner;
+    private TMP_Text _waveCounter;
+    private EnemySpawner _enemySpawner;
 
     // Start is called before the first frame update
     void Start()
     {
-        enemySpawner = GameObject.Find("EnemySpawner").GetComponent<EnemySpawner>();
-        waveCounter = GetComponent<TMP_Text>();
+        _enemySpawner = GameObject.Find("EnemySpawner").GetComponent<EnemySpawner>();
+        _waveCounter = GetComponent<TMP_Text>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        waveCounter.text = "Wave: " + enemySpawner.waveNumber;
+        _waveCounter.text = "Wave: " + _enemySpawner.WaveNumber;
     }
 }

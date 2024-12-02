@@ -13,19 +13,19 @@ namespace Combat
         [SerializeField]
         private DamageNumber _damageNumber;
 
-        private bool inRangeOfPlayer = false;
+        private bool _inRangeOfPlayer = false;
 
         [SerializeField]
         private Animator _enemyAnimatior;
 
-        private NavMeshAgent agent;
-        private AudioSource damageAudioSource;
-        private AudioSource ambientAudioSource;
-        private Collider collider;
-        private bool isCrossingLink = false;
-        private bool isDead = false;
+        private NavMeshAgent _agent;
+        private AudioSource _damageAudioSource;
+        private AudioSource _ambientAudioSource;
+        private Collider _collider;
+        private bool _isCrossingLink = false;
+        private bool _isDead = false;
 
-        public EnemyStats enemyStats { get; private set; }
+        public EnemyStats EnemyStats { get; private set; }
 
         public static event Action EnemyDeath;
 
@@ -36,28 +36,28 @@ namespace Combat
                 Debug.LogError("Player Stats Not Initialized?");
             }
 
-            enemyStats = new EnemyStats();
-            transform.localScale = transform.localScale * enemyStats.Scale;
+            EnemyStats = new EnemyStats();
+            transform.localScale = transform.localScale * EnemyStats.Scale;
 
             _playerhealth = PlayerStats.Instance.Health;
-            agent = GetComponent<NavMeshAgent>();
-            collider = GetComponent<Collider>();
-            _damageNumber.Initialize(enemyStats.Health);
-            damageAudioSource = gameObject.AddComponent<AudioSource>();
-            ambientAudioSource = gameObject.AddComponent<AudioSource>();
-            damageAudioSource.spatialBlend = 1.0f;
-            ambientAudioSource.spatialBlend = 1.0f;
-            damageAudioSource.rolloffMode = AudioRolloffMode.Custom;
-            ambientAudioSource.rolloffMode = AudioRolloffMode.Custom;
-            agent = transform.GetComponent<NavMeshAgent>();
-            agent.speed = enemyStats.Speed.Value;
+            _agent = GetComponent<NavMeshAgent>();
+            _collider = GetComponent<Collider>();
+            _damageNumber.Initialize(EnemyStats.Health);
+            _damageAudioSource = gameObject.AddComponent<AudioSource>();
+            _ambientAudioSource = gameObject.AddComponent<AudioSource>();
+            _damageAudioSource.spatialBlend = 1.0f;
+            _ambientAudioSource.spatialBlend = 1.0f;
+            _damageAudioSource.rolloffMode = AudioRolloffMode.Custom;
+            _ambientAudioSource.rolloffMode = AudioRolloffMode.Custom;
+            _agent = transform.GetComponent<NavMeshAgent>();
+            _agent.speed = EnemyStats.Speed.Value;
             StartCoroutine(AmbientSound());
         }
 
         private void Update()
         {
             // Check if the agent is on NavMeshLink
-            if (agent.isOnOffMeshLink && !isCrossingLink)
+            if (_agent.isOnOffMeshLink && !_isCrossingLink)
             {
                 // Start traversing the NavMeshLink
                 StartCoroutine(CrossLink());
@@ -67,12 +67,12 @@ namespace Combat
         {
             while (true)
             {
-                if (!damageAudioSource.isPlaying)
+                if (!_damageAudioSource.isPlaying)
                 {
                     if (UnityEngine.Random.value < 0.04f)
                     {
                         SoundManager.Sound[] items = { SoundManager.Sound.MobNoise1, SoundManager.Sound.MobNoise2, SoundManager.Sound.MobNoise3 };
-                        SoundManager.PlaySound(items[UnityEngine.Random.Range(0, items.Length)], ambientAudioSource, true);
+                        SoundManager.PlaySound(items[UnityEngine.Random.Range(0, items.Length)], _ambientAudioSource, true);
                     }
                 }
                 yield return new WaitForSeconds(1);
@@ -81,16 +81,16 @@ namespace Combat
 
         private IEnumerator CrossLink()
         {
-            isCrossingLink = true;
+            _isCrossingLink = true;
 
             // Get the link data (start and end points)
-            OffMeshLinkData linkData = agent.currentOffMeshLinkData;
-            Vector3 startPos = agent.transform.position;
-            Vector3 endPos = linkData.endPos + new Vector3(0, agent.transform.position.y, 0);
+            OffMeshLinkData linkData = _agent.currentOffMeshLinkData;
+            Vector3 startPos = _agent.transform.position;
+            Vector3 endPos = linkData.endPos + new Vector3(0, _agent.transform.position.y, 0);
 
             // Get the total distance to travel across the link
             float distance = Vector3.Distance(startPos, endPos);
-            float travelTime = distance / agent.speed;  // Maintain the agent's speed
+            float travelTime = distance / _agent.speed;  // Maintain the agent's speed
 
             float elapsedTime = 0f;
 
@@ -101,13 +101,13 @@ namespace Combat
                 float t = elapsedTime / travelTime;
 
                 // Linear interpolation from start to end position
-                agent.transform.position = Vector3.Lerp(startPos, endPos, t);
+                _agent.transform.position = Vector3.Lerp(startPos, endPos, t);
                 yield return null;
             }
 
             // After crossing the link, complete the off-mesh link
-            agent.CompleteOffMeshLink();
-            isCrossingLink = false;
+            _agent.CompleteOffMeshLink();
+            _isCrossingLink = false;
         }
 
 
@@ -115,9 +115,9 @@ namespace Combat
         {
             _damageNumber.ShowDamageNumber(damage);
 
-            SoundManager.PlaySound(SoundManager.Sound.MobHit, damageAudioSource, true);
+            SoundManager.PlaySound(SoundManager.Sound.MobHit, _damageAudioSource, true);
 
-            if (!enemyStats.Health.TrySpendResource(damage))
+            if (!EnemyStats.Health.TrySpendResource(damage))
             {
                 Death();
                 return false;
@@ -128,16 +128,16 @@ namespace Combat
 
         public void Death()
         {
-            isDead = true;
+            _isDead = true;
             // Used for killCounter UI + enemySpawner wave spawn time calculation
             EnemyDeath?.Invoke();
 
-            SoundManager.PlaySound(SoundManager.Sound.MobDeath, agent.transform.position, true);
+            SoundManager.PlaySound(SoundManager.Sound.MobDeath, _agent.transform.position, true);
             // TODO: Death Animation
-            if (agent.isOnNavMesh)
+            if (_agent.isOnNavMesh)
             {
-                agent.isStopped = true;
-                collider.enabled = false;
+                _agent.isStopped = true;
+                _collider.enabled = false;
                 _enemyAnimatior.gameObject.SetActive(false);
                 Destroy(gameObject, 3f);
             }
@@ -150,9 +150,9 @@ namespace Combat
 
         void OnTriggerEnter(Collider other)
         {
-            if (!isDead && other.name == "PlayerModel" && !isCrossingLink && !agent.isOnOffMeshLink)
+            if (!_isDead && other.name == "PlayerModel" && !_isCrossingLink && !_agent.isOnOffMeshLink)
             {
-                inRangeOfPlayer = true;
+                _inRangeOfPlayer = true;
                 //agent.isStopped = true;
 
                 StartCoroutine(AttackWhileNearby(other));
@@ -162,14 +162,14 @@ namespace Combat
 
         private IEnumerator AttackWhileNearby(Collider player)
         {
-            while (!isDead && (player.transform.position - transform.position).magnitude <= 3)
+            while (!_isDead && (player.transform.position - transform.position).magnitude <= 3)
             {
                 // check if enemy is not moving much
-                if (agent.velocity.magnitude < 0.1f && inRangeOfPlayer)
+                if (_agent.velocity.magnitude < 0.1f && _inRangeOfPlayer)
                 {
                     _enemyAnimatior.SetTrigger("TrAttack");
 
-                    bool isAlive = _playerhealth.TrySpendResource(enemyStats.AttackDamage.Value);
+                    bool isAlive = _playerhealth.TrySpendResource(EnemyStats.AttackDamage.Value);
                     if (!isAlive)
                     {
                         PlayerStats.Instance.Health.Value = 0;
@@ -195,19 +195,19 @@ namespace Combat
         {
             if (other.name == "PlayerModel")
             {
-                inRangeOfPlayer = false;
+                _inRangeOfPlayer = false;
 
-                agent.isStopped = false;
+                _agent.isStopped = false;
             }
         }
 
         public void ConfigureStats(float health, float speed, float scale, float attackDamage)
         {
-            enemyStats = new EnemyStats(health, speed, scale, attackDamage);
+            EnemyStats = new EnemyStats(health, speed, scale, attackDamage);
 
-            transform.localScale = transform.localScale * enemyStats.Scale;
-            _damageNumber.Initialize(enemyStats.Health);
-            agent.speed = enemyStats.Speed.Value;
+            transform.localScale = transform.localScale * EnemyStats.Scale;
+            _damageNumber.Initialize(EnemyStats.Health);
+            _agent.speed = EnemyStats.Speed.Value;
         }
     }
 }

@@ -3,122 +3,124 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.Serialization;
+
 public class Chest : MonoBehaviour
 {
-    public TextMeshProUGUI taskText;
+    [FormerlySerializedAs("taskText")] public TextMeshProUGUI _taskText;
 
-    public TextMeshPro timerText;
-    private bool playerInRange = false;
+    [FormerlySerializedAs("timerText")] public TextMeshPro _timerText;
+    private bool _playerInRange = false;
 
-    private bool playerInChargeRadius = true;
-    private bool opened = false;
+    private bool _playerInChargeRadius = true;
+    private bool _opened = false;
 
-    private bool charging = false;
-    private bool canFire = false;
-    private bool hasWand = false;
+    private bool _charging = false;
+    private bool _canFire = false;
+    private bool _hasWand = false;
     
-    public float chestSpeed = 40f;
-    public GameObject wand;
+    [FormerlySerializedAs("chestSpeed")] public float _chestSpeed = 40f;
+    [FormerlySerializedAs("wand")] public GameObject _wand;
 
-    public GameObject lid;
+    [FormerlySerializedAs("lid")] public GameObject _lid;
 
-    public int weaponIndex = 0;
+    [FormerlySerializedAs("weaponIndex")] public int _weaponIndex = 0;
 
-    public List<GameObject> chestWeaponEffects;
+    [FormerlySerializedAs("chestWeaponEffects")] public List<GameObject> _chestWeaponEffects;
 
-    public bool tutorialChest = false;
+    [FormerlySerializedAs("tutorialChest")] public bool _tutorialChest = false;
 
-    public int tutorialStartWeaponForceIndex = 3;
+    [FormerlySerializedAs("tutorialStartWeaponForceIndex")] public int _tutorialStartWeaponForceIndex = 3;
 
-    public float normalOpenTime = 60;
+    [FormerlySerializedAs("normalOpenTime")] public float _normalOpenTime = 60;
 
-    public float tutorialOpenTime = 5;
+    [FormerlySerializedAs("tutorialOpenTime")] public float _tutorialOpenTime = 5;
 
-    public float dechargeDistance = 5;
+    [FormerlySerializedAs("dechargeDistance")] public float _dechargeDistance = 5;
 
-    private float maxTimeRemaining;
-    private float timeRemaining;
-    private bool uniqueFail = true;
+    private float _maxTimeRemaining;
+    private float _timeRemaining;
+    private bool _uniqueFail = true;
 
-    private Camera mainCam;
+    private Camera _mainCam;
 
     // Start is called before the first frame update
     void Start()
     {
-        mainCam = Camera.main;
+        _mainCam = Camera.main;
         
-        if(tutorialChest){
-            weaponIndex = tutorialStartWeaponForceIndex;
+        if(_tutorialChest){
+            _weaponIndex = _tutorialStartWeaponForceIndex;
         }else{
-            weaponIndex = Random.Range(0, WeaponHandler.instance.weapons.Count);
+            _weaponIndex = Random.Range(0, WeaponHandler.instance._weapons.Count);
         }
-        Debug.Log("weaponIndex is" + weaponIndex);
-        if(tutorialChest){
+        Debug.Log("weaponIndex is" + _weaponIndex);
+        if(_tutorialChest){
             TextUpdates.Instance.UpdateTaskText("Use WASD keys to move to the chest.");
-            maxTimeRemaining = tutorialOpenTime;
+            _maxTimeRemaining = _tutorialOpenTime;
         }else{
-            maxTimeRemaining = normalOpenTime;
+            _maxTimeRemaining = _normalOpenTime;
         }
-        timeRemaining = maxTimeRemaining;
+        _timeRemaining = _maxTimeRemaining;
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(charging && !opened){
-            playerInChargeRadius = Vector3.Distance(transform.position, mainCam.transform.position) < dechargeDistance;
-            if(playerInChargeRadius){
-                uniqueFail = true;
-                timerText.color = new Color(1,1,0,1);
-                timeRemaining -= Time.deltaTime;
-                if(timeRemaining < 0){
+        if(_charging && !_opened){
+            _playerInChargeRadius = Vector3.Distance(transform.position, _mainCam.transform.position) < _dechargeDistance;
+            if(_playerInChargeRadius){
+                _uniqueFail = true;
+                _timerText.color = new Color(1,1,0,1);
+                _timeRemaining -= Time.deltaTime;
+                if(_timeRemaining < 0){
                     SoundManager.PlaySound(SoundManager.Sound.StoodGroundSuccess);
-                    opened = true;
-                    MeshRenderer chestWandRender = wand.GetComponent<MeshRenderer>();
+                    _opened = true;
+                    MeshRenderer chestWandRender = _wand.GetComponent<MeshRenderer>();
                     chestWandRender.enabled = true;
-                    StartCoroutine(setLid(true));
-                    StartCoroutine(moveWand());
-                    chestWeaponEffects[weaponIndex].SetActive(true);
+                    StartCoroutine(SetLid(true));
+                    StartCoroutine(MoveWand());
+                    _chestWeaponEffects[_weaponIndex].SetActive(true);
                 }
             }else{
-                if (uniqueFail)
+                if (_uniqueFail)
                 {
                     SoundManager.PlaySound(SoundManager.Sound.StoodGroundFail);
-                    uniqueFail = false;
+                    _uniqueFail = false;
                 }
-                timerText.color = new Color(1,0,0,1);
-                timeRemaining += Time.deltaTime;
-                if(timeRemaining > maxTimeRemaining){
-                    timeRemaining = maxTimeRemaining;
+                _timerText.color = new Color(1,0,0,1);
+                _timeRemaining += Time.deltaTime;
+                if(_timeRemaining > _maxTimeRemaining){
+                    _timeRemaining = _maxTimeRemaining;
                 }
             }
-            timerText.text = Mathf.Round(timeRemaining).ToString();
-            timerText.transform.LookAt(mainCam.transform.position);
+            _timerText.text = Mathf.Round(_timeRemaining).ToString();
+            _timerText.transform.LookAt(_mainCam.transform.position);
         }else{
-            timerText.text = "";
+            _timerText.text = "";
         }
         
-        if (playerInRange && !opened && !charging)
+        if (_playerInRange && !_opened && !_charging)
         {            
-            if(tutorialChest){
+            if(_tutorialChest){
                 TextUpdates.Instance.UpdateTaskText("Defend the chest until it opens.");
             }
-            charging = true; 
+            _charging = true; 
         }
 
-        if (Input.GetKeyDown(KeyCode.E) && playerInRange && opened && !hasWand)
+        if (Input.GetKeyDown(KeyCode.E) && _playerInRange && _opened && !_hasWand)
         {
-            hasWand = true;
+            _hasWand = true;
             Debug.LogWarning("Presed e");
-            if(tutorialChest){
+            if(_tutorialChest){
                 TextUpdates.Instance.UpdateTaskText("Now practice shooting your wand using left click.");
             }
 
             GameObject playerwand = GameObject.FindWithTag("MainCamera")?.transform.Find("wand")?.gameObject;
-            MeshRenderer chestWandRender = wand.GetComponent<MeshRenderer>();
+            MeshRenderer chestWandRender = _wand.GetComponent<MeshRenderer>();
             chestWandRender.enabled = false;
-            chestWeaponEffects[weaponIndex].SetActive(false);
+            _chestWeaponEffects[_weaponIndex].SetActive(false);
             if (playerwand != null)
             {
                 Debug.LogWarning("found");
@@ -128,14 +130,14 @@ public class Chest : MonoBehaviour
                     meshRenderer.enabled = true; 
                 }
             }
-            WeaponHandler.instance.ActivateWeapon(weaponIndex);
-            canFire = true;
+            WeaponHandler.instance.ActivateWeapon(_weaponIndex);
+            _canFire = true;
         }
 
-        if (Input.GetKeyDown(KeyCode.Mouse0) && canFire && opened)
+        if (Input.GetKeyDown(KeyCode.Mouse0) && _canFire && _opened)
         {
-            canFire = false;
-            if(tutorialChest){
+            _canFire = false;
+            if(_tutorialChest){
                 TextUpdates.Instance.UpdateTaskText("Search the dungeon for chests & beware of monsters.");
             }
             StartCoroutine(ClearTextAfterSeconds(5f));
@@ -143,27 +145,27 @@ public class Chest : MonoBehaviour
         }
     }
 
-    private IEnumerator setLid(bool open)
+    private IEnumerator SetLid(bool open)
     {
         SoundManager.PlaySound(SoundManager.Sound.OpenChest, gameObject.transform.position);
-        while (lid.transform.rotation.eulerAngles.x <= 350)
+        while (_lid.transform.rotation.eulerAngles.x <= 350)
         {
-            lid.transform.localRotation *= Quaternion.Euler(new Vector3(-80 * Time.deltaTime, 0, 0));
+            _lid.transform.localRotation *= Quaternion.Euler(new Vector3(-80 * Time.deltaTime, 0, 0));
            
             yield return null;
         }
     }
 
-    private IEnumerator moveWand()
+    private IEnumerator MoveWand()
     {
         Vector3 targetWandPos = transform.position + new Vector3(0, .3f, 0);
         yield return new WaitForSeconds(0.3f);
-        while (wand.transform.position.y < targetWandPos.y)
+        while (_wand.transform.position.y < targetWandPos.y)
         {
-            wand.transform.position = Vector3.MoveTowards(wand.transform.position, targetWandPos, .3f * Time.deltaTime);
+            _wand.transform.position = Vector3.MoveTowards(_wand.transform.position, targetWandPos, .3f * Time.deltaTime);
             yield return null;
         }
-        if(tutorialChest){
+        if(_tutorialChest){
             TextUpdates.Instance.UpdateTaskText("Press 'E' to collect your wand.");
         }
         
@@ -180,7 +182,7 @@ public class Chest : MonoBehaviour
     {
         if (other.name == "PlayerModel")
         {
-            playerInRange = true;
+            _playerInRange = true;
         }
     }
 
@@ -188,7 +190,7 @@ public class Chest : MonoBehaviour
     {
         if (other.name == "PlayerModel")
         {
-            playerInRange = false;
+            _playerInRange = false;
         }
     }
 

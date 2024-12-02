@@ -5,6 +5,7 @@ using System;
 using Random = System.Random;
 using Locomotion;
 using Unity.AI.Navigation;
+using UnityEngine.Serialization;
 using Utils.Singleton;
 
 [SingletonAttribute(SingletonCreationMode.Auto, false)]
@@ -16,38 +17,38 @@ public class DungeonGenerator : SingletonMonoBehaviour<DungeonGenerator>
     [Serializable]
     struct DungeonRoomParameters{
         //weight in spawn room function
-        public float spawnWeight;
+        [FormerlySerializedAs("spawnWeight")] public float _spawnWeight;
         //room prefab to spawn
-        public DungeonRoomObject roomObject;
+        [FormerlySerializedAs("roomObject")] public DungeonRoomObject _roomObject;
         //does the room have doors on different levels
-        public bool verticalRoom;
+        [FormerlySerializedAs("verticalRoom")] public bool _verticalRoom;
         //bounding box parameters
-        public Vector3 boundingBoxMinPoint;
-        public Vector3 boundingBoxMaxPoint;
+        [FormerlySerializedAs("boundingBoxMinPoint")] public Vector3 _boundingBoxMinPoint;
+        [FormerlySerializedAs("boundingBoxMaxPoint")] public Vector3 _boundingBoxMaxPoint;
         //centerpoint that bounding boxes branch from, usually at the center of the floor of the room
-        public Vector3 centerPoint;
+        [FormerlySerializedAs("centerPoint")] public Vector3 _centerPoint;
         //should be 0 by default, used when trying to spawn rooms.
-        public Vector3 rotation;
+        [FormerlySerializedAs("rotation")] public Vector3 _rotation;
 
-        public Vector3 chestPosition;
-        public Vector3 chestRotation;
+        [FormerlySerializedAs("chestPosition")] public Vector3 _chestPosition;
+        [FormerlySerializedAs("chestRotation")] public Vector3 _chestRotation;
         //list of door parameters for doors on this room
-        public List<DungeonDoorParameters> relativeDoorParameters;
+        [FormerlySerializedAs("relativeDoorParameters")] public List<DungeonDoorParameters> _relativeDoorParameters;
     }
 
     [Serializable]
     struct DungeonDoorParameters{
         public DungeonDoorParameters(Vector3 relativePosition, Vector3 angle){
-            this.relativePosition = relativePosition;
-            this.angle = angle;
+            this._relativePosition = relativePosition;
+            this._angle = angle;
         }
         //angle of the door in relation to the room's zForward. forward is 0, right is 90, back is 180, left is 270
-        public Vector3 angle;
+        [FormerlySerializedAs("angle")] public Vector3 _angle;
         //relative position of door in relation to the centerpoint of the room., should be at floor level of the room
-        public Vector3 relativePosition;
+        [FormerlySerializedAs("relativePosition")] public Vector3 _relativePosition;
     }
 
-    static int dungeonRoomCurrID = 0;
+    static int _dungeonRoomCurrID = 0;
     //connector structs with data for a graph
     class DungeonRoom{
         public readonly int roomId;
@@ -58,21 +59,21 @@ public class DungeonGenerator : SingletonMonoBehaviour<DungeonGenerator>
         //room rotation in worldspace
         public Quaternion worldRotation;
         //rotated bounding box of room, used to check against new rooms to see if they overlap
-        public OBB boundingBox;
+        public Obb boundingBox;
         //base parameters of room
         public DungeonRoomParameters parameters;
         //list of attatched doorways
         public List<DungeonDoorway> doorways;
         public int graphDistanceFromCenter;
-        public DungeonRoom(DungeonRoomParameters parameters, Vector3 worldPosition, Quaternion worldRotation, OBB boundingBox, int graphDistanceFromCenter){
+        public DungeonRoom(DungeonRoomParameters parameters, Vector3 worldPosition, Quaternion worldRotation, Obb boundingBox, int graphDistanceFromCenter){
             doorways = new List<DungeonDoorway>();
             this.parameters = parameters;
             this.worldPosition = worldPosition;
             this.worldRotation = worldRotation;
             this.boundingBox = boundingBox;
             this.graphDistanceFromCenter = graphDistanceFromCenter;
-            roomId = dungeonRoomCurrID;
-            dungeonRoomCurrID++;
+            roomId = _dungeonRoomCurrID;
+            _dungeonRoomCurrID++;
         }
         public void RemoveRoomFromConnections(DungeonRoom room){
             foreach(DungeonDoorway doorway in doorways){
@@ -126,24 +127,24 @@ public class DungeonGenerator : SingletonMonoBehaviour<DungeonGenerator>
     }
 
     //struct for non-axis aligned bounding boxes
-    struct OBB{
-        public Vector3 Center;      // Center of the OBB
-        public Vector3[] Axes;      // Local X, Y, and Z axes (3 unit vectors)
-        public Vector3 HalfExtents; // Half-width, half-height, and half-depth along each axis
+    struct Obb{
+        public Vector3 center;      // Center of the OBB
+        public Vector3[] axes;      // Local X, Y, and Z axes (3 unit vectors)
+        public Vector3 halfExtents; // Half-width, half-height, and half-depth along each axis
 
-        public OBB(DungeonRoomParameters roomParams, Vector3 worldPosition, Quaternion worldRotation){
-            Vector3 localCenter = Vector3.Lerp(roomParams.boundingBoxMaxPoint,roomParams.boundingBoxMinPoint,0.5f);
-            this.Center = worldPosition + localCenter;
-            this.Axes = new Vector3[3];
+        public Obb(DungeonRoomParameters roomParams, Vector3 worldPosition, Quaternion worldRotation){
+            Vector3 localCenter = Vector3.Lerp(roomParams._boundingBoxMaxPoint,roomParams._boundingBoxMinPoint,0.5f);
+            this.center = worldPosition + localCenter;
+            this.axes = new Vector3[3];
 
-            Axes[0] = worldRotation * new Vector3(1,0,0);
-            Axes[1] = worldRotation * new Vector3(0,1,0);
-            Axes[2] = worldRotation * new Vector3(0,0,1);
+            axes[0] = worldRotation * new Vector3(1,0,0);
+            axes[1] = worldRotation * new Vector3(0,1,0);
+            axes[2] = worldRotation * new Vector3(0,0,1);
 
-            float halfWidth = Mathf.Abs(roomParams.boundingBoxMaxPoint.x - roomParams.boundingBoxMinPoint.x)/2f;
-            float halfHeight = Mathf.Abs(roomParams.boundingBoxMaxPoint.y - roomParams.boundingBoxMinPoint.y)/2f;
-            float halfDepth = Mathf.Abs(roomParams.boundingBoxMaxPoint.z - roomParams.boundingBoxMinPoint.z)/2f;
-            this.HalfExtents = new Vector3(halfWidth, halfHeight, halfDepth);
+            float halfWidth = Mathf.Abs(roomParams._boundingBoxMaxPoint.x - roomParams._boundingBoxMinPoint.x)/2f;
+            float halfHeight = Mathf.Abs(roomParams._boundingBoxMaxPoint.y - roomParams._boundingBoxMinPoint.y)/2f;
+            float halfDepth = Mathf.Abs(roomParams._boundingBoxMaxPoint.z - roomParams._boundingBoxMinPoint.z)/2f;
+            this.halfExtents = new Vector3(halfWidth, halfHeight, halfDepth);
         }
     }
 
@@ -153,119 +154,119 @@ public class DungeonGenerator : SingletonMonoBehaviour<DungeonGenerator>
     }
 
     //random
-    Random random;
+    Random _random;
     //generation mode
-    [SerializeField]
-    private GenerationMode generationMode = GenerationMode.DynamicGeneration;
+    [FormerlySerializedAs("generationMode"),SerializeField]
+    private GenerationMode _generationMode = GenerationMode.DynamicGeneration;
     //number of rooms to spawn
-    [Header("Settings for Static Generation")]
+    [FormerlySerializedAs("roomsToSpawn"),Header("Settings for Static Generation")]
     [SerializeField]
-    private int roomsToSpawn = 5;
+    private int _roomsToSpawn = 5;
 
-    [SerializeField]
-    private Vector3 playerStartOffset;
+    [FormerlySerializedAs("playerStartOffset"),SerializeField]
+    private Vector3 _playerStartOffset;
     //if bounding boxes are farther away from eachother than this value, they will not test for collision
-    [SerializeField]
-    private int boundingBoxCheckPruneDistance = 50;
+    [FormerlySerializedAs("boundingBoxCheckPruneDistance"),SerializeField]
+    private int _boundingBoxCheckPruneDistance = 50;
     //quota of vertical rooms to spawn for each level
-    [SerializeField]
-    private float verticalRoomsPerLevelQuota = 5;
-    private float verticalRoomsOnCurrentLevel = 0;
+    [FormerlySerializedAs("verticalRoomsPerLevelQuota"),SerializeField]
+    private float _verticalRoomsPerLevelQuota = 5;
+    private float _verticalRoomsOnCurrentLevel = 0;
     //the maximum height a bounding box can reach currently. goes down as level increses
-    [SerializeField]
-    private float maxPossibleDungeonRoomHeight = 5;
+    [FormerlySerializedAs("maxPossibleDungeonRoomHeight"),SerializeField]
+    private float _maxPossibleDungeonRoomHeight = 5;
     // if a door is below this y value, it cannot be branched from. this value is decremented when level increases. this is done to stop generation on lower levels before higher levels are finished
-    [SerializeField]
-    private float availableDoorheight = 0;
+    [FormerlySerializedAs("availableDoorheight"),SerializeField]
+    private float _availableDoorheight = 0;
     
-    [SerializeField]
-    private bool forceLevels = false;
+    [FormerlySerializedAs("forceLevels"),SerializeField]
+    private bool _forceLevels = false;
     //y height of each level
-    [SerializeField]
-    private float levelHeight = 15;
+    [FormerlySerializedAs("levelHeight"),SerializeField]
+    private float _levelHeight = 15;
 
     //once this amount of rooms is added, level is incremented
-    [SerializeField]
-    private int roomsToAddBeforeBlacklistingLevel = 100;
+    [FormerlySerializedAs("roomsToAddBeforeBlacklistingLevel"),SerializeField]
+    private int _roomsToAddBeforeBlacklistingLevel = 100;
 
-    private int roomsAddedInLevel = 0;
+    private int _roomsAddedInLevel = 0;
 
     //current level value
-    [SerializeField]
-    private int currlevel = 1;
+    [FormerlySerializedAs("currlevel"),SerializeField]
+    private int _currlevel = 1;
 
-    [Header("Settings for Dynamic Generation")]
+    [FormerlySerializedAs("maxGraphDistanceFromCenter"),Header("Settings for Dynamic Generation")]
     //the limit of how far a room can be from the center of the graph without being removed
     [SerializeField]
-    private int maxGraphDistanceFromCenter;
-    public int getMaxGraphDistanceFromCenter()
+    private int _maxGraphDistanceFromCenter;
+    public int GetMaxGraphDistanceFromCenter()
     {
-        return maxGraphDistanceFromCenter;
+        return _maxGraphDistanceFromCenter;
     }
 
-    [SerializeField]
-    private float precentageOfDoorsToBeUsable;
-    [SerializeField]
-    public Transform player;
-    [SerializeField]
-    private GameObject navMeshLinkHolder;
-    [SerializeField]
-    private float doorWidth;
+    [FormerlySerializedAs("precentageOfDoorsToBeUsable"),SerializeField]
+    private float _precentageOfDoorsToBeUsable;
+    [FormerlySerializedAs("player"),SerializeField]
+    public Transform _player;
+    [FormerlySerializedAs("navMeshLinkHolder"),SerializeField]
+    private GameObject _navMeshLinkHolder;
+    [FormerlySerializedAs("doorWidth"),SerializeField]
+    private float _doorWidth;
 
-    [Header("Settings for Enemies")]
+    [FormerlySerializedAs("enemySpawner"),Header("Settings for Enemies")]
     [SerializeField]
-    EnemySpawner enemySpawner;
+    EnemySpawner _enemySpawner;
     
 
-    [Header("Settings for Debugging")]
+    [FormerlySerializedAs("visualizeBoundingBoxes"),Header("Settings for Debugging")]
     // visualize bounding boxes for debuging
     [SerializeField]
-    private bool visualizeBoundingBoxes = false;
+    private bool _visualizeBoundingBoxes = false;
 
     //debug object
-    [SerializeField]
-    GameObject testObject;
+    [FormerlySerializedAs("testObject"),SerializeField]
+    GameObject _testObject;
 
-    [Header("General Settings")]
+    [FormerlySerializedAs("randomSeed"),Header("General Settings")]
     //choose to randomize seed
     [SerializeField]
-    private bool randomSeed = false;
+    private bool _randomSeed = false;
     //seed value, can set if random seed is false
-    [SerializeField]
-    private int seed = 0;
+    [FormerlySerializedAs("seed"),SerializeField]
+    private int _seed = 0;
     
     //parameters of the start room
-    [SerializeField]
-    private DungeonRoomParameters startRoom;
+    [FormerlySerializedAs("startRoom"),SerializeField]
+    private DungeonRoomParameters _startRoom;
 
     //this object gets spawned at doorways that connect to nothing after generation.
-    [SerializeField]
-    private GameObject doorwayBlocker;
+    [FormerlySerializedAs("doorwayBlocker"),SerializeField]
+    private GameObject _doorwayBlocker;
 
     //this is for open doors
-    [SerializeField]
-    private GameObject doorwayOpen;
+    [FormerlySerializedAs("doorwayOpen"),SerializeField]
+    private GameObject _doorwayOpen;
 
-    [SerializeField]
-    private GameObject chest;
+    [FormerlySerializedAs("chest"),SerializeField]
+    private GameObject _chest;
 
-    [SerializeField]
+    [FormerlySerializedAs("chestChance"),SerializeField]
     //out of 100
-    private float chestChance;
+    private float _chestChance;
 
     //list of possible room parameters that can be added
-    [SerializeField]
-    private List<DungeonRoomParameters> possibleRoomParameters = new List<DungeonRoomParameters>();
+    [FormerlySerializedAs("possibleRoomParameters"),SerializeField]
+    private List<DungeonRoomParameters> _possibleRoomParameters = new List<DungeonRoomParameters>();
 
     //private vars 
-    private List<DungeonRoom> rooms = new List<DungeonRoom>();
-    private List<DungeonDoorway> doorways = new List<DungeonDoorway>();
+    private List<DungeonRoom> _rooms = new List<DungeonRoom>();
+    private List<DungeonDoorway> _doorways = new List<DungeonDoorway>();
     //private List<GameObject> spawnedPrefabs = new List<GameObject>();
     //current room player is in
-    private DungeonRoom currentCenterRoom;
-    public Vector3 getCurrentCenterRoomWorldPosition()
+    private DungeonRoom _currentCenterRoom;
+    public Vector3 GetCurrentCenterRoomWorldPosition()
     {
-        return this.currentCenterRoom.worldPosition;
+        return this._currentCenterRoom.worldPosition;
     }
 
     void Start()
@@ -273,21 +274,21 @@ public class DungeonGenerator : SingletonMonoBehaviour<DungeonGenerator>
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         //randomize seed if needed
-        if(randomSeed){
-            random = new Random();
-            seed = random.Next(0,Int32.MaxValue);
+        if(_randomSeed){
+            _random = new Random();
+            _seed = _random.Next(0,Int32.MaxValue);
         }
-        Debug.Log("SEED IS:" + seed);
-        random = new Random(seed);
+        Debug.Log("SEED IS:" + _seed);
+        _random = new Random(_seed);
         //spawn start room with 
         AddRoomToDungeon();
         //set center room to start room
-        currentCenterRoom = rooms[0];
-        currentCenterRoom.EnteredRoom();
-        if(generationMode == GenerationMode.StaticGeneration){
+        _currentCenterRoom = _rooms[0];
+        _currentCenterRoom.EnteredRoom();
+        if(_generationMode == GenerationMode.StaticGeneration){
             GenerateStaticDungeon();
-        }else if(generationMode == GenerationMode.DynamicGeneration){
-            GenerateDynamicDungeon(rooms[0]);
+        }else if(_generationMode == GenerationMode.DynamicGeneration){
+            GenerateDynamicDungeon(_rooms[0]);
         }
         PlacePlayer();
         SetupEnemies();
@@ -295,32 +296,32 @@ public class DungeonGenerator : SingletonMonoBehaviour<DungeonGenerator>
     }
 
     void Update(){
-        if(generationMode == GenerationMode.StaticGeneration){
+        if(_generationMode == GenerationMode.StaticGeneration){
             return;
         }
         //check if player is in current room bounds
-        bool playerInCurrRoomBounds = IsPointInsideOBB(player.position, currentCenterRoom.boundingBox);
+        bool playerInCurrRoomBounds = IsPointInsideObb(_player.position, _currentCenterRoom.boundingBox);
         //if not in bounds, check if in neighbor bounds, if so, update center room to neighbor, if not, player out of bounds
         if(!playerInCurrRoomBounds){
-            DungeonRoom newCenterRoom = currentCenterRoom;
+            DungeonRoom newCenterRoom = _currentCenterRoom;
             bool newCenterFound = false;
-            List<DungeonRoom> neighbors = GetDungeonRoomNeighbors(currentCenterRoom);
+            List<DungeonRoom> neighbors = GetDungeonRoomNeighbors(_currentCenterRoom);
             foreach(DungeonRoom neighbor in neighbors){
-                if(!newCenterFound && IsPointInsideOBB(player.position, neighbor.boundingBox)){
+                if(!newCenterFound && IsPointInsideObb(_player.position, neighbor.boundingBox)){
                     newCenterRoom = neighbor;
                     newCenterFound = true;
                 }
             }
             
             //currentCenterRoom.ExitedRoom();
-            currentCenterRoom = newCenterRoom;
+            _currentCenterRoom = newCenterRoom;
             //currentCenterRoom.EnteredRoom();
             
             if(!newCenterFound){
                 Debug.Log("DYNAMIC WORLD GENERATION LOST PLAYER, LIKELY OUT OF BOUNDS");
             }else{
                 Debug.Log("NEW CENTER ROOM SET, GENERATING DYNAMIC DUNGEON");
-                GenerateDynamicDungeon(currentCenterRoom);
+                GenerateDynamicDungeon(_currentCenterRoom);
             }
         }
     }
@@ -330,8 +331,8 @@ public class DungeonGenerator : SingletonMonoBehaviour<DungeonGenerator>
         UpdateNeighborCenterDistances(newCenterRoom, newCenterRoom);
         //destroy old rooms out of range
         List<DungeonRoom> destroyQueue = new List<DungeonRoom>();
-        foreach(DungeonRoom room in rooms){
-            if(room.graphDistanceFromCenter > maxGraphDistanceFromCenter){
+        foreach(DungeonRoom room in _rooms){
+            if(room.graphDistanceFromCenter > _maxGraphDistanceFromCenter){
                 destroyQueue.Add(room);
             }
         }
@@ -339,7 +340,7 @@ public class DungeonGenerator : SingletonMonoBehaviour<DungeonGenerator>
 
         //add new rooms: fo all rooms with distance to center less than range, add rooms
         //function to pass to dungeon addition to check if branch doors are in bounds and branchable
-        Func<DungeonDoorway, bool> doorwayBoundFunc = door => door.branchable && door.parentRoom.graphDistanceFromCenter < maxGraphDistanceFromCenter ? true : false;
+        Func<DungeonDoorway, bool> doorwayBoundFunc = door => door.branchable && door.parentRoom.graphDistanceFromCenter < _maxGraphDistanceFromCenter ? true : false;
         bool addedRoomToDungeon = true;
         //Add rooms to dungeon until failure
         while(addedRoomToDungeon){
@@ -350,8 +351,8 @@ public class DungeonGenerator : SingletonMonoBehaviour<DungeonGenerator>
         
         //update possible spawn positions
         List<Vector3> temp = new List<Vector3>();
-        foreach(DungeonRoom room in rooms){
-            if(room.graphDistanceFromCenter == maxGraphDistanceFromCenter){
+        foreach(DungeonRoom room in _rooms){
+            if(room.graphDistanceFromCenter == _maxGraphDistanceFromCenter){
                 temp.Add(room.worldPosition + new Vector3(0,1,0));
             }
         }
@@ -377,34 +378,34 @@ public class DungeonGenerator : SingletonMonoBehaviour<DungeonGenerator>
                     Destroy(doorway.spawnedNavMeshLink);
                 }
                 
-                doorways.Remove(doorway);
+                _doorways.Remove(doorway);
             }
-            rooms.Remove(room);
+            _rooms.Remove(room);
         }
         
     }
 
     //function to generate full dungeon given parameters in inspector
     private void GenerateStaticDungeon(){
-        while(roomsToSpawn > 0){
+        while(_roomsToSpawn > 0){
             //if room adition fails, debug and stop
             if(AddRoomToDungeon() == false){
                 Debug.Log("FAILED TO ADD ROOM");
-                roomsToSpawn = 0;
+                _roomsToSpawn = 0;
             //increment values if room added
             }else{
                 Debug.Log("SUCESSFULLY ADDED ROOM");
-                roomsAddedInLevel++;
-                if(roomsAddedInLevel > roomsToAddBeforeBlacklistingLevel){
-                    roomsAddedInLevel -= roomsToAddBeforeBlacklistingLevel;
-                    availableDoorheight -= levelHeight;
-                    maxPossibleDungeonRoomHeight -= levelHeight;
-                    currlevel++;
-                    verticalRoomsOnCurrentLevel = 0;
+                _roomsAddedInLevel++;
+                if(_roomsAddedInLevel > _roomsToAddBeforeBlacklistingLevel){
+                    _roomsAddedInLevel -= _roomsToAddBeforeBlacklistingLevel;
+                    _availableDoorheight -= _levelHeight;
+                    _maxPossibleDungeonRoomHeight -= _levelHeight;
+                    _currlevel++;
+                    _verticalRoomsOnCurrentLevel = 0;
 
                 }
             }
-            roomsToSpawn--;
+            _roomsToSpawn--;
         }
         SpawnRoomObjects();
         
@@ -412,34 +413,34 @@ public class DungeonGenerator : SingletonMonoBehaviour<DungeonGenerator>
 
     private void SpawnRoomObjects(){
         //spawn in room objects after graph is completed
-        foreach(DungeonRoom room in rooms){
+        foreach(DungeonRoom room in _rooms){
             if(room.spawnedPrefabs.Count > 0){
                 //room object already exists
             }else{
                 //visualize bounding boxes if specified
-                if(visualizeBoundingBoxes){
-                    GameObject boundingBoxVisualization = Instantiate(testObject, room.worldPosition, room.worldRotation);
+                if(_visualizeBoundingBoxes){
+                    GameObject boundingBoxVisualization = Instantiate(_testObject, room.worldPosition, room.worldRotation);
                     room.spawnedPrefabs.Add(boundingBoxVisualization.gameObject);
-                    Vector3 pointA = room.parameters.boundingBoxMaxPoint + room.worldPosition;
-                    Vector3 pointB = room.parameters.boundingBoxMinPoint + room.worldPosition;
+                    Vector3 pointA = room.parameters._boundingBoxMaxPoint + room.worldPosition;
+                    Vector3 pointB = room.parameters._boundingBoxMinPoint + room.worldPosition;
                     Vector3 size = new Vector3(Mathf.Abs(pointA.x - pointB.x),
                                         Mathf.Abs(pointA.y - pointB.y),
                                         Mathf.Abs(pointA.z - pointB.z));
-                    Vector3 center = room.worldPosition + new Vector3(0,(room.parameters.boundingBoxMaxPoint.y - room.parameters.boundingBoxMinPoint.y)/2,0);;
+                    Vector3 center = room.worldPosition + new Vector3(0,(room.parameters._boundingBoxMaxPoint.y - room.parameters._boundingBoxMinPoint.y)/2,0);;
                     boundingBoxVisualization.transform.position = center;
                     boundingBoxVisualization.transform.localScale = size;
 
-                    GameObject worldTransformVisualization = Instantiate(testObject, room.worldPosition, room.worldRotation);
+                    GameObject worldTransformVisualization = Instantiate(_testObject, room.worldPosition, room.worldRotation);
                 }
                 //spawn in room object and block unsued doors
-                DungeonRoomObject roomObject = Instantiate(room.parameters.roomObject, room.worldPosition, room.worldRotation);
+                DungeonRoomObject roomObject = Instantiate(room.parameters._roomObject, room.worldPosition, room.worldRotation);
                 room.spawnedPrefabs.Add(roomObject.gameObject);
-                foreach (DungeonRoomContainedObject obj in room.parameters.roomObject.GetComponentsInChildren<DungeonRoomContainedObject>())
+                foreach (DungeonRoomContainedObject obj in room.parameters._roomObject.GetComponentsInChildren<DungeonRoomContainedObject>())
                 {
                     room.dungeonRoomObjects.Add(obj);
                 }
-                if(RandomFloat(0,100) < chestChance){
-                    roomObject.SpawnChest(chest);
+                if(RandomFloat(0,100) < _chestChance){
+                    roomObject.SpawnChest(_chest);
                 }
             }
             //update door blockers and navmesh links
@@ -454,18 +455,18 @@ public class DungeonGenerator : SingletonMonoBehaviour<DungeonGenerator>
                     if(door.spawnedOpenDoorway == null){
                         //block off door if no blocker already
                         //bandaid fix, add 1 to y
-                        GameObject openDoor = Instantiate(doorwayOpen, door.worldPosition + new Vector3(0,1,0), room.worldRotation * Quaternion.Euler(door.parameters.angle));
+                        GameObject openDoor = Instantiate(_doorwayOpen, door.worldPosition + new Vector3(0,1,0), room.worldRotation * Quaternion.Euler(door.parameters._angle));
                         door.parentRoom.spawnedPrefabs.Add(openDoor);
                         door.spawnedOpenDoorway = openDoor;
                     }
                     //create navMeshLink if null
                     if(door.spawnedNavMeshLink == null){
                         
-                        NavMeshLink link = navMeshLinkHolder.AddComponent<NavMeshLink>();
-                        Vector3 posDistanceFromDoor = GetOutVectorFromAngle(door.parentRoom.worldRotation.eulerAngles + door.parameters.angle);
+                        NavMeshLink link = _navMeshLinkHolder.AddComponent<NavMeshLink>();
+                        Vector3 posDistanceFromDoor = GetOutVectorFromAngle(door.parentRoom.worldRotation.eulerAngles + door.parameters._angle);
                         link.startPoint = door.worldPosition - posDistanceFromDoor;
                         link.endPoint = door.worldPosition + posDistanceFromDoor;
-                        link.width = doorWidth;
+                        link.width = _doorWidth;
                         link.enabled = true;
                         door.spawnedNavMeshLink = link;
                         
@@ -481,7 +482,7 @@ public class DungeonGenerator : SingletonMonoBehaviour<DungeonGenerator>
                         //block off door if no blocker already
                         //add 180 because the door was backwards, bandaid fix
                         //another bandaid fix, add 1 to y
-                        GameObject blocker = Instantiate(doorwayBlocker, door.worldPosition + new Vector3(0,1,0), room.worldRotation * Quaternion.Euler(door.parameters.angle + new Vector3(0,180,0)));
+                        GameObject blocker = Instantiate(_doorwayBlocker, door.worldPosition + new Vector3(0,1,0), room.worldRotation * Quaternion.Euler(door.parameters._angle + new Vector3(0,180,0)));
                         door.parentRoom.spawnedPrefabs.Add(blocker);
                         door.spawnedBlocker = blocker;
                     }
@@ -503,14 +504,14 @@ public class DungeonGenerator : SingletonMonoBehaviour<DungeonGenerator>
     private bool AddRoomToDungeon(Func<DungeonDoorway,bool> branchDoorFunc){
         bool successfullyAddedRoom = false;
         //first room
-        if(rooms.Count == 0){
+        if(_rooms.Count == 0){
             //initialize start room
-            DungeonRoom newRoom = InitializeStartRoom(startRoom,Vector3.zero);
+            DungeonRoom newRoom = InitializeStartRoom(_startRoom,Vector3.zero);
             //add to roomlist
-            rooms.Add(newRoom);
+            _rooms.Add(newRoom);
             //add doorways to doorwaylist
             for(int j = 0; j < newRoom.doorways.Count; j++){
-                doorways.Add(newRoom.doorways[j]);
+                _doorways.Add(newRoom.doorways[j]);
             }
 
             successfullyAddedRoom = true;
@@ -527,25 +528,25 @@ public class DungeonGenerator : SingletonMonoBehaviour<DungeonGenerator>
                 DungeonDoorway choosenDoorway = orderedDoorsToTry.Dequeue();
                 //set weight function for possible rooms to add, if vertical room quota is reached, vertical room wieght will be 0.
                 //if we are reaching the end of the level, and don't have enough vertical rooms, force vertical rooms into list.
-                Func<DungeonRoomParameters, float> roomParamWeightFunc = param => param.spawnWeight;
-                if(forceLevels){
-                    roomParamWeightFunc = param => (verticalRoomsOnCurrentLevel >= verticalRoomsPerLevelQuota && param.verticalRoom) ? 0 : param.spawnWeight;
-                    if(verticalRoomsOnCurrentLevel < verticalRoomsPerLevelQuota && roomsToAddBeforeBlacklistingLevel - roomsAddedInLevel <= verticalRoomsPerLevelQuota - verticalRoomsOnCurrentLevel){
-                        roomParamWeightFunc = param => param.verticalRoom ? 1 : 0;
+                Func<DungeonRoomParameters, float> roomParamWeightFunc = param => param._spawnWeight;
+                if(_forceLevels){
+                    roomParamWeightFunc = param => (_verticalRoomsOnCurrentLevel >= _verticalRoomsPerLevelQuota && param._verticalRoom) ? 0 : param._spawnWeight;
+                    if(_verticalRoomsOnCurrentLevel < _verticalRoomsPerLevelQuota && _roomsToAddBeforeBlacklistingLevel - _roomsAddedInLevel <= _verticalRoomsPerLevelQuota - _verticalRoomsOnCurrentLevel){
+                        roomParamWeightFunc = param => param._verticalRoom ? 1 : 0;
                     }
                 }
                 
                 //reset to default if dungeon verticality doesn't matter
                 
                 //get queue shuffled based on weight
-                Queue<DungeonRoomParameters> orderedTemplatesToTry = WeightedOrderShuffle(new List<DungeonRoomParameters>(possibleRoomParameters), roomParamWeightFunc);
+                Queue<DungeonRoomParameters> orderedTemplatesToTry = WeightedOrderShuffle(new List<DungeonRoomParameters>(_possibleRoomParameters), roomParamWeightFunc);
                 //loop through all templates to try.
                 while(orderedTemplatesToTry.Count > 0 && !successfullyAddedRoom){
                     //dequeue top of list
                     DungeonRoomParameters choosenParams = orderedTemplatesToTry.Dequeue();
                     // get list of door indicies to try to add at on room template
                     List<int>doorIndiciesToTry = new List<int>();
-                    for(int i = 0; i < choosenParams.relativeDoorParameters.Count; i++){
+                    for(int i = 0; i < choosenParams._relativeDoorParameters.Count; i++){
                         doorIndiciesToTry.Add(i);
                     }
                     //weight all doors equally
@@ -569,16 +570,16 @@ public class DungeonGenerator : SingletonMonoBehaviour<DungeonGenerator>
                             //connect choosenIndex door to prevRoom
                             newRoom.doorways[choosenIndex].connectingRooms.Add(choosenDoorway.parentRoom);
                             //add new room to roomlist
-                            rooms.Add(newRoom);
+                            _rooms.Add(newRoom);
                             //add to doorway list
                             for(int j = 0; j < newRoom.doorways.Count; j++){
-                                doorways.Add(newRoom.doorways[j]);
+                                _doorways.Add(newRoom.doorways[j]);
                             }
 
                             //check if vertical room and increment if so
-                            if(newRoom.parameters.verticalRoom && forceLevels){
-                                verticalRoomsOnCurrentLevel++;
-                                Debug.Log("current vert rooms on level is " + verticalRoomsOnCurrentLevel);
+                            if(newRoom.parameters._verticalRoom && _forceLevels){
+                                _verticalRoomsOnCurrentLevel++;
+                                Debug.Log("current vert rooms on level is " + _verticalRoomsOnCurrentLevel);
                             }
                         }else{
                             //if not continue looping
@@ -607,9 +608,9 @@ public class DungeonGenerator : SingletonMonoBehaviour<DungeonGenerator>
     private DungeonRoom InitializeStartRoom(DungeonRoomParameters dungeonRoomParameters, Vector3 startPosition){
         DungeonRoom newRoom;
         //initialize start room for graph
-        newRoom = new DungeonRoom(dungeonRoomParameters, startPosition, Quaternion.identity, new OBB(dungeonRoomParameters,startPosition,Quaternion.identity), 0);
-        for(int i = 0; i < dungeonRoomParameters.relativeDoorParameters.Count; i++){
-            DungeonDoorway newDoorway = new DungeonDoorway(dungeonRoomParameters.relativeDoorParameters[i], newRoom.worldPosition + dungeonRoomParameters.relativeDoorParameters[i].relativePosition, newRoom);
+        newRoom = new DungeonRoom(dungeonRoomParameters, startPosition, Quaternion.identity, new Obb(dungeonRoomParameters,startPosition,Quaternion.identity), 0);
+        for(int i = 0; i < dungeonRoomParameters._relativeDoorParameters.Count; i++){
+            DungeonDoorway newDoorway = new DungeonDoorway(dungeonRoomParameters._relativeDoorParameters[i], newRoom.worldPosition + dungeonRoomParameters._relativeDoorParameters[i]._relativePosition, newRoom);
             newRoom.doorways.Add(newDoorway);
         }
 
@@ -621,42 +622,42 @@ public class DungeonGenerator : SingletonMonoBehaviour<DungeonGenerator>
         bool successfullyAddedRoom = true;
         DungeonRoom newRoom;
         //get the angle of the door in world space, stored in the y value
-        Vector3 fromDoorOutVector = GetOutVectorFromAngle(branchFromDoor.parentRoom.worldRotation.eulerAngles + branchFromDoor.parameters.angle);
+        Vector3 fromDoorOutVector = GetOutVectorFromAngle(branchFromDoor.parentRoom.worldRotation.eulerAngles + branchFromDoor.parameters._angle);
        //rotate the room parameters to be in line with the door, return the modified parameters and the rotation applied
         var result = ModifyRoomParamsToFitDoor(dungeonRoomParameters, fromDoorOutVector, branchFromDoor.parentRoom.worldRotation,connectingDoorIndex);
         DungeonRoomParameters modifiedParameters = result.returnedParams;
         Quaternion appliedRotation = result.returnedQuaternion;
         //get the distance of the new room parameters center to it door we are trying to add at.
-        float centerDistanceFromDoor = Vector3.Distance(modifiedParameters.centerPoint, modifiedParameters.relativeDoorParameters[connectingDoorIndex].relativePosition);
+        float centerDistanceFromDoor = Vector3.Distance(modifiedParameters._centerPoint, modifiedParameters._relativeDoorParameters[connectingDoorIndex]._relativePosition);
         // set center position of new room as world position of the branch door + the difference 
         //between modified parameters choosen door's relative position in local space and the modified parameter's center in local space
         Vector3 newPosition = branchFromDoor.worldPosition;
-        var startPosition = newPosition + modifiedParameters.relativeDoorParameters[connectingDoorIndex].relativePosition;
+        var startPosition = newPosition + modifiedParameters._relativeDoorParameters[connectingDoorIndex]._relativePosition;
         var targetPosition = branchFromDoor.worldPosition;
         newPosition += (targetPosition - startPosition);
 
         //create new Dungeon Room object
-        newRoom = new DungeonRoom(modifiedParameters, newPosition, appliedRotation, new OBB(modifiedParameters,newPosition, appliedRotation), branchFromDoor.parentRoom.graphDistanceFromCenter + 1);
+        newRoom = new DungeonRoom(modifiedParameters, newPosition, appliedRotation, new Obb(modifiedParameters,newPosition, appliedRotation), branchFromDoor.parentRoom.graphDistanceFromCenter + 1);
         //if the bounding box of the new room is above the maxPossibleDungeonRoomheight, fail room add attempt
-        if(forceLevels && newRoom.parameters.boundingBoxMaxPoint.y + newPosition.y > maxPossibleDungeonRoomHeight){
+        if(_forceLevels && newRoom.parameters._boundingBoxMaxPoint.y + newPosition.y > _maxPossibleDungeonRoomHeight){
             successfullyAddedRoom = false;
             return (newRoom, successfullyAddedRoom);
         }
         // add new doorway to new room doorways at modified parameter's position and rotation
-        for(int i = 0; i < modifiedParameters.relativeDoorParameters.Count; i++){
-            Vector3 newDoorPosition = newRoom.worldPosition + modifiedParameters.relativeDoorParameters[i].relativePosition;
-            DungeonDoorway newDoorway = new DungeonDoorway(modifiedParameters.relativeDoorParameters[i], newDoorPosition, newRoom);
+        for(int i = 0; i < modifiedParameters._relativeDoorParameters.Count; i++){
+            Vector3 newDoorPosition = newRoom.worldPosition + modifiedParameters._relativeDoorParameters[i]._relativePosition;
+            DungeonDoorway newDoorway = new DungeonDoorway(modifiedParameters._relativeDoorParameters[i], newDoorPosition, newRoom);
             newRoom.doorways.Add(newDoorway);
         }
 
         //check validity of bounding boxes
-        List<DungeonRoom> roomsToCheck = new List<DungeonRoom>(rooms);
+        List<DungeonRoom> roomsToCheck = new List<DungeonRoom>(_rooms);
         //don't check the parent room
         roomsToCheck.Remove(branchFromDoor.parentRoom);
 
         //check if bounding box overlaps with any other bounding boxes closer than prune distance
         foreach(DungeonRoom room in roomsToCheck){
-            if(Vector3.Distance(room.worldPosition,newRoom.worldPosition) < boundingBoxCheckPruneDistance && AreOBBsIntersecting(newRoom.boundingBox, room.boundingBox)){
+            if(Vector3.Distance(room.worldPosition,newRoom.worldPosition) < _boundingBoxCheckPruneDistance && AreObBsIntersecting(newRoom.boundingBox, room.boundingBox)){
                 successfullyAddedRoom = false;
             }
         }
@@ -671,20 +672,20 @@ public class DungeonGenerator : SingletonMonoBehaviour<DungeonGenerator>
     private (DungeonRoomParameters returnedParams, Quaternion returnedQuaternion) ModifyRoomParamsToFitDoor(DungeonRoomParameters inParams, Vector3 vectorToOppose, Quaternion prevRotation, int attachingDoorIndex){
         DungeonRoomParameters returnParameters = inParams;
         //Get outward direction of connecting door
-        Vector3 currentAttatchingDoorOutVector = GetOutVectorFromAngle(inParams.relativeDoorParameters[attachingDoorIndex].angle);
+        Vector3 currentAttatchingDoorOutVector = GetOutVectorFromAngle(inParams._relativeDoorParameters[attachingDoorIndex]._angle);
         //get reverse of the branching door's outward direction, this is what we want out connection door to point towards.
         Vector3 targetVector = -vectorToOppose;
         //calulate target up (this is overkill now, it was going to be used if doors could face in angles other than only y rotation)
-        Vector3 targetUp = prevRotation * Quaternion.Euler(inParams.relativeDoorParameters[attachingDoorIndex].angle)* Vector3.up;
+        Vector3 targetUp = prevRotation * Quaternion.Euler(inParams._relativeDoorParameters[attachingDoorIndex]._angle)* Vector3.up;
         //get quaternion rotation needed to point room towards target vector
         Quaternion rotationToApply = GetAlignmentQuaternion(currentAttatchingDoorOutVector, targetVector);
         //rotate all door parameters on room parameter by rotationToApply.
         List<DungeonDoorParameters> newDoorParameters = new List<DungeonDoorParameters>();
-        for(int i = 0; i < returnParameters.relativeDoorParameters.Count; i++){
-            Vector3 rotatedPoint = RotateAround(returnParameters.relativeDoorParameters[i].relativePosition,inParams.centerPoint,rotationToApply);
-            newDoorParameters.Add(new DungeonDoorParameters(rotatedPoint,returnParameters.relativeDoorParameters[i].angle));
+        for(int i = 0; i < returnParameters._relativeDoorParameters.Count; i++){
+            Vector3 rotatedPoint = RotateAround(returnParameters._relativeDoorParameters[i]._relativePosition,inParams._centerPoint,rotationToApply);
+            newDoorParameters.Add(new DungeonDoorParameters(rotatedPoint,returnParameters._relativeDoorParameters[i]._angle));
         }
-        returnParameters.relativeDoorParameters = newDoorParameters;
+        returnParameters._relativeDoorParameters = newDoorParameters;
         return(returnParameters,rotationToApply);
     }
 
@@ -759,9 +760,9 @@ public class DungeonGenerator : SingletonMonoBehaviour<DungeonGenerator>
     //get a list of all the unused door in the dungeon
     private List<DungeonDoorway> GetUnusedDoors(Func<DungeonDoorway,bool> usableDoorFunc){
         List<DungeonDoorway> returnList = new List<DungeonDoorway>();
-        foreach (DungeonDoorway doorway in doorways)
+        foreach (DungeonDoorway doorway in _doorways)
         {
-            if(doorway.connectingRooms.Count == 1 && (doorway.worldPosition.y == availableDoorheight || !forceLevels)){
+            if(doorway.connectingRooms.Count == 1 && (doorway.worldPosition.y == _availableDoorheight || !_forceLevels)){
                 if(usableDoorFunc(doorway)){
                     returnList.Add(doorway);
                 }
@@ -774,7 +775,7 @@ public class DungeonGenerator : SingletonMonoBehaviour<DungeonGenerator>
     //helper functions
     //get random float
     float RandomFloat(float min, float max){
-        return (float)(random.NextDouble() * (max - min) + min);
+        return (float)(_random.NextDouble() * (max - min) + min);
     }
 
 
@@ -806,10 +807,10 @@ public class DungeonGenerator : SingletonMonoBehaviour<DungeonGenerator>
     }
 
     //check if OBBS are intersecting
-    bool AreOBBsIntersecting(OBB obb1, OBB obb2)
+    bool AreObBsIntersecting(Obb obb1, Obb obb2)
     {
-        Vector3[] axes1 = obb1.Axes;
-        Vector3[] axes2 = obb2.Axes;
+        Vector3[] axes1 = obb1.axes;
+        Vector3[] axes2 = obb2.axes;
 
         // The 15 potential separating axes
         List<Vector3> separatingAxes = new List<Vector3>();
@@ -845,11 +846,11 @@ public class DungeonGenerator : SingletonMonoBehaviour<DungeonGenerator>
         return true;
     }
     //OBB helper function
-    bool IsOverlappingOnAxis(OBB obb1, OBB obb2, Vector3 axis)
+    bool IsOverlappingOnAxis(Obb obb1, Obb obb2, Vector3 axis)
     {
         // Project the center of both OBBs onto the axis
-        float centerProjection1 = Vector3.Dot(obb1.Center, axis);
-        float centerProjection2 = Vector3.Dot(obb2.Center, axis);
+        float centerProjection1 = Vector3.Dot(obb1.center, axis);
+        float centerProjection2 = Vector3.Dot(obb2.center, axis);
 
         // Project the half-extents of both OBBs onto the axis
         float projection1 = GetProjectionLength(obb1, axis);
@@ -863,42 +864,42 @@ public class DungeonGenerator : SingletonMonoBehaviour<DungeonGenerator>
     }
 
     //OBB helper function
-    float GetProjectionLength(OBB obb, Vector3 axis)
+    float GetProjectionLength(Obb obb, Vector3 axis)
     {
         // Project the half-extents of the OBB onto the axis
         float projectionLength = 0;
 
         for (int i = 0; i < 3; i++) // Loop over the OBB's 3 axes
         {
-            projectionLength += Mathf.Abs(Vector3.Dot(obb.Axes[i], axis)) * obb.HalfExtents[i];
+            projectionLength += Mathf.Abs(Vector3.Dot(obb.axes[i], axis)) * obb.halfExtents[i];
         }
 
         return projectionLength;
     }
 
-    private bool IsPointInsideOBB(Vector3 point, OBB obb)
+    private bool IsPointInsideObb(Vector3 point, Obb obb)
     {
         // Vector from the center of the OBB to the point
-        Vector3 V = point - obb.Center;
+        Vector3 v = point - obb.center;
 
         // Project the vector V onto each of the OBB's axes
-        float projX = Vector3.Dot(V, obb.Axes[0]);
-        float projY = Vector3.Dot(V, obb.Axes[1]);
-        float projZ = Vector3.Dot(V, obb.Axes[2]);
+        float projX = Vector3.Dot(v, obb.axes[0]);
+        float projY = Vector3.Dot(v, obb.axes[1]);
+        float projZ = Vector3.Dot(v, obb.axes[2]);
 
         // Check if the projections are within the extents on each axis
-        return (Math.Abs(projX) <= obb.HalfExtents[0]) &&
-               (Math.Abs(projY) <= obb.HalfExtents[1]) &&
-               (Math.Abs(projZ) <= obb.HalfExtents[2]);
+        return (Math.Abs(projX) <= obb.halfExtents[0]) &&
+               (Math.Abs(projY) <= obb.halfExtents[1]) &&
+               (Math.Abs(projZ) <= obb.halfExtents[2]);
     }
 
     void PlacePlayer(){
-        LocomotionManager.Instance.Teleport(currentCenterRoom.worldPosition + new Vector3(0.5f,0.5f,0.5f) + playerStartOffset);
+        LocomotionManager.Instance.Teleport(_currentCenterRoom.worldPosition + new Vector3(0.5f,0.5f,0.5f) + _playerStartOffset);
     }
 
     void SetupEnemies()
     {
-        enemySpawner.SpawnEnemies();
+        _enemySpawner.SpawnEnemies();
     }
 
 }

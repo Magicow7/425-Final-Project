@@ -3,35 +3,36 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Serialization;
 
 public class EnemyNavigation : MonoBehaviour
 {
-    [SerializeField]
-    private Transform player;
-    private NavMeshAgent agent;
-    private bool linkTraversing = false;
+    [FormerlySerializedAs("player"),SerializeField]
+    private Transform _player;
+    private NavMeshAgent _agent;
+    private bool _linkTraversing = false;
     
     void Start()
     {
         //this wasn't getting updated so I added this -Silas
-        player = DungeonGenerator.Instance?.player;
-        agent = GetComponent<NavMeshAgent>();
-        agent.autoTraverseOffMeshLink = false;
+        _player = DungeonGenerator.Instance?._player;
+        _agent = GetComponent<NavMeshAgent>();
+        _agent.autoTraverseOffMeshLink = false;
 
         StartCoroutine(CheckHasPath());
     }
 
     void Update()
     {
-        if(agent.isOnOffMeshLink){
+        if(_agent.isOnOffMeshLink){
             StartCoroutine(TraverseOffMeshLink());
-            linkTraversing = true;
+            _linkTraversing = true;
         }
-        if(!linkTraversing){
+        if(!_linkTraversing){
            try
            {
                 // Code that might throw an exception
-                agent.destination = player.position;
+                _agent.destination = _player.position;
                 
             }
             catch (Exception e)
@@ -49,7 +50,7 @@ public class EnemyNavigation : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(5);
-            if (!agent.hasPath)
+            if (!_agent.hasPath)
             {
                 Respawn();
             }
@@ -58,23 +59,23 @@ public class EnemyNavigation : MonoBehaviour
 
     //this is spagetti code to put a band-aid over the bug with nav mesh links and vertical rooms.
     private IEnumerator TraverseOffMeshLink(){
-        Vector3 endPos = agent.currentOffMeshLinkData.endPos + Vector3.up * agent.baseOffset/2.25f;
-        Vector3 savedVelocity = agent.velocity;
-        agent.enabled = false;
-        while(Vector3.Distance(agent.transform.position, endPos) > 0.5f){
-            agent.transform.position = Vector3.MoveTowards(agent.transform.position, endPos, agent.speed * Time.deltaTime);
+        Vector3 endPos = _agent.currentOffMeshLinkData.endPos + Vector3.up * _agent.baseOffset/2.25f;
+        Vector3 savedVelocity = _agent.velocity;
+        _agent.enabled = false;
+        while(Vector3.Distance(_agent.transform.position, endPos) > 0.5f){
+            _agent.transform.position = Vector3.MoveTowards(_agent.transform.position, endPos, _agent.speed * Time.deltaTime);
             yield return null;
         }
-        agent.enabled = true;
-        agent.CompleteOffMeshLink();
-        agent.velocity = savedVelocity;
-        linkTraversing = false;
+        _agent.enabled = true;
+        _agent.CompleteOffMeshLink();
+        _agent.velocity = savedVelocity;
+        _linkTraversing = false;
     }
 
     private void Respawn()
     {
         Vector3 randomValidSpawnPoint = DungeonGenerator.possibleSpawnPoints[UnityEngine.Random.Range(0, DungeonGenerator.possibleSpawnPoints.Count)];
         randomValidSpawnPoint.y += 0.5f;
-        agent.Warp(randomValidSpawnPoint);
+        _agent.Warp(randomValidSpawnPoint);
     }
 }

@@ -2,12 +2,14 @@ using TMPro;
 using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
+
 public class TextUpdates : MonoBehaviour
 {
     public static TextUpdates Instance { get; private set; }
 
-    [SerializeField] private TextMeshProUGUI taskText;
-    [SerializeField] private GameObject deathScreenText;
+    [FormerlySerializedAs("taskText"),SerializeField] private TextMeshProUGUI _taskText;
+    [FormerlySerializedAs("deathScreenText"),SerializeField] private GameObject _deathScreenText;
 
     private void Awake()
     {
@@ -24,13 +26,13 @@ public class TextUpdates : MonoBehaviour
 
     public void ShowDeathScreen()
     {
-        deathScreenText.SetActive(true);
+        _deathScreenText.SetActive(true);
         MouseLook.instance.UnlockCursor();
     }
 
     public void HideDeathScreen()
     {
-        deathScreenText.SetActive(false);
+        _deathScreenText.SetActive(false);
         MouseLook.instance.LockCursor();
     }
 
@@ -38,14 +40,14 @@ public class TextUpdates : MonoBehaviour
     public void UpdateTaskText(string newText)
     {
 
-        if (taskText != null)
+        if (_taskText != null)
         {
             if (string.IsNullOrEmpty(newText))
             {
-                taskText.text = "";
+                _taskText.text = "";
             } else
             {
-                StartCoroutine(typewrite(newText));
+                StartCoroutine(Typewrite(newText));
 
             }
         } else
@@ -54,7 +56,7 @@ public class TextUpdates : MonoBehaviour
         }
     }
 
-    private IEnumerator typewrite(string text)
+    private IEnumerator Typewrite(string text)
     {
         char[] characters = text.ToCharArray();
         string finalText = "";
@@ -68,10 +70,10 @@ public class TextUpdates : MonoBehaviour
                 continue;
             } 
 
-            taskText.text = finalText;
+            _taskText.text = finalText;
             yield return new WaitForSeconds(0.04f);
         }
-        taskText.text = text;
+        _taskText.text = text;
         yield return null;
     }
 }

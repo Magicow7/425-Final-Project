@@ -2,73 +2,73 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DijkstrasGraph<E> : MonoBehaviour
+public class DijkstrasGraph<TE> : MonoBehaviour
 {
-    private Dictionary<string, Dictionary<string, int>> adjacencyMap;
-    private Dictionary<string, E> dataMap;
+    private Dictionary<string, Dictionary<string, int>> _adjacencyMap;
+    private Dictionary<string, TE> _dataMap;
 
     public DijkstrasGraph() {
-		adjacencyMap = new Dictionary<string, Dictionary<string, int>>();
-		dataMap = new Dictionary<string, E>();
+		_adjacencyMap = new Dictionary<string, Dictionary<string, int>>();
+		_dataMap = new Dictionary<string, TE>();
 	}
 
-    public void addVertex(string vertexName, E data){
-        if(dataMap.ContainsKey(vertexName)){
+    public void AddVertex(string vertexName, TE data){
+        if(_dataMap.ContainsKey(vertexName)){
             Debug.Log("vertex by this key already stored in graph");
         }
-        adjacencyMap.Add(vertexName, new Dictionary<string,int>());
-        dataMap.Add(vertexName, data);
+        _adjacencyMap.Add(vertexName, new Dictionary<string,int>());
+        _dataMap.Add(vertexName, data);
 
         
     }
 
-    public void addEdge(string vertex1Name, string vertex2Name, int cost){
-        if(!dataMap.ContainsKey(vertex1Name) || !dataMap.ContainsKey(vertex2Name)) {
+    public void AddEdge(string vertex1Name, string vertex2Name, int cost){
+        if(!_dataMap.ContainsKey(vertex1Name) || !_dataMap.ContainsKey(vertex2Name)) {
 			Debug.Log("Vertex not found");
 		}
-        adjacencyMap[vertex1Name].Add(vertex2Name, cost);
-        adjacencyMap[vertex2Name].Add(vertex1Name, cost);
+        _adjacencyMap[vertex1Name].Add(vertex2Name, cost);
+        _adjacencyMap[vertex2Name].Add(vertex1Name, cost);
     }
 
     //toString not added, refer to the Dijkstras graph project if you want that, if you are not silas: lol good luck.
 
-    public Dictionary<string,int> getAdjacentVertices(string vertexName){
-		return adjacencyMap[vertexName];
+    public Dictionary<string,int> GetAdjacentVertices(string vertexName){
+		return _adjacencyMap[vertexName];
 	}
 
-    public int getCost(string vertex1Name, string vertex2Name){
-        if(!dataMap.ContainsKey(vertex1Name) || !dataMap.ContainsKey(vertex2Name)) {
+    public int GetCost(string vertex1Name, string vertex2Name){
+        if(!_dataMap.ContainsKey(vertex1Name) || !_dataMap.ContainsKey(vertex2Name)) {
 			Debug.Log("Vertex not found");
 		}
-        int oneToTwo = adjacencyMap[vertex1Name][vertex2Name];
-        int twoToOne = adjacencyMap[vertex2Name][vertex1Name];
+        int oneToTwo = _adjacencyMap[vertex1Name][vertex2Name];
+        int twoToOne = _adjacencyMap[vertex2Name][vertex1Name];
         if(oneToTwo != twoToOne){
             Debug.Log("Cost mismatch");
         }
         return oneToTwo;
     }
 
-    public void setCost(string vertex1Name, string vertex2Name, int value){
-        if(!dataMap.ContainsKey(vertex1Name) || !dataMap.ContainsKey(vertex2Name)) {
+    public void SetCost(string vertex1Name, string vertex2Name, int value){
+        if(!_dataMap.ContainsKey(vertex1Name) || !_dataMap.ContainsKey(vertex2Name)) {
 			Debug.Log("Vertex not found");
 		}
-        adjacencyMap[vertex1Name][vertex2Name] = value;
-        adjacencyMap[vertex2Name][vertex1Name] = value;
+        _adjacencyMap[vertex1Name][vertex2Name] = value;
+        _adjacencyMap[vertex2Name][vertex1Name] = value;
     }
 
-    public List<string> getVetricies(){
-        return new List<string>(this.dataMap.Keys);
+    public List<string> GetVetricies(){
+        return new List<string>(this._dataMap.Keys);
     }
     
-    public E getData(string vertex){
-        if(!dataMap.ContainsKey(vertex)) {
+    public TE GetData(string vertex){
+        if(!_dataMap.ContainsKey(vertex)) {
 			Debug.Log("Vertex not found");
 		}
-        return dataMap[vertex];
+        return _dataMap[vertex];
     }
 
-    public List<string> doBreadthFirstSearch(string startVertexName){
-        if(!dataMap.ContainsKey(startVertexName)) {
+    public List<string> DoBreadthFirstSearch(string startVertexName){
+        if(!_dataMap.ContainsKey(startVertexName)) {
 			Debug.Log("Vertex not found");
 		}
         List<string> queue = new List<string>();
@@ -79,7 +79,7 @@ public class DijkstrasGraph<E> : MonoBehaviour
             currentVert = queue[0];
             queue.Remove(currentVert);
             visited.Add(currentVert);
-            Dictionary<string,int> vertAdjs = adjacencyMap[currentVert];
+            Dictionary<string,int> vertAdjs = _adjacencyMap[currentVert];
             foreach(string key in vertAdjs.Keys){
                 if(!visited.Contains(key) && !queue.Contains(key)){
                     queue.Add(key);
@@ -91,9 +91,9 @@ public class DijkstrasGraph<E> : MonoBehaviour
     }
 
     // depth first searches not implemented
-    public List<string> doDijkstras(string startVertexName, string endVertexName){
+    public List<string> DoDijkstras(string startVertexName, string endVertexName){
     
-        if(!dataMap.ContainsKey(startVertexName) || !dataMap.ContainsKey(endVertexName)) {
+        if(!_dataMap.ContainsKey(startVertexName) || !_dataMap.ContainsKey(endVertexName)) {
 			Debug.Log("Vertex not found");
 		}
 
@@ -103,7 +103,7 @@ public class DijkstrasGraph<E> : MonoBehaviour
         List<string> queue = new List<string>();
         List<string> visited = new List<string>();
 
-        foreach(string key in dataMap.Keys){
+        foreach(string key in _dataMap.Keys){
             distances.Add(key, int.MaxValue);
             List<string> putList = new List<string>();
             putList.Add("None");
@@ -119,8 +119,8 @@ public class DijkstrasGraph<E> : MonoBehaviour
         string current = startVertexName;
 
 
-        while(visited.Count < dataMap.Count){
-            Dictionary<string,int> adjs = adjacencyMap[current];
+        while(visited.Count < _dataMap.Count){
+            Dictionary<string,int> adjs = _adjacencyMap[current];
             if(adjs != null){
                 foreach(string key in adjs.Keys){
                     if(!visited.Contains(key) && !queue.Contains(key)){

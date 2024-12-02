@@ -9,9 +9,9 @@ public class ManaBar : MonoBehaviour
     private Image _barImage;
     private ResourceStat _mana;
 
-    private bool canShakeBar = true;
+    private bool _canShakeBar = true;
     private RectTransform _rectTransform;
-    private bool lowMana = false;
+    private bool _lowMana = false;
 
     // Start is called before the first frame update
     void Start()
@@ -30,9 +30,9 @@ public class ManaBar : MonoBehaviour
     void Update()
     {
         _barImage.fillAmount = _mana.Percentage;
-        if (!lowMana && _mana.Percentage < .25)
+        if (!_lowMana && _mana.Percentage < .25)
         {
-            lowMana = true;
+            _lowMana = true;
             StartCoroutine(LowManaSound());
         }
     }
@@ -50,7 +50,7 @@ public class ManaBar : MonoBehaviour
         }
 
         _rectTransform.anchoredPosition = pos;
-        canShakeBar = true;
+        _canShakeBar = true;
     }
 
     public bool UseMana(int amt)
@@ -63,9 +63,9 @@ public class ManaBar : MonoBehaviour
         }
         else
         {
-            if (canShakeBar)
+            if (_canShakeBar)
             {
-                canShakeBar = false;
+                _canShakeBar = false;
                 // not enough mana probably
                 
                 StartCoroutine(ShakeBar());
@@ -82,6 +82,6 @@ public class ManaBar : MonoBehaviour
         {
             yield return null;
         }
-        lowMana = false;
+        _lowMana = false;
     }
 }

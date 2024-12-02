@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using static SoundManager;
 
 // References Sound Manager by Code Monkey: https://www.youtube.com/watch?v=QL29aTa7J5Q
@@ -13,7 +14,7 @@ public class SoundManager : MonoBehaviour
         AirborneMovement,   // FUNCTIONAL (SCALES WITH SPEED)
         Jumping,            // FUNCTIONAL
         PlayerHit,          // FUNCTIONAL
-        PlayerLowHP,        // FUNCTIONAL
+        PlayerLowHp,        // FUNCTIONAL
         PlayerDeath,        // FUNCTIONAL
         LowMana,            // FUNCTIONAL
         FireSpellStart,     // FUNCTIONAL
@@ -28,7 +29,7 @@ public class SoundManager : MonoBehaviour
         OpenChest,          // FUNCTIONAL
         ShotSpellCast,      // FUNCTIONAL
         NormalBackground,   // FUNCTIONAL
-        LowHPBackground,    // FUNCTIONAL
+        LowHpBackground,    // FUNCTIONAL
         MenuButtonMove,     // Menu Buttons not implemented (death screen)
         MenuButtonPress,    // Menu Buttons not implemented (death screen)
         LaserShoot,         // FUNCTIONAL
@@ -41,80 +42,80 @@ public class SoundManager : MonoBehaviour
     [System.Serializable]
     public class SoundComponents
     {
-        public Sound sound;
-        public AudioClip clip;
-        public float volume = 1;
-        public float maxDistance = 10;
-        public float wait = -1;  // set to -1 to be set to the length of the audioclip
+        [FormerlySerializedAs("sound")] public Sound _sound;
+        [FormerlySerializedAs("clip")] public AudioClip _clip;
+        [FormerlySerializedAs("volume")] public float _volume = 1;
+        [FormerlySerializedAs("maxDistance")] public float _maxDistance = 10;
+        [FormerlySerializedAs("wait")] public float _wait = -1;  // set to -1 to be set to the length of the audioclip
     }
 
-    public SoundComponents[] soundComponents;
+    [FormerlySerializedAs("soundComponents")] public SoundComponents[] _soundComponents;
 
-    private static GameObject Player;
-    private static Sound currentBackground;
-    private static AudioSource backgroundMusic;
-    private static Dictionary<Sound, AudioClip> sounds = new Dictionary<Sound, AudioClip>();
-    private static Dictionary<Sound, float> waits = new Dictionary<Sound, float>();
-    private static Dictionary<Sound, float> vols = new Dictionary<Sound, float>();
-    private static Dictionary<Sound, float> dists = new Dictionary<Sound, float>();
-    private static Dictionary<Sound, float> lastPlayed = new Dictionary<Sound, float>();
+    private static GameObject _player;
+    private static Sound _currentBackground;
+    private static AudioSource _backgroundMusic;
+    private static Dictionary<Sound, AudioClip> _sounds = new Dictionary<Sound, AudioClip>();
+    private static Dictionary<Sound, float> _waits = new Dictionary<Sound, float>();
+    private static Dictionary<Sound, float> _vols = new Dictionary<Sound, float>();
+    private static Dictionary<Sound, float> _dists = new Dictionary<Sound, float>();
+    private static Dictionary<Sound, float> _lastPlayed = new Dictionary<Sound, float>();
 
     private void Start()
     {
-        Player = GameObject.Find("PlayerModel");
-        foreach(SoundComponents soundComponent in soundComponents)
+        _player = GameObject.Find("PlayerModel");
+        foreach(SoundComponents soundComponent in _soundComponents)
         {
-            sounds.Add(soundComponent.sound, soundComponent.clip);
-            waits.Add(soundComponent.sound, soundComponent.wait != -1 ? soundComponent.wait : soundComponent.clip.length);
-            vols.Add(soundComponent.sound, soundComponent.volume);
-            dists.Add(soundComponent.sound, soundComponent.maxDistance);
-            lastPlayed.Add(soundComponent.sound, 0f);
+            _sounds.Add(soundComponent._sound, soundComponent._clip);
+            _waits.Add(soundComponent._sound, soundComponent._wait != -1 ? soundComponent._wait : soundComponent._clip.length);
+            _vols.Add(soundComponent._sound, soundComponent._volume);
+            _dists.Add(soundComponent._sound, soundComponent._maxDistance);
+            _lastPlayed.Add(soundComponent._sound, 0f);
         }
-        backgroundMusic = Player.AddComponent<AudioSource>();
-        backgroundMusic.loop = true;
+        _backgroundMusic = _player.AddComponent<AudioSource>();
+        _backgroundMusic.loop = true;
         ChangeBackgroundMusic(SoundManager.Sound.NormalBackground);
     }
 
     // Plays a Sound on the Player
     public static void PlaySound(Sound sound)
     {
-        PlaySound(sound, Player);
+        PlaySound(sound, _player);
     }
 
     // Plays a Sound on the given GameObject
     public static void PlaySound(Sound sound, GameObject obj, bool randomPitch = false)
     {
         Vector3 position = obj.transform.position;
-        if (canPlay(sound))
+        if (CanPlay(sound))
         {
             Debug.Log("Playing " + sound + " on " + obj.name);
-            AudioSource source = Player.AddComponent<AudioSource>();
+            AudioSource source = _player.AddComponent<AudioSource>();
             if (randomPitch)
             {
                 source.pitch = UnityEngine.Random.Range(0.9f, 1.1f);
             }
             source.spatialBlend = 1.0f;
-            source.maxDistance = dists[sound];
-            source.volume = vols[sound];
+            source.maxDistance = _dists[sound];
+            source.volume = _vols[sound];
             source.rolloffMode = AudioRolloffMode.Custom;
-            source.PlayOneShot(getAudioClip(sound));
-            Destroy(source, getAudioClip(sound).length);
+            source.PlayOneShot(GetAudioClip(sound));
+            Destroy(source, GetAudioClip(sound).length);
         }
     }
 
     // Plays a Sound on the given AudioSource
     public static void PlaySound(Sound sound, AudioSource source, bool randomPitch = false)
     {
-        if (canPlay(sound) && !source.isPlaying)
+        if (CanPlay(sound) && !source.isPlaying)
         {
             if (randomPitch)
             {
                 source.pitch = UnityEngine.Random.Range(0.9f, 1.1f);
             }
             Debug.Log("Playing " + sound + " on given source.");
-            source.clip = getAudioClip(sound);
-            source.maxDistance = dists[sound];
-            source.volume = vols[sound];
+            source.clip = GetAudioClip(sound);
+            source.maxDistance = _dists[sound];
+            source.volume = _vols[sound];
             source.Play();
         }
     }
@@ -122,7 +123,7 @@ public class SoundManager : MonoBehaviour
     // Plays a Sound at the given position
     public static void PlaySound(Sound sound, Vector3 position, bool randomPitch=false)
     {
-        if (canPlay(sound))
+        if (CanPlay(sound))
         {
             Debug.Log("Playing " + sound + " at " + position);
             GameObject obj = new GameObject("Sound");
@@ -133,11 +134,11 @@ public class SoundManager : MonoBehaviour
                 source.pitch = UnityEngine.Random.Range(0.9f, 1.1f);
             }
             source.spatialBlend = 1.0f;
-            source.maxDistance = dists[sound];
-            source.volume = vols[sound];
+            source.maxDistance = _dists[sound];
+            source.volume = _vols[sound];
             source.rolloffMode = AudioRolloffMode.Custom;
-            source.PlayOneShot(getAudioClip(sound));
-            Object.Destroy(obj, getAudioClip(sound).length);
+            source.PlayOneShot(GetAudioClip(sound));
+            Object.Destroy(obj, GetAudioClip(sound).length);
         }
     }
 
@@ -145,48 +146,48 @@ public class SoundManager : MonoBehaviour
     // Changes the Background Music to the given Sound
     public static void ChangeBackgroundMusic(Sound sound)
     {
-        if (currentBackground != sound)
+        if (_currentBackground != sound)
         {
             Debug.Log("Changing Background Music to " + sound);
-            currentBackground = sound;
-            backgroundMusic.clip = getAudioClip(sound);
-            backgroundMusic.volume = vols[sound];
-            backgroundMusic.Play();
+            _currentBackground = sound;
+            _backgroundMusic.clip = GetAudioClip(sound);
+            _backgroundMusic.volume = _vols[sound];
+            _backgroundMusic.Play();
         }
     }
 
     // Changes the wait for a sound (-1 to set the wait to the audio's length)
     public static void SetWait(Sound sound, float newWait)
     {
-        waits[sound] = newWait != -1 ? newWait : sounds[sound].length;
+        _waits[sound] = newWait != -1 ? newWait : _sounds[sound].length;
     }
 
     // Changes the volume for a sound
     public static void SetVolume(Sound sound, float newVolume)
     {
-        vols[sound] = newVolume;
+        _vols[sound] = newVolume;
     }
 
     // Returns the volume for a sound
     public static float GetVolume(Sound sound)
     {
-        return vols[sound];
+        return _vols[sound];
     }
 
     // Changes the volume of the currentBackground audio source
     public static void ChangeBackgroundVolume(float newVolume)
     {
-        backgroundMusic.volume = newVolume;
+        _backgroundMusic.volume = newVolume;
     }
 
     // Checks if a given sound can be played given it's wait time
-    private static bool canPlay(Sound sound)
+    private static bool CanPlay(Sound sound)
     {
-        float previousPlay = lastPlayed[sound];
-        float wait = waits[sound];
+        float previousPlay = _lastPlayed[sound];
+        float wait = _waits[sound];
         if (wait == 0 || (Time.time < wait && previousPlay == 0) || previousPlay + wait < Time.time)
         {
-            lastPlayed[sound] = Time.time;
+            _lastPlayed[sound] = Time.time;
             return true;
         }
         else
@@ -196,8 +197,8 @@ public class SoundManager : MonoBehaviour
     }
 
     // Returns the audioclip of a given sound
-    public static AudioClip getAudioClip(Sound sound)
+    public static AudioClip GetAudioClip(Sound sound)
     {
-        return SoundManager.sounds[sound];
+        return SoundManager._sounds[sound];
     }
 }

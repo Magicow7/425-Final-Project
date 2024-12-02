@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Stat;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class DamageNumber : MonoBehaviour
 {
@@ -102,7 +103,7 @@ public class DamageNumber : MonoBehaviour
 
         foreach (var t in _thresholds)
         {
-            if (damagePercent < t.threshold)
+            if (damagePercent < t._threshold)
             {
                 threshold = t;
                 break;
@@ -110,9 +111,9 @@ public class DamageNumber : MonoBehaviour
             prevThres = t;
         }
 
-        float size = Mathf.Lerp(threshold.size, prevThres.size, (threshold.threshold - damagePercent) / (threshold.threshold - prevThres.threshold));
+        float size = Mathf.Lerp(threshold._size, prevThres._size, (threshold._threshold - damagePercent) / (threshold._threshold - prevThres._threshold));
         _group.transform.localScale = new Vector3(size, size, size);
-        _textMesh.color = Color.Lerp(threshold.color, prevThres.color, (threshold.threshold - damagePercent) / (threshold.threshold - prevThres.threshold));
+        _textMesh.color = Color.Lerp(threshold._color, prevThres._color, (threshold._threshold - damagePercent) / (threshold._threshold - prevThres._threshold));
 
         _hideTime = Time.time + _maxVisibleTime;
         _textMesh.text = result;
@@ -125,8 +126,8 @@ public class DamageNumber : MonoBehaviour
     [Serializable]
     private class DamageThreshold
     {
-        public float threshold;
-        public Color color;
-        public float size;
+        [FormerlySerializedAs("threshold")] public float _threshold;
+        [FormerlySerializedAs("color")] public Color _color;
+        [FormerlySerializedAs("size")] public float _size;
     }
 }
