@@ -1,5 +1,4 @@
 using System.Collections;
-using Locomotion;
 using UnityEngine;
 
 namespace Locomotion
@@ -18,28 +17,26 @@ namespace Locomotion
         [SerializeField, Tooltip("The max speed someone can move at.")]
         private float _maxSpeed = 30f;
 
-        [SerializeField]
-        private float _jumpSpeed = 3f;
-        
-        [SerializeField]
-        private float _wallJumpCooldown = 2f;
-        
-        [SerializeField]
-        private float _wallJumpDistanceThreshold = 5f;
-        
-        private bool _isSprinting = true;
-        private float _currentMoveSpeed;
-        private float _currentMaxSpeed;
-        
-        private Transform _characterTransform = null!;
+        [SerializeField] private float _jumpSpeed = 3f;
 
-        private bool _wallJump = true;
+        [SerializeField] private float _wallJumpCooldown = 2f;
+
+        [SerializeField] private float _wallJumpDistanceThreshold = 5f;
+
         private bool _canJump = true;
-        
-        private Vector3 _lastWallJumpPos = Vector3.zero;
+
+        private Transform _characterTransform = null!;
+        private float _currentMaxSpeed;
+        private float _currentMoveSpeed;
 
         private GravityProvider _gravityProvider;
-        
+
+        private bool _isSprinting = true;
+
+        private Vector3 _lastWallJumpPos = Vector3.zero;
+
+        private bool _wallJump = true;
+
         protected override void OnInitialize()
         {
             _currentMoveSpeed = 0;
@@ -62,14 +59,14 @@ namespace Locomotion
         {
             float vertical = Input.GetAxisRaw("Vertical");
             float horizontal = Input.GetAxisRaw("Horizontal");
-            
+
             var input = new Vector2(horizontal, vertical);
-            
+
             if (_isSprinting && input == Vector2.zero && vertical > 0)
             {
                 ToggleSprint();
             }
-            
+
             input.Normalize();
 
             if (Input.GetKey(KeyCode.Space) && _canJump)
@@ -79,7 +76,7 @@ namespace Locomotion
                     Jump(_jumpSpeed);
                     _lastWallJumpPos = Vector3.zero;
                 }
-                else if (locomotionManager.IsTouchingWall && _wallJump && 
+                else if (locomotionManager.IsTouchingWall && _wallJump &&
                          (locomotionManager.CharacterController.transform.position - _lastWallJumpPos).magnitude >= _wallJumpDistanceThreshold)
                 {
                     _lastWallJumpPos = locomotionManager.CharacterController.transform.position;
@@ -90,12 +87,12 @@ namespace Locomotion
 
             //if (UnityEngine.Input.GetKey(KeyCode.LeftShift) != _isSprinting)
             //{
-                ToggleSprint();
+            ToggleSprint();
             //}
-            
+
             Move(LocomotionManager.Instance.Camera.transform, new Vector2(horizontal, vertical));
         }
-        
+
         public void ToggleSprint()
         {
             if (_isSprinting)
@@ -106,10 +103,11 @@ namespace Locomotion
             {
                 SoundManager.SetWait(SoundManager.Sound.Walking, 0.25f);
             }
+
             _isSprinting = !_isSprinting;
             _currentMaxSpeed = _isSprinting ? _sprintSpeed : _walkSpeed;
         }
-        
+
         public void Jump(float speed)
         {
             StartCoroutine(_JumpCooldown());
@@ -132,20 +130,20 @@ namespace Locomotion
             yield return new WaitForSeconds(_wallJumpCooldown);
             _wallJump = true;
         }
-        
+
         public void Move(Transform relativeTo, Vector2 input)
         {
             var forward = relativeTo.forward;
             var right = relativeTo.right;
-            
+
             forward.y = 0;
             right.y = 0;
-            
+
             forward.Normalize();
             right.Normalize();
             input.Normalize();
-            
-            var targetVelocity = (forward * input.y + right * input.x);
+
+            var targetVelocity = forward * input.y + right * input.x;
             if (targetVelocity == Vector3.zero)
             {
                 _currentMoveSpeed = 0;
@@ -156,7 +154,7 @@ namespace Locomotion
                 if (locomotionManager.VelocityXZ.magnitude > _currentMaxSpeed)
                 {
                     _currentMoveSpeed -= Mathf.Max(
-                        _currentMaxSpeed * _frictionSpeed * Time.fixedDeltaTime, 
+                        _currentMaxSpeed * _frictionSpeed * Time.fixedDeltaTime,
                         locomotionManager.VelocityXZ.magnitude / 100);
                 }
                 else
@@ -175,6 +173,7 @@ namespace Locomotion
                 {
                     _currentMoveSpeed = _maxSpeed;
                 }
+
                 if (_currentMoveSpeed >= 4.5)
                 {
                     SoundManager.SetVolume(SoundManager.Sound.AirborneMovement, (0.2f * _currentMoveSpeed - 0.75f) / 1.5f);

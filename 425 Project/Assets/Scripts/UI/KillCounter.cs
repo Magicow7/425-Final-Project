@@ -1,20 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
+using Combat;
 using TMPro;
+using UnityEngine;
 
 public class KillCounter : MonoBehaviour
 {
+    private int _killCount;
     private TMP_Text _killCounter;
-    private int _killCount = 0;
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         _killCounter = GetComponent<TMP_Text>();
         _killCounter.text = "Kills: " + _killCount;
-        Combat.Enemy.EnemyDeath += IncrementKillCounter;
+        Enemy.EnemyDeath += IncrementKillCounter;
     }
 
     public void IncrementKillCounter()

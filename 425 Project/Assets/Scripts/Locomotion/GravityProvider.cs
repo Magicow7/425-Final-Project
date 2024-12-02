@@ -7,8 +7,8 @@ namespace Locomotion
         [SerializeField, Tooltip("How fast gravity will pull you down.")]
         private float _gravityAcceleration = 9.8f;
 
-        private bool _enabled = false;
-        
+        private bool _enabled;
+
         protected override void OnInitialize()
         {
             _enabled = true;

@@ -1,37 +1,31 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using Combat.Weapon;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class ShotWand : Weapon
 {
-    [SerializeField]
-    private Transform _bulletSpawnPoint;
-    [SerializeField]
-    private Bullet _bulletPrefab;
-    [SerializeField]
-    private Camera _mainCamera;
-    [SerializeField]
-    private LayerMask _bulletLayer;
+    [SerializeField] private Transform _bulletSpawnPoint;
 
-    private float _nextFireTime = 0f;
-    
-    [SerializeField]
-    private float _bulletSpeed = 10f;
-    [SerializeField]
-    private float _bulletLifespan = 10f;
-    [SerializeField]
-    private float _fireRate = 0.1f;
-    [SerializeField]
-    private float _explosionRadius = 0f;
-    [SerializeField]
-    private float _explosionDamage = 0f;
-    [SerializeField]
-    private float _explosionTime = 0f;
-    [SerializeField]
-    private float _explosionDamageOverTime = 0f;
+    [SerializeField] private Bullet _bulletPrefab;
+
+    [SerializeField] private Camera _mainCamera;
+
+    [SerializeField] private LayerMask _bulletLayer;
+
+    [SerializeField] private float _bulletSpeed = 10f;
+
+    [SerializeField] private float _bulletLifespan = 10f;
+
+    [SerializeField] private float _fireRate = 0.1f;
+
+    [SerializeField] private float _explosionRadius;
+
+    [SerializeField] private float _explosionDamage;
+
+    [SerializeField] private float _explosionTime;
+
+    [SerializeField] private float _explosionDamageOverTime;
+
+    private float _nextFireTime;
 
     protected override bool Fire()
     {
@@ -45,13 +39,14 @@ public class ShotWand : Weapon
             {
                 SoundManager.PlaySound(SoundManager.Sound.GrenadeThrow);
             }
+
             _nextFireTime = Time.time + _fireRate;
-            
-            Ray ray = _mainCamera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2));
+
+            var ray = _mainCamera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2));
             RaycastHit hit;
 
             Vector3 targetPoint;
-            
+
             if (Physics.Raycast(ray, out hit, ~_bulletLayer))
             {
                 targetPoint = hit.point;
@@ -61,7 +56,7 @@ public class ShotWand : Weapon
                 targetPoint = ray.GetPoint(1000);
             }
 
-            Vector3 direction = (targetPoint - _bulletSpawnPoint.position).normalized;
+            var direction = (targetPoint - _bulletSpawnPoint.position).normalized;
 
             var bullet = Instantiate(_bulletPrefab, _bulletSpawnPoint.position, _bulletSpawnPoint.rotation);
             bullet.Setup(_damage, _explosionRadius, _explosionDamage, _explosionTime, _explosionDamageOverTime, _bulletLifespan);

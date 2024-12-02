@@ -1,33 +1,33 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
+
 // ReSharper disable StaticMemberInGenericType
 
 namespace Utils.Singleton
 {
     /// <summary>
-    /// Simple base class for implementing a singleton.
+    ///     Simple base class for implementing a singleton.
     /// </summary>
     public abstract class SingletonMonoBehaviour<T> : MonoBehaviour where T : MonoBehaviour
     {
         private static T? _instance;
-        private static readonly object _instanceLock = new ();
+        private static readonly object _instanceLock = new();
         private static bool _quitting;
-        
-        /// <summary>
-        /// True if an instance of this singleton exists.
-        /// </summary>
-        public static bool HasInstance => _instance != null;
-        
+
         private static SingletonAttribute? _cachedAttribute;
         private static readonly List<Action<T>> _pendingActions = new();
-        
-        public static T? Instance 
+
+        /// <summary>
+        ///     True if an instance of this singleton exists.
+        /// </summary>
+        public static bool HasInstance => _instance != null;
+
+        public static T? Instance
         {
-            get 
+            get
             {
-                lock(_instanceLock)
+                lock (_instanceLock)
                 {
                     if (_instance != null || _quitting)
                     {
@@ -35,7 +35,7 @@ namespace Utils.Singleton
                     }
 
                     CacheAttribute();
-                        
+
                     switch (_cachedAttribute!.CreationParams.creationMode)
                     {
                         case SingletonCreationMode.Throw:
@@ -53,7 +53,7 @@ namespace Utils.Singleton
                     {
                         DontDestroyOnLoad(go);
                     }
-                        
+
                     InvokePendingActions();
 
                     return _instance;
@@ -61,8 +61,40 @@ namespace Utils.Singleton
             }
         }
 
+        protected virtual void Awake()
+        {
+            if (_instance == null)
+            {
+                _instance = gameObject.GetComponent<T>();
+
+                if (_instance == null)
+                {
+                    return;
+                }
+
+                CacheAttribute();
+                if (_cachedAttribute!.CreationParams.dontDestroyOnLoad)
+                {
+                    DontDestroyOnLoad(gameObject);
+                }
+
+                InvokePendingActions();
+            }
+            else if (_instance.GetInstanceID() != GetInstanceID())
+            {
+                Destroy(gameObject);
+                Debug.LogError($"Instance of {GetType().FullName} already exists, removing {ToString()}");
+            }
+        }
+
+        protected virtual void OnApplicationQuit()
+        {
+            _quitting = true;
+        }
+
         /// <summary>
-        /// Invokes the supplied action with the instance of this singleton if it exists, otherwise caches the action to be invoked when the instance is created.
+        ///     Invokes the supplied action with the instance of this singleton if it exists, otherwise caches the action to be
+        ///     invoked when the instance is created.
         /// </summary>
         public static void OnInstanceCreated(Action<T> action)
         {
@@ -75,7 +107,7 @@ namespace Utils.Singleton
                 _pendingActions.Add(action);
             }
         }
-        
+
         private static void InvokePendingActions()
         {
             if (_instance == null)
@@ -83,48 +115,18 @@ namespace Utils.Singleton
                 Debug.LogError("Don't call InvokePendingActions before the instance is created!");
                 return;
             }
-            
-            foreach (var action in _pendingActions)
+
+            foreach (Action<T> action in _pendingActions)
             {
                 action(_instance);
             }
-            
+
             _pendingActions.Clear();
         }
-        
-        private static void CacheAttribute() 
-            => _cachedAttribute ??= Attribute.GetCustomAttribute(typeof(T), typeof(SingletonAttribute)) as SingletonAttribute ?? new SingletonAttribute();
 
-        protected virtual void Awake()
+        private static void CacheAttribute()
         {
-            if (_instance == null)
-            {
-                _instance = gameObject.GetComponent<T>();
-
-                if (_instance == null)
-                {
-                    return;
-                }
-                
-                CacheAttribute();
-                if(_cachedAttribute!.CreationParams.dontDestroyOnLoad)
-                {
-                    DontDestroyOnLoad(gameObject);
-                }
-                
-                InvokePendingActions();
-            }
-            else if(_instance.GetInstanceID() != GetInstanceID())
-            {
-                Destroy(gameObject);
-                Debug.LogError($"Instance of {GetType().FullName} already exists, removing {ToString()}");
-            }
+            _cachedAttribute ??= Attribute.GetCustomAttribute(typeof(T), typeof(SingletonAttribute)) as SingletonAttribute ?? new SingletonAttribute();
         }
-
-        protected virtual void OnApplicationQuit() 
-        {
-            _quitting = true;
-        }
-
     }
 }

@@ -1,4 +1,3 @@
-using System;
 using Stat;
 using UnityEngine;
 
@@ -6,10 +5,9 @@ namespace Combat.Weapon
 {
     public abstract class Weapon : MonoBehaviour
     {
-        [SerializeField]
-        protected float _manaPerShot = 20;
-        [SerializeField]
-        protected float _damage = 10;
+        [SerializeField] protected float _manaPerShot = 20;
+
+        [SerializeField] protected float _damage = 10;
 
 
         private void LateUpdate()
@@ -47,7 +45,7 @@ namespace Combat.Weapon
 
         protected abstract bool Fire();
 
-        protected virtual void FireStart() {}
-        protected virtual void FireEnd() {}
+        protected virtual void FireStart() { }
+        protected virtual void FireEnd() { }
     }
 }

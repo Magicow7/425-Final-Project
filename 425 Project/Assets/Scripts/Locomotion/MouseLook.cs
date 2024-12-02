@@ -1,35 +1,35 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
 public class MouseLook : MonoBehaviour
 {
-     public static MouseLook instance;
+    public static MouseLook instance;
 
-    [FormerlySerializedAs("clampInDegrees"),Header("Settings")]
-    public Vector2 _clampInDegrees = new Vector2(360, 180);
+    [FormerlySerializedAs("clampInDegrees"), Header("Settings")]
+    public Vector2 _clampInDegrees = new(360, 180);
+
     [FormerlySerializedAs("lockCursor")] public bool _lockCursor = true;
-    [Space]
-    private readonly Vector2 _sensitivity = new Vector2(2, 2);
-    [FormerlySerializedAs("smoothing"),Space]
-    public Vector2 _smoothing = new Vector2(3, 3);
 
-    [FormerlySerializedAs("characterBody"),Header("First Person")]
+    [FormerlySerializedAs("smoothing"), Space]
+    public Vector2 _smoothing = new(3, 3);
+
+    [FormerlySerializedAs("characterBody"), Header("First Person")]
     public GameObject _characterBody;
 
-    private Vector2 _targetDirection;
-    private Vector2 _targetCharacterDirection;
-
-    private Vector2 _mouseAbsolute;
-    private Vector2 _smoothMouse;
-
-    private Vector2 _mouseDelta;
-
-    [FormerlySerializedAs("scoped"),HideInInspector]
+    [FormerlySerializedAs("scoped"), HideInInspector]
     public bool _scoped;
 
-    void Start()
+    [Space] private readonly Vector2 _sensitivity = new(2, 2);
+
+    private Vector2 _mouseAbsolute;
+
+    private Vector2 _mouseDelta;
+    private Vector2 _smoothMouse;
+    private Vector2 _targetCharacterDirection;
+
+    private Vector2 _targetDirection;
+
+    private void Start()
     {
         instance = this;
 
@@ -38,28 +38,17 @@ public class MouseLook : MonoBehaviour
 
         // Set target direction for the character body to its inital state.
         if (_characterBody)
+        {
             _targetCharacterDirection = _characterBody.transform.localRotation.eulerAngles;
-        
+        }
+
         if (_lockCursor)
+        {
             LockCursor();
-
+        }
     }
 
-    public void LockCursor()
-    {
-        // make the cursor hidden and locked
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-    }
-
-    public void UnlockCursor()
-    {
-        // make the cursor hidden and locked
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-    }
-
-    void Update()
+    private void Update()
     {
         // Allow the script to clamp based on a desired target value.
         var targetOrientation = Quaternion.Euler(_targetDirection);
@@ -80,11 +69,15 @@ public class MouseLook : MonoBehaviour
 
         // Clamp and apply the local x value first, so as not to be affected by world transforms.
         if (_clampInDegrees.x < 360)
+        {
             _mouseAbsolute.x = Mathf.Clamp(_mouseAbsolute.x, -_clampInDegrees.x * 0.5f, _clampInDegrees.x * 0.5f);
+        }
 
         // Then clamp and apply the global y value.
         if (_clampInDegrees.y < 360)
+        {
             _mouseAbsolute.y = Mathf.Clamp(_mouseAbsolute.y, -_clampInDegrees.y * 0.5f, _clampInDegrees.y * 0.5f);
+        }
 
         transform.localRotation = Quaternion.AngleAxis(-_mouseAbsolute.y, targetOrientation * Vector3.right) * targetOrientation;
 
@@ -103,5 +96,19 @@ public class MouseLook : MonoBehaviour
             var yRotation = Quaternion.AngleAxis(_mouseAbsolute.x, transform.InverseTransformDirection(Vector3.up));
             transform.localRotation *= yRotation;
         }
+    }
+
+    public void LockCursor()
+    {
+        // make the cursor hidden and locked
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+
+    public void UnlockCursor()
+    {
+        // make the cursor hidden and locked
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 }

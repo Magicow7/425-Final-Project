@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using Stat;
 using UnityEngine;
 using Utils;
 using Utils.Singleton;
@@ -9,118 +7,96 @@ using Utils.Singleton;
 namespace Locomotion
 {
     /// <summary>
-    /// Manages all locomotion providers that are a child of the provider holder.
+    ///     Manages all locomotion providers that are a child of the provider holder.
     /// </summary>
     [SingletonAttribute(SingletonCreationMode.Auto, false)]
     public class LocomotionManager : SingletonMonoBehaviour<LocomotionManager>, ICustomUpdate, ICustomFixedUpdate
     {
-        [field: SerializeField] 
-        public Camera Camera { get; private set; }
-        
-        [SerializeField]
-        private CharacterController _characterController = null!;
-        
-        [SerializeField, Tooltip("All Locomotion Providers should be a first level child of this transform.")] 
+        [field: SerializeField] public Camera Camera { get; private set; }
+
+        [SerializeField] private CharacterController _characterController = null!;
+
+        [SerializeField, Tooltip("All Locomotion Providers should be a first level child of this transform.")]
         private Transform _providerHolder = null!;
+
         [SerializeField] private SphereCollider _groundCheckSphere = null!;
         [SerializeField] private SphereCollider _wallCheckSphere = null!;
         [SerializeField] private SphereCollider _ceilingCheckSphere = null!;
 
         [SerializeField] private LayerMask _groundLayer;
         [SerializeField] private LayerMask _wallLayer;
-        
-        
-        private RaycastNonAllocWrapper _groundRaycastWrapper = null!;
-        private RaycastNonAllocWrapper _wallRaycastWrapper = null!;
 
-        private Vector2 _velocityXZ;
-        private float _velocityY;
-        
-        private float _rotation;
+        private readonly List<LocomotionProvider> _providers = new();
+
+
+        private RaycastNonAllocWrapper _groundRaycastWrapper = null!;
 
         private Vector3 _velocity;
-        
-        private readonly List<LocomotionProvider> _providers = new();
+
+        private Vector2 _velocityXZ;
+        private RaycastNonAllocWrapper _wallRaycastWrapper = null!;
         private bool _wasGrounded = true;
-        private bool _isGrounded = true;
-        private bool _isTouchingWall = false;
-        private bool _isTouchingCeiling = false;
 
         /// <summary>
-        /// A list of all providers found.
+        ///     A list of all providers found.
         /// </summary>
         public IReadOnlyList<LocomotionProvider> Providers => _providers;
-        
+
         /// <summary>
-        /// The character controller that is used for movement.
+        ///     The character controller that is used for movement.
         /// </summary>
         public CharacterController CharacterController => _characterController;
-        
+
         /// <summary>
-        /// True if the player is currently grounded.
+        ///     True if the player is currently grounded.
         /// </summary>
-        public bool IsGrounded => _isGrounded;
-        
+        public bool IsGrounded { get; private set; } = true;
+
         /// <summary>
-        /// True if the player is currently grounded.
+        ///     True if the player is currently grounded.
         /// </summary>
-        public bool IsTouchingWall => _isTouchingWall;
-        
+        public bool IsTouchingWall { get; private set; }
+
         /// <summary>
-        /// True if the player is currently grounded.
+        ///     True if the player is currently grounded.
         /// </summary>
-        public bool IsTouchingCeiling => _isTouchingCeiling;
-        
+        public bool IsTouchingCeiling { get; private set; }
+
         /// <summary>
-        /// The current velocity of the player.
+        ///     The current velocity of the player.
         /// </summary>
-        public Vector3 Velocity => new Vector3(_velocityXZ.x, _velocityY, _velocityXZ.y);
-        
+        public Vector3 Velocity => new(_velocityXZ.x, VelocityY, _velocityXZ.y);
+
         /// <summary>
-        /// The current velocity of the player on the XZ plane.
+        ///     The current velocity of the player on the XZ plane.
         /// </summary>
         public Vector2 VelocityXZ => _velocityXZ;
-        
+
         /// <summary>
-        /// The current velocity of the player on the Y axis.
+        ///     The current velocity of the player on the Y axis.
         /// </summary>
-        public float VelocityY => _velocityY;
-        
+        public float VelocityY { get; private set; }
+
         /// <summary>
-        /// The current rotation of the player.
+        ///     The current rotation of the player.
         /// </summary>
-        public float Rotation => _rotation;
-        
+        public float Rotation { get; private set; }
+
         /// <summary>
-        /// The current speed of the player (ignoring the Y axis).
+        ///     The current speed of the player (ignoring the Y axis).
         /// </summary>
         public float CurrentSpeed => _velocityXZ.magnitude;
-        
+
         /// <summary>
-        /// The current movement state of the player.
+        ///     The current movement state of the player.
         /// </summary>
         public MovementState State { get; private set; } = MovementState.Idle;
-
-        public event Action OnProvidersInitialized = delegate { };
 
         protected override void Awake()
         {
             CollectProviders();
             InitializeProviders();
             base.Awake();
-        }
-
-        private void CollectProviders()
-        {
-            foreach (Transform child in _providerHolder)
-            {
-                if (!child.TryGetComponent(out LocomotionProvider provider))
-                {
-                    continue;
-                }
-                
-                _providers.Add(provider);
-            }
         }
 
         private void Start()
@@ -135,21 +111,36 @@ namespace Locomotion
             CustomUpdateManager.Unregister(this);
         }
 
-        public void CustomUpdate(float deltaTime)
-        {
-            HandleCollisions();
-            ProcessUpdate(deltaTime);
-        }
-
         public void CustomFixedUpdate(float fixedDeltaTime)
         {
             ProcessFixedUpdate(fixedDeltaTime);
             ApplyMovement(fixedDeltaTime);
             ProcessAfterMovementUpdate(fixedDeltaTime);
         }
-        
+
+        public void CustomUpdate(float deltaTime)
+        {
+            HandleCollisions();
+            ProcessUpdate(deltaTime);
+        }
+
+        public event Action OnProvidersInitialized = delegate { };
+
+        private void CollectProviders()
+        {
+            foreach (Transform child in _providerHolder)
+            {
+                if (!child.TryGetComponent(out LocomotionProvider provider))
+                {
+                    continue;
+                }
+
+                _providers.Add(provider);
+            }
+        }
+
         /// <summary>
-        /// Returns the provider of the specified type.
+        ///     Returns the provider of the specified type.
         /// </summary>
         public T GetProvider<T>() where T : LocomotionProvider
         {
@@ -173,17 +164,16 @@ namespace Locomotion
 
         private void ApplyMovement(float deltaTime)
         {
-            _velocity = new Vector3(_velocityXZ.x, _velocityY, _velocityXZ.y);
+            _velocity = new Vector3(_velocityXZ.x, VelocityY, _velocityXZ.y);
 
             var totalVelocity = _velocity;
 
             if (CharacterController.enabled)
             {
                 CharacterController.Move(totalVelocity * deltaTime);
-                
-                CharacterController.transform.Rotate(Vector3.up, _rotation * deltaTime);
+
+                CharacterController.transform.Rotate(Vector3.up, Rotation * deltaTime);
             }
-            
         }
 
         private void SetMovementState(MovementState state, bool on)
@@ -217,26 +207,37 @@ namespace Locomotion
             {
                 provider.Initialize(this, SetVelocityXZ, SetVelocityY, SetRotation, SetMovementState);
             }
-            
+
             OnProvidersInitialized.Invoke();
         }
-        
-        private void SetVelocityXZ(Vector2 velocity) => _velocityXZ = velocity;
-        private void SetVelocityY(float velocity) => _velocityY = velocity;
-        private void SetRotation(float rotation) => _rotation = rotation;
+
+        private void SetVelocityXZ(Vector2 velocity)
+        {
+            _velocityXZ = velocity;
+        }
+
+        private void SetVelocityY(float velocity)
+        {
+            VelocityY = velocity;
+        }
+
+        private void SetRotation(float rotation)
+        {
+            Rotation = rotation;
+        }
 
         private void HandleCollisions()
         {
             _wasGrounded = IsGrounded;
-            _isGrounded = _groundRaycastWrapper.OverlapSphere(_groundCheckSphere.transform.position, _groundCheckSphere.radius, out _);
-            _isTouchingWall = _wallRaycastWrapper.OverlapSphere(_wallCheckSphere.transform.position, _wallCheckSphere.radius, out _);
-            _isTouchingCeiling = _groundRaycastWrapper.OverlapSphere(_ceilingCheckSphere.transform.position, _ceilingCheckSphere.radius, out _);
+            IsGrounded = _groundRaycastWrapper.OverlapSphere(_groundCheckSphere.transform.position, _groundCheckSphere.radius, out _);
+            IsTouchingWall = _wallRaycastWrapper.OverlapSphere(_wallCheckSphere.transform.position, _wallCheckSphere.radius, out _);
+            IsTouchingCeiling = _groundRaycastWrapper.OverlapSphere(_ceilingCheckSphere.transform.position, _ceilingCheckSphere.radius, out _);
 
             if (IsTouchingCeiling)
             {
-                _velocityY = MathF.Min(_velocityY, 0);
+                VelocityY = MathF.Min(VelocityY, 0);
             }
-            
+
             bool groundedChanged = _wasGrounded != IsGrounded;
 
             if (groundedChanged && State is MovementState.Idle or MovementState.Airborne)
@@ -252,7 +253,7 @@ namespace Locomotion
 
         private void ProcessUpdate(float deltaTime)
         {
-            foreach(var provider in _providers)
+            foreach (var provider in _providers)
             {
                 provider.OnUpdate(deltaTime);
             }
@@ -265,7 +266,7 @@ namespace Locomotion
                 provider.OnFixedUpdate(fixedDeltaTime);
             }
         }
-        
+
         private void ProcessAfterMovementUpdate(float fixedDeltaTime)
         {
             foreach (var provider in _providers)

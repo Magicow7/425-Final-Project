@@ -1,23 +1,18 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using Combat;
 using Combat.Weapon;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Utils;
 
 public class ConeWand : Weapon
 {
-    [SerializeField]
-    private TriggerEvent _damageCone;
+    [SerializeField] private TriggerEvent _damageCone;
 
-    [SerializeField]
-    private float _rate = 0.05f;
-    private float _nextFireTime = 0f;
-    private AudioSource _sfx;
+    [SerializeField] private float _rate = 0.05f;
 
     private readonly List<IDamageable> _enemies = new();
+    private float _nextFireTime;
+    private AudioSource _sfx;
 
     private void Start()
     {
@@ -25,14 +20,14 @@ public class ConeWand : Weapon
         _damageCone.OnTriggerEnterEvent += (o, c) =>
         {
             Debug.Log(c.name);
-            if (c.TryGetComponent(out IDamageable damageable) && Player.Instance && c.gameObject != Player.Instance.gameObject) 
+            if (c.TryGetComponent(out IDamageable damageable) && Player.Instance && c.gameObject != Player.Instance.gameObject)
             {
                 _enemies.Add(damageable);
             }
         };
         _damageCone.OnTriggerExitEvent += (o, c) =>
         {
-            if (c.TryGetComponent(out IDamageable damageable) && Player.Instance && c.gameObject != Player.Instance.gameObject) 
+            if (c.TryGetComponent(out IDamageable damageable) && Player.Instance && c.gameObject != Player.Instance.gameObject)
             {
                 _enemies.Remove(damageable);
             }
@@ -45,7 +40,7 @@ public class ConeWand : Weapon
         SoundManager.PlaySound(SoundManager.Sound.FireSpellStart, _sfx);
         SpawnCone();
     }
-    
+
     protected override void FireEnd()
     {
         _sfx.loop = false;

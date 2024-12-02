@@ -1,23 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
+using UnityEngine;
 
 public class WaveCounter : MonoBehaviour
 {
-    private TMP_Text _waveCounter;
     private EnemySpawner _enemySpawner;
+    private TMP_Text _waveCounter;
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         _enemySpawner = GameObject.Find("EnemySpawner").GetComponent<EnemySpawner>();
         _waveCounter = GetComponent<TMP_Text>();
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         _waveCounter.text = "Wave: " + _enemySpawner.WaveNumber;
     }

@@ -1,32 +1,25 @@
-using System;
-using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using Random = UnityEngine.Random;
 using Combat;
-using UnityEngine.Serialization;
+using Stat;
+using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class EnemySpawner : MonoBehaviour
 {
-    [SerializeField]
-    private Enemy _enemyPrefab;
-    [SerializeField]
-    private int _maxEnemies;
-    [SerializeField]
-    private float _healthScaling = 0.05f;
-    [SerializeField]
-    private float _damageScaling = 0.05f;
+    [SerializeField] private Enemy _enemyPrefab;
 
-    public int WaveNumber { get; private set; } = 0;
-    private float _waveInterval = 30.0f; // time in between waves
+    [SerializeField] private int _maxEnemies;
+
+    [SerializeField] private float _healthScaling = 0.05f;
+
+    [SerializeField] private float _damageScaling = 0.05f;
+
+    private readonly Vector3 _modifier = new(0.2f, 0.2f, 0.2f); // ensures enemy spawns above floor
     private readonly float _spawnInterval = 0.01f; // lag time so enemies don't spawn on top of one another
-    
-    private readonly Vector3 _modifier = new Vector3(0.2f, 0.2f, 0.2f); // ensures enemy spawns above floor
-    private Enemy[] _spawnedEnemies;
-    private int _currentSpawnedEnemy = 0;
 
     // Waves 1-9 predefined to introduce enemy variants => endless mode after that
-    private readonly Dictionary<int, (int smallCount, int normalCount, int largeCount)> _waveConfig = new Dictionary<int, (int, int, int)>
+    private readonly Dictionary<int, (int smallCount, int normalCount, int largeCount)> _waveConfig = new()
     {
         { 1, (0, 10, 0) },
         { 2, (0, 15, 0) },
@@ -36,15 +29,14 @@ public class EnemySpawner : MonoBehaviour
         { 6, (15, 10, 0) },
         { 7, (5, 10, 1) },
         { 8, (10, 15, 2) },
-        { 9, (15, 20, 3) },
+        { 9, (15, 20, 3) }
     };
-    
-    private enum EnemyType
-    {
-        Small,
-        Medium,
-        Large
-    }
+
+    private int _currentSpawnedEnemy;
+    private Enemy[] _spawnedEnemies;
+    private float _waveInterval = 30.0f; // time in between waves
+
+    public int WaveNumber { get; private set; }
 
     private void Awake()
     {
@@ -66,6 +58,12 @@ public class EnemySpawner : MonoBehaviour
             yield return StartCoroutine(SpawnWave(WaveNumber));
             yield return new WaitForSeconds(_waveInterval);
 
+            // Regenerate 20% of health after each wave
+            if (PlayerStats.Instance)
+            {
+                PlayerStats.Instance.RegenerateHealth(PlayerStats.Instance.Health.MaxValue / 25, 5);
+            }
+
             // Decrease wave interval as game progresses
             _waveInterval = Mathf.Max(10f, _waveInterval - 1.0f);
         }
@@ -74,25 +72,24 @@ public class EnemySpawner : MonoBehaviour
     private IEnumerator SpawnWave(int waveNumber)
     {
         // Endless mode: small = 15 = 5X, normal = 20 + 5X, large = 3 + X, X = # waves beyond 9
-        (int smallCount, int normalCount, int largeCount) = _waveConfig.ContainsKey(waveNumber) ?
-            _waveConfig[waveNumber] : ((15 + (waveNumber - 9) * 5), (20 + (waveNumber - 9) * 5), (3 + (waveNumber - 9) * 1));
+        (int smallCount, int normalCount, int largeCount) = _waveConfig.ContainsKey(waveNumber) ? _waveConfig[waveNumber] : (15 + (waveNumber - 9) * 5, 20 + (waveNumber - 9) * 5, 3 + (waveNumber - 9) * 1);
 
         // Spawn small enemies
-        for (int i = 0; i < smallCount; i++)
+        for (var i = 0; i < smallCount; i++)
         {
             SpawnEnemy(EnemyType.Small);
             yield return new WaitForSeconds(_spawnInterval);
         }
 
         // Spawn normal enemies
-        for (int i = 0; i < normalCount; i++)
+        for (var i = 0; i < normalCount; i++)
         {
             SpawnEnemy(EnemyType.Medium);
             yield return new WaitForSeconds(_spawnInterval);
         }
 
         // Spawn large enemies
-        for (int i = 0; i < largeCount; i++)
+        for (var i = 0; i < largeCount; i++)
         {
             SpawnEnemy(EnemyType.Large);
             yield return new WaitForSeconds(_spawnInterval);
@@ -105,13 +102,13 @@ public class EnemySpawner : MonoBehaviour
         {
             Destroy(_spawnedEnemies[_currentSpawnedEnemy].gameObject);
         }
-        
+
         // Spawn enemy at a random spawner
         _spawnedEnemies[_currentSpawnedEnemy] = Instantiate(_enemyPrefab, DungeonGenerator.possibleSpawnPoints[Random.Range(0, DungeonGenerator.possibleSpawnPoints.Count)] + _modifier, Quaternion.identity);
-        
+
         // Scale stats based on wave number
-        float healthMultiplier = 1 + (WaveNumber * _healthScaling); // 5% flat increase per wave
-        float attackDamageMultiplier = 1 + (WaveNumber * _damageScaling); // 5% flat increase per wave
+        float healthMultiplier = 1 + WaveNumber * _healthScaling; // 5% flat increase per wave
+        float attackDamageMultiplier = 1 + WaveNumber * _damageScaling; // 5% flat increase per wave
 
         // Health, Speed, Scale, AttackDamage
         switch (variant)
@@ -128,5 +125,12 @@ public class EnemySpawner : MonoBehaviour
         }
 
         _currentSpawnedEnemy = (_currentSpawnedEnemy + 1) % _maxEnemies;
+    }
+
+    private enum EnemyType
+    {
+        Small,
+        Medium,
+        Large
     }
 }

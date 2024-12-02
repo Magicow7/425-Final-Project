@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Stat;
 using TMPro;
@@ -9,25 +8,34 @@ using UnityEngine.Serialization;
 public class DamageNumber : MonoBehaviour
 {
     [SerializeField] private float _maxVisibleTime = 1f;
-    
-    [SerializeField] private List<DamageThreshold> _thresholds = new List<DamageThreshold>();
-    
-    private LookAtCamera _lookAtCamera;
+
+    [SerializeField] private List<DamageThreshold> _thresholds = new();
+    private float _damageTotal;
     private CanvasGroup _group;
-    private RectTransform _rectTransform;
-    private TextMeshProUGUI _textMesh;
+    private float _hideTime;
 
     private Vector3 _initialPosition;
+    private bool _isMaxHeight;
+    private float _lastTime;
+
+    private LookAtCamera _lookAtCamera;
     private ResourceStat _maxHealth;
+    private RectTransform _rectTransform;
 
-    private bool _showing = false;
-    private bool _isMaxHeight = false;
-    private float _hideTime = 0;
-    private float _lastTime = 0;
+    private bool _showing;
 
-    private String _switchTo = "";
-    private float _damageTotal = 0;
-    
+    private string _switchTo = "";
+    private TextMeshProUGUI _textMesh;
+
+    private void Reset()
+    {
+        _showing = false;
+        _isMaxHeight = false;
+        _damageTotal = 0;
+        _rectTransform.position = _initialPosition;
+        _group.alpha = 0;
+    }
+
     private void Start()
     {
         _lookAtCamera = gameObject.AddComponent<LookAtCamera>();
@@ -36,11 +44,6 @@ public class DamageNumber : MonoBehaviour
         _textMesh = GetComponentInChildren<TextMeshProUGUI>();
 
         _initialPosition = _rectTransform.position;
-    }
-    
-    public void Initialize(ResourceStat maxHealth)
-    {
-        _maxHealth = maxHealth;
     }
 
     private void Update()
@@ -53,13 +56,9 @@ public class DamageNumber : MonoBehaviour
         }
     }
 
-    private void Reset()
+    public void Initialize(ResourceStat maxHealth)
     {
-        _showing = false;
-        _isMaxHeight = false;
-        _damageTotal = 0;
-        _rectTransform.position = _initialPosition;
-        _group.alpha = 0;
+        _maxHealth = maxHealth;
     }
 
     public void ShowDamageNumber(float damage)
@@ -68,28 +67,28 @@ public class DamageNumber : MonoBehaviour
         {
             return;
         }
-        
-        string result = "";
+
+        var result = "";
 
         _damageTotal += damage;
-        
+
         if (_damageTotal >= 10000)
         {
             _damageTotal /= 1000;
-            result = _damageTotal.ToString("0") + "k"; 
+            result = _damageTotal.ToString("0") + "k";
         }
         else if (_damageTotal >= 1000)
         {
             _damageTotal /= 1000;
-            result = _damageTotal.ToString("0.0") + "k"; 
+            result = _damageTotal.ToString("0.0") + "k";
         }
         else if (_damageTotal >= 100)
         {
-            result = _damageTotal.ToString("0"); 
+            result = _damageTotal.ToString("0");
         }
         else if (_damageTotal >= 10)
         {
-            result = _damageTotal.ToString("0.0"); 
+            result = _damageTotal.ToString("0.0");
         }
         else
         {
@@ -98,8 +97,8 @@ public class DamageNumber : MonoBehaviour
 
         float damagePercent = _damageTotal / _maxHealth.MaxValue;
 
-        DamageThreshold prevThres = _thresholds[0];
-        DamageThreshold threshold = _thresholds[0];
+        var prevThres = _thresholds[0];
+        var threshold = _thresholds[0];
 
         foreach (var t in _thresholds)
         {
@@ -108,6 +107,7 @@ public class DamageNumber : MonoBehaviour
                 threshold = t;
                 break;
             }
+
             prevThres = t;
         }
 
@@ -118,11 +118,11 @@ public class DamageNumber : MonoBehaviour
         _hideTime = Time.time + _maxVisibleTime;
         _textMesh.text = result;
         _group.alpha = 1;
-            
+
         _lastTime = Time.time;
         _showing = true;
     }
-    
+
     [Serializable]
     private class DamageThreshold
     {

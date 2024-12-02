@@ -1,6 +1,1 @@
-using UnityEngine;
-
-public interface IManagedUpdate
-{
-    
-}
+public interface IManagedUpdate { }

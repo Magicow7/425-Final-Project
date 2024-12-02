@@ -4,6 +4,6 @@ namespace Locomotion
     {
         Idle,
         Airborne,
-        Moving,
+        Moving
     }
 }

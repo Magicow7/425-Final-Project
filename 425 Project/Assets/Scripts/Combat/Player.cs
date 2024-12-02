@@ -1,11 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using Locomotion;
 using Stat;
-using UnityEngine;
-using UnityEngine.AI;
-using UnityEngine.UI;
 using Utils.Singleton;
 
 namespace Combat
@@ -21,7 +15,7 @@ namespace Combat
                 Death();
                 return false;
             }
-            
+
             SoundManager.PlaySound(SoundManager.Sound.PlayerHit);
 
             return true;

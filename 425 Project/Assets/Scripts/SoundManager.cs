@@ -1,69 +1,60 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
-using static SoundManager;
+using Random = UnityEngine.Random;
 
 // References Sound Manager by Code Monkey: https://www.youtube.com/watch?v=QL29aTa7J5Q
 public class SoundManager : MonoBehaviour
 {
-    public enum Sound       // TO DO: 1) FIND + IMPLEMENT SOUNDS FOR LASER WEAPON
-                            //        2) FIND PERMANANT SOUNDS FOR ALL TEMP/MISSING SOUNDS
+    public enum Sound // TO DO: 1) FIND + IMPLEMENT SOUNDS FOR LASER WEAPON
+        //        2) FIND PERMANANT SOUNDS FOR ALL TEMP/MISSING SOUNDS
     {
-        Walking,            // FUNCTIONAL (WALKING/SPRINTING)
-        AirborneMovement,   // FUNCTIONAL (SCALES WITH SPEED)
-        Jumping,            // FUNCTIONAL
-        PlayerHit,          // FUNCTIONAL
-        PlayerLowHp,        // FUNCTIONAL
-        PlayerDeath,        // FUNCTIONAL
-        LowMana,            // FUNCTIONAL
-        FireSpellStart,     // FUNCTIONAL
-        FireSpellStop,      // FUNCTIONAL
-        MobHit,             // FUNCTIONAL
-        MobNoise1,          // FUNCTIONAL
-        MobNoise2,          // FUNCTIONAL
-        MobNoise3,          // FUNCTIONAL
-        MobDeath,           // FUNCTIONAL
+        Walking, // FUNCTIONAL (WALKING/SPRINTING)
+        AirborneMovement, // FUNCTIONAL (SCALES WITH SPEED)
+        Jumping, // FUNCTIONAL
+        PlayerHit, // FUNCTIONAL
+        PlayerLowHp, // FUNCTIONAL
+        PlayerDeath, // FUNCTIONAL
+        LowMana, // FUNCTIONAL
+        FireSpellStart, // FUNCTIONAL
+        FireSpellStop, // FUNCTIONAL
+        MobHit, // FUNCTIONAL
+        MobNoise1, // FUNCTIONAL
+        MobNoise2, // FUNCTIONAL
+        MobNoise3, // FUNCTIONAL
+        MobDeath, // FUNCTIONAL
         StoodGroundSuccess, // FUNCTIONAL
-        StoodGroundFail,    // FUNCTIONAL
-        OpenChest,          // FUNCTIONAL
-        ShotSpellCast,      // FUNCTIONAL
-        NormalBackground,   // FUNCTIONAL
-        LowHpBackground,    // FUNCTIONAL
-        MenuButtonMove,     // Menu Buttons not implemented (death screen)
-        MenuButtonPress,    // Menu Buttons not implemented (death screen)
-        LaserShoot,         // FUNCTIONAL
-        LaserBlast,         // FUNCTIONAL
-        GrenadeThrow,       // FUNCTIONAL
-        GrenadeBoom,        // FUNCTIONAL
-        SpendGold,          // Gold unimplemented in this version 
+        StoodGroundFail, // FUNCTIONAL
+        OpenChest, // FUNCTIONAL
+        ShotSpellCast, // FUNCTIONAL
+        NormalBackground, // FUNCTIONAL
+        LowHpBackground, // FUNCTIONAL
+        MenuButtonMove, // Menu Buttons not implemented (death screen)
+        MenuButtonPress, // Menu Buttons not implemented (death screen)
+        LaserShoot, // FUNCTIONAL
+        LaserBlast, // FUNCTIONAL
+        GrenadeThrow, // FUNCTIONAL
+        GrenadeBoom, // FUNCTIONAL
+        SpendGold // Gold unimplemented in this version 
     }
-
-    [System.Serializable]
-    public class SoundComponents
-    {
-        [FormerlySerializedAs("sound")] public Sound _sound;
-        [FormerlySerializedAs("clip")] public AudioClip _clip;
-        [FormerlySerializedAs("volume")] public float _volume = 1;
-        [FormerlySerializedAs("maxDistance")] public float _maxDistance = 10;
-        [FormerlySerializedAs("wait")] public float _wait = -1;  // set to -1 to be set to the length of the audioclip
-    }
-
-    [FormerlySerializedAs("soundComponents")] public SoundComponents[] _soundComponents;
 
     private static GameObject _player;
     private static Sound _currentBackground;
     private static AudioSource _backgroundMusic;
-    private static readonly Dictionary<Sound, AudioClip> _sounds = new Dictionary<Sound, AudioClip>();
-    private static readonly Dictionary<Sound, float> _waits = new Dictionary<Sound, float>();
-    private static readonly Dictionary<Sound, float> _vols = new Dictionary<Sound, float>();
-    private static readonly Dictionary<Sound, float> _dists = new Dictionary<Sound, float>();
-    private static readonly Dictionary<Sound, float> _lastPlayed = new Dictionary<Sound, float>();
+    private static readonly Dictionary<Sound, AudioClip> _sounds = new();
+    private static readonly Dictionary<Sound, float> _waits = new();
+    private static readonly Dictionary<Sound, float> _vols = new();
+    private static readonly Dictionary<Sound, float> _dists = new();
+    private static readonly Dictionary<Sound, float> _lastPlayed = new();
+
+    [FormerlySerializedAs("soundComponents")]
+    public SoundComponents[] _soundComponents;
 
     private void Start()
     {
         _player = GameObject.Find("PlayerModel");
-        foreach(SoundComponents soundComponent in _soundComponents)
+        foreach (var soundComponent in _soundComponents)
         {
             _sounds.Add(soundComponent._sound, soundComponent._clip);
             _waits.Add(soundComponent._sound, soundComponent._wait != -1 ? soundComponent._wait : soundComponent._clip.length);
@@ -71,6 +62,7 @@ public class SoundManager : MonoBehaviour
             _dists.Add(soundComponent._sound, soundComponent._maxDistance);
             _lastPlayed.Add(soundComponent._sound, 0f);
         }
+
         _backgroundMusic = _player.AddComponent<AudioSource>();
         _backgroundMusic.loop = true;
         ChangeBackgroundMusic(Sound.NormalBackground);
@@ -85,15 +77,16 @@ public class SoundManager : MonoBehaviour
     // Plays a Sound on the given GameObject
     public static void PlaySound(Sound sound, GameObject obj, bool randomPitch = false)
     {
-        Vector3 position = obj.transform.position;
+        var position = obj.transform.position;
         if (CanPlay(sound))
         {
             Debug.Log("Playing " + sound + " on " + obj.name);
-            AudioSource source = _player.AddComponent<AudioSource>();
+            var source = _player.AddComponent<AudioSource>();
             if (randomPitch)
             {
                 source.pitch = Random.Range(0.9f, 1.1f);
             }
+
             source.spatialBlend = 1.0f;
             source.maxDistance = _dists[sound];
             source.volume = _vols[sound];
@@ -112,6 +105,7 @@ public class SoundManager : MonoBehaviour
             {
                 source.pitch = Random.Range(0.9f, 1.1f);
             }
+
             Debug.Log("Playing " + sound + " on given source.");
             source.clip = GetAudioClip(sound);
             source.maxDistance = _dists[sound];
@@ -121,18 +115,19 @@ public class SoundManager : MonoBehaviour
     }
 
     // Plays a Sound at the given position
-    public static void PlaySound(Sound sound, Vector3 position, bool randomPitch=false)
+    public static void PlaySound(Sound sound, Vector3 position, bool randomPitch = false)
     {
         if (CanPlay(sound))
         {
             Debug.Log("Playing " + sound + " at " + position);
-            GameObject obj = new GameObject("Sound");
+            var obj = new GameObject("Sound");
             obj.transform.position = position;
-            AudioSource source = obj.AddComponent<AudioSource>();
+            var source = obj.AddComponent<AudioSource>();
             if (randomPitch)
             {
                 source.pitch = Random.Range(0.9f, 1.1f);
             }
+
             source.spatialBlend = 1.0f;
             source.maxDistance = _dists[sound];
             source.volume = _vols[sound];
@@ -190,15 +185,23 @@ public class SoundManager : MonoBehaviour
             _lastPlayed[sound] = Time.time;
             return true;
         }
-        else
-        {
-            return false;
-        }
+
+        return false;
     }
 
     // Returns the audioclip of a given sound
     public static AudioClip GetAudioClip(Sound sound)
     {
         return _sounds[sound];
+    }
+
+    [Serializable]
+    public class SoundComponents
+    {
+        [FormerlySerializedAs("sound")] public Sound _sound;
+        [FormerlySerializedAs("clip")] public AudioClip _clip;
+        [FormerlySerializedAs("volume")] public float _volume = 1;
+        [FormerlySerializedAs("maxDistance")] public float _maxDistance = 10;
+        [FormerlySerializedAs("wait")] public float _wait = -1; // set to -1 to be set to the length of the audioclip
     }
 }

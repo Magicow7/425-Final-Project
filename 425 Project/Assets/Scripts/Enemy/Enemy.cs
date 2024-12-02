@@ -1,34 +1,30 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using Stat;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.UI;
+using Random = UnityEngine.Random;
+
 namespace Combat
 {
     public class Enemy : MonoBehaviour, IDamageable
     {
-        private ResourceStat _playerhealth;
-        [SerializeField]
-        private DamageNumber _damageNumber;
+        [SerializeField] private DamageNumber _damageNumber;
 
-        private bool _inRangeOfPlayer = false;
-
-        [SerializeField]
-        private Animator _enemyAnimatior;
+        [SerializeField] private Animator _enemyAnimatior;
 
         private NavMeshAgent _agent;
-        private AudioSource _damageAudioSource;
         private AudioSource _ambientAudioSource;
         private Collider _collider;
-        private bool _isCrossingLink = false;
-        private bool _isDead = false;
+        private AudioSource _damageAudioSource;
+
+        private bool _inRangeOfPlayer = false;
+        private bool _isCrossingLink;
+        private bool _isDead;
         private float _lastPlayerTime = -1;
+        private ResourceStat _playerhealth;
 
         public EnemyStats EnemyStats { get; private set; }
-
-        public static event Action EnemyDeath;
 
         private void Awake()
         {
@@ -59,51 +55,41 @@ namespace Combat
             StartCoroutine(AmbientSound());
         }
 
-        private IEnumerator AmbientSound()
+        private void Update()
         {
-            while (true)
+            // Check if the agent is on NavMeshLink
+            if (_agent.isOnOffMeshLink && !_isCrossingLink)
             {
-                if (!_damageAudioSource.isPlaying)
-                {
-                    if (UnityEngine.Random.value < 0.04f)
-                    {
-                        SoundManager.Sound[] items = { SoundManager.Sound.MobNoise1, SoundManager.Sound.MobNoise2, SoundManager.Sound.MobNoise3 };
-                        SoundManager.PlaySound(items[UnityEngine.Random.Range(0, items.Length)], _ambientAudioSource, true);
-                    }
-                }
-                yield return new WaitForSeconds(1);
-            }
-        }
-
-        private IEnumerator CrossLink()
-        {
-            _isCrossingLink = true;
-
-            // Get the link data (start and end points)
-            OffMeshLinkData linkData = _agent.currentOffMeshLinkData;
-            Vector3 startPos = _agent.transform.position;
-            Vector3 endPos = linkData.endPos + new Vector3(0, _agent.transform.position.y, 0);
-
-            // Get the total distance to travel across the link
-            float distance = Vector3.Distance(startPos, endPos);
-            float travelTime = distance / _agent.speed;  // Maintain the agent's speed
-
-            float elapsedTime = 0f;
-
-            // Move the agent manually across the link
-            while (elapsedTime < travelTime)
-            {
-                elapsedTime += Time.deltaTime;
-                float t = elapsedTime / travelTime;
-
-                // Linear interpolation from start to end position
-                _agent.transform.position = Vector3.Lerp(startPos, endPos, t);
-                yield return null;
+                // Start traversing the NavMeshLink
+                StartCoroutine(CrossLink());
             }
 
-            // After crossing the link, complete the off-mesh link
-            _agent.CompleteOffMeshLink();
-            _isCrossingLink = false;
+            if (!Player.Instance)
+            {
+                return;
+            }
+
+            float playerDistance = (Player.Instance.transform.position - transform.position).magnitude;
+
+            if (Player.Instance && playerDistance <= 1)
+            {
+                _lastPlayerTime = _lastPlayerTime < 0 ? 0 : _lastPlayerTime + Time.deltaTime;
+                _enemyAnimatior.SetTrigger("TrAttack");
+            }
+            else if (Player.Instance && playerDistance <= 2)
+            {
+                _lastPlayerTime = _lastPlayerTime < 0 ? _lastPlayerTime : _lastPlayerTime + Time.deltaTime;
+            }
+            else
+            {
+                _lastPlayerTime = -1;
+            }
+
+            if (_lastPlayerTime > EnemyStats.AttackSpeed.Value)
+            {
+                Player.Instance.TakeDamage(EnemyStats.AttackDamage.Value);
+                _lastPlayerTime = -1;
+            }
         }
 
 
@@ -143,42 +129,55 @@ namespace Combat
                 Destroy(gameObject);
             }
         }
-        
-        private void Update()
+
+        public static event Action EnemyDeath;
+
+        private IEnumerator AmbientSound()
         {
-            // Check if the agent is on NavMeshLink
-            if (_agent.isOnOffMeshLink && !_isCrossingLink)
+            while (true)
             {
-                // Start traversing the NavMeshLink
-                StartCoroutine(CrossLink());
+                if (!_damageAudioSource.isPlaying)
+                {
+                    if (Random.value < 0.04f)
+                    {
+                        SoundManager.Sound[] items = { SoundManager.Sound.MobNoise1, SoundManager.Sound.MobNoise2, SoundManager.Sound.MobNoise3 };
+                        SoundManager.PlaySound(items[Random.Range(0, items.Length)], _ambientAudioSource, true);
+                    }
+                }
+
+                yield return new WaitForSeconds(1);
+            }
+        }
+
+        private IEnumerator CrossLink()
+        {
+            _isCrossingLink = true;
+
+            // Get the link data (start and end points)
+            var linkData = _agent.currentOffMeshLinkData;
+            var startPos = _agent.transform.position;
+            var endPos = linkData.endPos + new Vector3(0, _agent.transform.position.y, 0);
+
+            // Get the total distance to travel across the link
+            float distance = Vector3.Distance(startPos, endPos);
+            float travelTime = distance / _agent.speed; // Maintain the agent's speed
+
+            var elapsedTime = 0f;
+
+            // Move the agent manually across the link
+            while (elapsedTime < travelTime)
+            {
+                elapsedTime += Time.deltaTime;
+                float t = elapsedTime / travelTime;
+
+                // Linear interpolation from start to end position
+                _agent.transform.position = Vector3.Lerp(startPos, endPos, t);
+                yield return null;
             }
 
-            if (!Player.Instance)
-            {
-                return;
-            }
-
-            float playerDistance = (Player.Instance.transform.position - transform.position).magnitude;
-
-            if (Player.Instance && playerDistance <= 1)
-            {
-                _lastPlayerTime = _lastPlayerTime < 0 ? 0 : _lastPlayerTime + Time.deltaTime;
-                _enemyAnimatior.SetTrigger("TrAttack");
-            }
-            else if (Player.Instance && playerDistance <= 3)
-            {
-                _lastPlayerTime = _lastPlayerTime < 0 ? _lastPlayerTime : _lastPlayerTime + Time.deltaTime;
-            }
-            else
-            {
-                _lastPlayerTime = -1;
-            }
-
-            if (_lastPlayerTime > EnemyStats.AttackSpeed.Value)
-            {
-                Player.Instance.TakeDamage(EnemyStats.AttackDamage.Value);
-                _lastPlayerTime = -1;
-            }
+            // After crossing the link, complete the off-mesh link
+            _agent.CompleteOffMeshLink();
+            _isCrossingLink = false;
         }
 
         public void ConfigureStats(float health, float speed, float scale, float attackDamage, float attackSpeed)

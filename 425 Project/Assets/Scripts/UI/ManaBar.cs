@@ -1,80 +1,80 @@
 using System.Collections;
-using System.Collections.Generic;
 using Stat;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class ManaBar : MonoBehaviour
 {
-    private Image _barImage;
-    private ResourceStat _mana;
+    [SerializeField] private Slider _mainBar;
+    [SerializeField] private Slider _backBar;
 
-    private bool _canShakeBar = true;
-    private RectTransform _rectTransform;
-    private bool _lowMana = false;
+    [SerializeField] private float _resetTime;
+    [SerializeField] private float _lastUpdate;
+    private bool _coroutineLock;
+
+    private ResourceStat _mana;
+    
+    private float _lastMana;
+    private bool _lowMana;
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        _barImage = transform.Find("Bar").GetComponent<Image>();
-        _rectTransform = GetComponent<RectTransform>();
+        _mana = PlayerStats.Instance.Mana;
+        
+        _lastMana = _mana.Value;
+
         if (PlayerStats.Instance == null)
         {
             Debug.LogError("Player Stats Not Initialized?");
         }
-        _mana = PlayerStats.Instance.Mana;
+
+        _mainBar.value = _mana.Value / _mana.MaxValue;
+        _backBar.value = _mana.Value / _mana.MaxValue;
     }
 
-
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        _barImage.fillAmount = _mana.Percentage;
-        if (!_lowMana && _mana.Percentage < .25)
+        if (_lastMana / _mana.MaxValue - _mana.Percentage >= 0.001)
+        {
+            _lastUpdate = _resetTime;
+            StartCoroutine(LoseMana());
+        }
+        
+        _mainBar.value = _mana.Percentage;
+        if (_backBar.value < _mainBar.value)
+        {
+            _backBar.value = _mainBar.value;
+        }
+        
+        _lastUpdate -= Time.deltaTime;
+        _lastMana = _mana.Value;
+
+        if (!_lowMana && _mana.Percentage < .35)
         {
             _lowMana = true;
             StartCoroutine(LowManaSound());
         }
     }
 
-    private IEnumerator ShakeBar()
+    private IEnumerator LoseMana()
     {
-        Vector3 pos = _rectTransform.anchoredPosition;
-        
-        for (int i = 0; i < 3; i++)
+        if (!_coroutineLock)
         {
-            _rectTransform.anchoredPosition = pos + new Vector3(-5, 0, 0);
-            yield return new WaitForSeconds(0.05f);
-            _rectTransform.anchoredPosition = pos + new Vector3(5, 0, 0);
-            yield return new WaitForSeconds(0.05f);
-        }
-
-        _rectTransform.anchoredPosition = pos;
-        _canShakeBar = true;
-    }
-
-    public bool UseMana(int amt)
-    {
-        bool success = _mana.TrySpendResource(amt);
-
-        if (success)
-        {
-            // nothing to do
-        }
-        else
-        {
-            if (_canShakeBar)
+            _coroutineLock = true;
+            yield return new WaitUntil(() => _lastUpdate <= 0);
+            while (_backBar.value > _mainBar.value)
             {
-                _canShakeBar = false;
-                // not enough mana probably
-                
-                StartCoroutine(ShakeBar());
+                _backBar.value -= 0.001f;
+                yield return new WaitForNextFrameUnit();
             }
 
+            _coroutineLock = false;
         }
-        return success;
     }
-
+    
     private IEnumerator LowManaSound()
     {
         SoundManager.PlaySound(SoundManager.Sound.LowMana);
@@ -82,6 +82,7 @@ public class ManaBar : MonoBehaviour
         {
             yield return null;
         }
+
         _lowMana = false;
     }
 }

@@ -1,18 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using Stat;
-
 namespace Stat
 {
     public class EnemyStats
     {
-        public ResourceStat Health { get; private set; }
-        public AttributeStat Speed { get; private set; }
-        public float Scale { get; private set; }
-        public AttributeStat AttackDamage { get; private set; }
-        public AttributeStat AttackSpeed { get; private set; }
-
         // Base constructor
         public EnemyStats()
         {
@@ -32,5 +21,11 @@ namespace Stat
             AttackDamage = new AttributeStat(attackDamage);
             AttackSpeed = new AttributeStat(attackTime);
         }
+
+        public ResourceStat Health { get; private set; }
+        public AttributeStat Speed { get; private set; }
+        public float Scale { get; private set; }
+        public AttributeStat AttackDamage { get; private set; }
+        public AttributeStat AttackSpeed { get; private set; }
     }
 }

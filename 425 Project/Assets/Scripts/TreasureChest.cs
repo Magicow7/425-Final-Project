@@ -1,25 +1,18 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class TreasureChest : DungeonRoomContainedObject
 {
-    [SerializeField]
-    private Slider _slider;
-    
-    [SerializeField]
-    private float _maxCountdownTime = 10f;
-    
-    [SerializeField]
-    private float _countdownTime = 10f;
-    
-    [SerializeField]
-    private bool _collected = false;
+    [SerializeField] private Slider _slider;
 
-    [SerializeField]
-    private bool _inRoom = false;
+    [SerializeField] private float _maxCountdownTime = 10f;
+
+    [SerializeField] private float _countdownTime = 10f;
+
+    [SerializeField] private bool _collected;
+
+    [SerializeField] private bool _inRoom;
 
     private void Awake()
     {
@@ -35,12 +28,12 @@ public class TreasureChest : DungeonRoomContainedObject
             _countdownTime = Mathf.Min(_countdownTime, _maxCountdownTime);
             _slider.value = 1 - _countdownTime / _maxCountdownTime;
         }
-        
+
         if (_collected || !_inRoom)
         {
             return;
         }
-        
+
         _countdownTime -= Time.deltaTime;
         _slider.value = 1f - _countdownTime / _maxCountdownTime;
         if (_countdownTime <= 0)

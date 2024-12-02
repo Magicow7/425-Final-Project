@@ -1,41 +1,26 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using Combat;
 using UnityEngine;
-using Utils;
 
 public class Bullet : MonoBehaviour
 {
-    [field: SerializeField] 
-    public Rigidbody Rigidbody { get; private set; } = null!;
+    [field: SerializeField] public Rigidbody Rigidbody { get; private set; } = null!;
 
-    [SerializeField] 
-    private Explosion _explosion;
-    
-    [SerializeField] 
-    private LayerMask _layerMask;
+    [SerializeField] private Explosion _explosion;
 
-    private float _damage = 0;
-    private float _explosionRadius = 0;
-    private float _explosionDamage = 0;
-    private float _explosionTime = 0;
-    private float _explosionDamageOverTime = 0;
-    private bool _canHit = false;
+    [SerializeField] private LayerMask _layerMask;
+
+    private bool _canHit;
+
+    private float _damage;
+    private float _explosionDamage;
+    private float _explosionDamageOverTime;
+    private float _explosionRadius;
+    private float _explosionTime;
 
     private void Awake()
     {
         _canHit = true;
-    }
-
-    public void Setup(float damage, float explosionRadius, float explosionDamage, float explosionTime, float explosionDamageOverTime, float lifespan)
-    {
-        _damage = damage;
-        _explosionRadius = explosionRadius;
-        _explosionDamage = explosionDamage;
-        _explosionDamageOverTime = explosionDamageOverTime;
-        _explosionTime = explosionTime;
-        StartCoroutine(_Lifetime(lifespan));
     }
 
     private void OnTriggerEnter(Collider other)
@@ -49,6 +34,7 @@ public class Bullet : MonoBehaviour
         {
             SoundManager.PlaySound(SoundManager.Sound.GrenadeBoom, gameObject.transform.position);
         }
+
         if (other.gameObject.TryGetComponent(out IDamageable damageable) && Player.Instance && other.gameObject != Player.Instance.gameObject)
         {
             damageable.TakeDamage(_damage);
@@ -60,6 +46,16 @@ public class Bullet : MonoBehaviour
         {
             ExplodeAndDestroy();
         }
+    }
+
+    public void Setup(float damage, float explosionRadius, float explosionDamage, float explosionTime, float explosionDamageOverTime, float lifespan)
+    {
+        _damage = damage;
+        _explosionRadius = explosionRadius;
+        _explosionDamage = explosionDamage;
+        _explosionDamageOverTime = explosionDamageOverTime;
+        _explosionTime = explosionTime;
+        StartCoroutine(_Lifetime(lifespan));
     }
 
     private IEnumerator _Lifetime(float time)
@@ -76,6 +72,7 @@ public class Bullet : MonoBehaviour
             Instantiate(_explosion, transform.position, Quaternion.identity)
                 .Explode(_explosionRadius, _explosionDamage, _explosionTime, _explosionDamageOverTime);
         }
+
         Destroy(gameObject);
     }
 }
