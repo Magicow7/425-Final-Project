@@ -28884,6 +28884,7 @@ MonoBehaviour:
   _explosionDamage: 0
   _explosionTime: 0
   _explosionDamageOverTime: 0
+  _isExplode: 0
 --- !u!136 &2077026113
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -29275,6 +29276,10 @@ PrefabInstance:
     - target: {fileID: 2606022365083338542, guid: d5f799c854aabf64ea9c2c4389f1764f, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 3431231471813526088, guid: d5f799c854aabf64ea9c2c4389f1764f, type: 3}
+      propertyPath: _isExplode
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3431231471813526088, guid: d5f799c854aabf64ea9c2c4389f1764f, type: 3}
       propertyPath: _bulletSpeed

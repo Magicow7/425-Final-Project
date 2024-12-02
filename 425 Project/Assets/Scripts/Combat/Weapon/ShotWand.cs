@@ -26,6 +26,8 @@ public class ShotWand : Weapon
 
     [SerializeField] private float _explosionDamageOverTime;
 
+    [SerializeField] private bool _isExplode;
+
     private float _nextFireTime;
 
     protected override bool Fire()
@@ -76,53 +78,60 @@ public class ShotWand : Weapon
     {
         float mult = Random.Range(0.8f, 1.3f);
         _manaPerShot = 30 * Mathf.Pow(mult, 2);
-        _damage = 30 * Mathf.Pow(1 + PlayerStats.Instance.WeaponPower.Value, 2) * mult;
+        _damage = 45 * Mathf.Pow(1 + PlayerStats.Instance.WeaponPower.Value, 2) * mult;
         _fireRate = 1 * (1 + PlayerStats.Instance.WeaponPower.Value) * mult;
         _bulletSpeed = 5 * mult;
         _bulletLifespan = 10 * mult;
 
-        int type = Random.Range(1, 6);
-        if (type == 1)
+        if (_isExplode)
         {
-            _damage *= 2;
-            _manaPerShot *= 1;
-            _explosionRadius = 0;
-            _explosionDamage = 0;
-            _explosionTime = 0;
-            _explosionDamageOverTime = 0;
+            int type = Random.Range(1, 3);
+            if (type == 1)
+            {
+                _damage *= 2;
+                _manaPerShot *= 1;
+                _explosionRadius = 0;
+                _explosionDamage = 0;
+                _explosionTime = 0;
+                _explosionDamageOverTime = 0;
+            }
+            else if (type == 2)
+            {
+                _fireRate *= 2;
+                _manaPerShot /= 2;
+                _explosionRadius = 0;
+                _explosionDamage = 0;
+                _explosionTime = 0;
+                _explosionDamageOverTime = 0;
+            }
         }
-        else if (type == 2)
+        else
         {
-            _fireRate *= 2;
-            _manaPerShot /= 2;
-            _explosionRadius = 0;
-            _explosionDamage = 0;
-            _explosionTime = 0;
-            _explosionDamageOverTime = 0;
-        }
-        else if (type == 3)
-        {
-            _manaPerShot *= 1.2f;
-            _explosionRadius = Random.Range(1f, 3f) * mult;
-            _explosionDamage = 3f / _explosionRadius * 10 * (1 + PlayerStats.Instance.WeaponPower.Value) * mult;
-            _explosionTime = 1;
-            _explosionDamageOverTime = 0;
-        }
-        else if (type == 4)
-        {
-            _manaPerShot *= 1.2f;
-            _explosionRadius = Random.Range(1f, 3f) * mult;
-            _explosionDamage = 0;
-            _explosionTime = 2 * (1 + PlayerStats.Instance.WeaponPower.Value) * mult;
-            _explosionDamageOverTime = 3f / _explosionRadius * 2 * (1 + PlayerStats.Instance.WeaponPower.Value) * mult;
-        }
-        else if (type == 5)
-        {
-            _manaPerShot *= 1.2f;
-            _explosionRadius = Random.Range(1f, 3f) * mult;
-            _explosionDamage = 3f / _explosionRadius * 5 * (1 + PlayerStats.Instance.WeaponPower.Value) * mult;
-            _explosionTime = 2 * (1 + PlayerStats.Instance.WeaponPower.Value) * mult;
-            _explosionDamageOverTime = 3f / _explosionRadius * 1 * (1 + PlayerStats.Instance.WeaponPower.Value) * mult;
+            int type = Random.Range(1, 4);
+            if (type == 1)
+            {
+                _manaPerShot *= 1.5f;
+                _explosionRadius = Random.Range(1f, 3f) * mult;
+                _explosionDamage = 3f / _explosionRadius * 10 * (1 + PlayerStats.Instance.WeaponPower.Value) * mult;
+                _explosionTime = 1;
+                _explosionDamageOverTime = 0;
+            }
+            else if (type == 2)
+            {
+                _manaPerShot *= 1.5f;
+                _explosionRadius = Random.Range(1f, 3f) * mult;
+                _explosionDamage = 0;
+                _explosionTime = 2 * (1 + PlayerStats.Instance.WeaponPower.Value) * mult;
+                _explosionDamageOverTime = 3f / _explosionRadius * 2 * (1 + PlayerStats.Instance.WeaponPower.Value) * mult;
+            }
+            else if (type == 3)
+            {
+                _manaPerShot *= 1.5f;
+                _explosionRadius = Random.Range(1f, 3f) * mult;
+                _explosionDamage = 3f / _explosionRadius * 5 * (1 + PlayerStats.Instance.WeaponPower.Value) * mult;
+                _explosionTime = 2 * (1 + PlayerStats.Instance.WeaponPower.Value) * mult;
+                _explosionDamageOverTime = 3f / _explosionRadius * 1 * (1 + PlayerStats.Instance.WeaponPower.Value) * mult;
+            }
         }
     }
 }

@@ -108,7 +108,7 @@ public class LaserWand : Weapon
     public override void SetStats()
     {
         float mult = Random.Range(0.8f, 1.3f);
-        _manaPerShot = 75 * Mathf.Pow(mult, 2);
+        _manaPerShot = 85 * Mathf.Pow(mult, 2);
         _explosionRadius = Random.Range(1f, 3f) * mult;
         _explosionDamage = 10 * 1 + PlayerStats.Instance.WeaponPower.Value * mult;
         _explosionTime = 1;
