@@ -104,7 +104,7 @@ public class EnemySpawner : MonoBehaviour
         Debug.Log(_currentSpawnedEnemy);
         if (_spawnedEnemies[_currentSpawnedEnemy] != null)
         {
-            Destroy(_spawnedEnemies[_currentSpawnedEnemy]);
+            Destroy(_spawnedEnemies[_currentSpawnedEnemy].gameObject);
         }
         
         // Spawn enemy at a random spawner
