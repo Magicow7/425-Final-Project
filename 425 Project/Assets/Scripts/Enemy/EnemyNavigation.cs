@@ -58,7 +58,7 @@ public class EnemyNavigation : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(5);
+            yield return new WaitForSeconds(2);
             if (!_agent.hasPath)
             {
                 Respawn();

@@ -14,6 +14,8 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private float _healthScaling = 0.05f;
 
     [SerializeField] private float _damageScaling = 0.05f;
+    
+    [SerializeField] private float _speedScaling = 0.05f;
 
     private readonly Vector3 _modifier = new(0.2f, 0.2f, 0.2f); // ensures enemy spawns above floor
     private readonly float _spawnInterval = 0.01f; // lag time so enemies don't spawn on top of one another
@@ -41,6 +43,14 @@ public class EnemySpawner : MonoBehaviour
     private void Awake()
     {
         _spawnedEnemies = new Enemy[_maxEnemies];
+    }
+
+    private void Update() {
+        if (Input.GetKeyDown("9")) {
+            WaveNumber += 10;
+            PlayerStats.Instance.WeaponPower.Value += 1f;
+            _waveInterval = Mathf.Max(10f, _waveInterval - 10f);
+        }
     }
 
     // called from dungeon generator script
@@ -110,18 +120,19 @@ public class EnemySpawner : MonoBehaviour
         // Scale stats based on wave number
         float healthMultiplier = 1 + WaveNumber * _healthScaling; // 5% flat increase per wave
         float attackDamageMultiplier = 1 + WaveNumber * _damageScaling; // 5% flat increase per wave
+        float speedMultiplier = 1 + WaveNumber * _speedScaling; // 5% flat increase per wave
 
         // Health, Speed, Scale, AttackDamage
         switch (variant)
         {
             case EnemyType.Small:
-                _spawnedEnemies[_currentSpawnedEnemy].ConfigureStats(20 * healthMultiplier, 3.5f, 0.75f, 3 * attackDamageMultiplier, 1);
+                _spawnedEnemies[_currentSpawnedEnemy].ConfigureStats(20 * healthMultiplier, 3.5f * speedMultiplier, 0.75f, 3 * attackDamageMultiplier, 1);
                 break;
             case EnemyType.Medium:
-                _spawnedEnemies[_currentSpawnedEnemy].ConfigureStats(50 * healthMultiplier, 2, 1, 5 * attackDamageMultiplier, 1);
+                _spawnedEnemies[_currentSpawnedEnemy].ConfigureStats(50 * healthMultiplier, 2 * speedMultiplier, 1, 5 * attackDamageMultiplier, 1);
                 break;
             case EnemyType.Large:
-                _spawnedEnemies[_currentSpawnedEnemy].ConfigureStats(150 * Mathf.Pow(healthMultiplier, 1.5f), 1, 1.5f, 10 * attackDamageMultiplier, 1);
+                _spawnedEnemies[_currentSpawnedEnemy].ConfigureStats(150 * Mathf.Pow(healthMultiplier, 1.5f), 1 * speedMultiplier, 1.5f, 10 * attackDamageMultiplier, 1);
                 break;
         }
 

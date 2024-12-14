@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Combat.Weapon;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Stat;
 
 public class WeaponHandler : MonoBehaviour
 {
@@ -18,6 +19,30 @@ public class WeaponHandler : MonoBehaviour
     private void Start()
     {
         instance = this;
+    }
+
+    private void Update(){
+        if(Input.GetKeyDown("1")){
+            ActivateWeapon(3);
+        }
+        if(Input.GetKeyDown("2")){
+            ActivateWeapon(2);
+        }
+        if(Input.GetKeyDown("3")){
+            ActivateWeapon(1);
+        }
+        if(Input.GetKeyDown("4")){
+            ActivateWeapon(0);
+        }
+        if(Input.GetKeyDown("5")) {
+            PlayerStats.Instance.WeaponPower.Value += 0.1f;
+        }
+        if(Input.GetKeyDown("6")) {
+            PlayerStats.Instance.WeaponPower.Value += 1f;
+        }
+        if(Input.GetKeyDown("7")) {
+            PlayerStats.Instance.WeaponPower.Value += 10f;
+        }
     }
 
     //activate the new weapon
